@@ -1,10 +1,12 @@
 name: Production Quality
 
-on:
+'on':
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -13,7 +15,9 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
+
       - name: Verify production files
         shell: bash
         run: |
@@ -23,16 +27,18 @@ jobs:
           test -s script.js
           test -s robots.txt
           test -d assets/images
-          grep -q '<!doctype html>' index.html
+          grep -qi '<!doctype html>' index.html
           grep -q 'styles.css' index.html
           grep -q 'script.js' index.html
           grep -q 'viewport' index.html
           grep -q 'description' index.html
+
       - name: Verify referenced local assets
         shell: python
         run: |
           from pathlib import Path
           import re
+
           root = Path('.')
           missing = []
           for source in ('index.html', 'styles.css', 'script.js'):
@@ -40,18 +46,24 @@ jobs:
               refs = set(re.findall(r'(?:src|href)=[\"\']([^\"\']+)[\"\']', text))
               refs |= set(re.findall(r'url\([\"\']?([^\)\"\']+)', text))
               for ref in refs:
-                  if ref.startswith(('http://','https://','mailto:','tel:','data:','#','javascript:')):
+                  if ref.startswith(('http://', 'https://', 'mailto:', 'tel:', 'data:', '#', 'javascript:')):
                       continue
-                  path = ref.split('?',1)[0].split('#',1)[0].lstrip('/')
+                  path = ref.split('?', 1)[0].split('#', 1)[0].lstrip('/')
                   if path and not (root / path).exists():
                       missing.append((source, ref))
+
           if missing:
               raise SystemExit('Missing local references: ' + repr(missing))
           print('All referenced local assets exist.')
+
       - name: Check JavaScript syntax
         run: node --check script.js
+
       - name: Check for accidental development placeholders
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -RniE 'localhost|127\.0\.0\.1|TODO|FIXME|lorem ipsum' --exclude-dir=.git --exclude='quality.yml' .
+          ! grep -RniE 'localhost|127\.0\.0\.1|TODO|FIXME|lorem ipsum' \
+            --exclude-dir=.git \
+            --exclude='quality.yml' \
+            .
