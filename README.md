@@ -1,35 +1,32 @@
 # Tasmaarah Collection
 
-Official website for Tasmaarah Collection. A premium gifting and presentation website for kunchas, trays, boxes, custom orders, hire, purchase and professional gift setting. Designed and developed by Prime Presence Atelier.
+Official website for Tasmaarah Collection. A premium gifting and presentation business offering kunchas, trays, boxes, custom orders, hire, purchase and professional gift setting. Designed and developed by Prime Presence Atelier.
 
-## Current V1 build
+## Production build status
 
 Implemented:
 
-- responsive desktop and mobile homepage
-- Tasmaarah-inspired ivory, champagne, taupe and near-black visual system
-- textured paper / stone / marble-style backgrounds
+- responsive desktop, tablet and mobile homepage
+- Tasmaarah's real logo and genuine client photography
+- direct optimised WebP image assets; no generated product substitutes
 - Hire, Purchase and Professional Gift Setting positioning
 - Wood, Perspex and Glass material options
 - common sizes: 15×15cm, 20×20cm and 30×30cm
-- custom sizing
+- custom sizing and quote-led ordering
 - Weddings, Birthdays, Year-End & Functions and Special Gifts
-- WhatsApp-first quote flow
-- pre-filled WhatsApp enquiry form
+- WhatsApp-first quote flow with structured enquiry details
 - Reservoir Hills location wording
 - courier-services wording
-- FAQ
-- mobile navigation
-- accessibility basics and reduced-motion support
+- FAQ, mobile navigation and keyboard/focus states
+- SEO metadata, Open Graph metadata and Organization structured data
+- lazy-loaded portfolio imagery and reduced-motion support
 - Prime Presence Atelier credit
 
-## Important photography rule
+## Photography policy
 
-The current beige image areas are deliberate placeholders. Replace them with Tasmaarah Collection's real client photographs before launch.
+The site uses genuine photographs supplied by Tasmaarah Collection. Product imagery must not be replaced with AI-generated representations or materially altered in a way that misrepresents actual products or completed work.
 
-Do not use AI-generated substitutes as final product photography and do not materially alter the client's actual trays, boxes, kunchas or arrangements.
-
-## Contact details in the build
+## Contact details
 
 - WhatsApp: 063 540 9729
 - Call or WhatsApp: 074 378 8958
@@ -39,21 +36,21 @@ Do not use AI-generated substitutes as final product photography and do not mate
 
 Do not change the delivery wording to nationwide delivery unless the client confirms it.
 
-## Still needed before launch
+## Client/owner details still required before public launch
 
-- final logo asset file
-- real product photography placed into the page
-- social-media links
-- hire/deposit/damage/return terms
-- turnaround and lead-time information
-- collection and courier details
-- final product-size-to-photo mapping where available
-- domain and production hosting
-- final browser, accessibility, performance and mobile QA
+These items are deliberately not invented in the codebase:
+
+- confirmed social-media profile URLs
+- hire deposit, damage and return terms
+- confirmed production lead times / turnaround wording
+- final collection and courier terms
+- production domain and hosting
+
+## Final launch checks
+
+Before publishing to the client domain, complete a real-browser acceptance pass on desktop and mobile, verify WhatsApp/call/email actions on physical devices, run Lighthouse/accessibility checks, and perform the final domain/HTTPS/search-indexing smoke test.
 
 ## Local preview
-
-Open `index.html` directly, or run a basic local server:
 
 ```bash
 python -m http.server 8080
