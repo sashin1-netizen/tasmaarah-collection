@@ -1,7 +1,11 @@
-const menuButton=document.querySelector('.menu-button');const nav=document.querySelector('.site-nav');
-menuButton?.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')==='true';menuButton.setAttribute('aria-expanded',String(!open));nav?.classList.toggle('open',!open);document.body.classList.toggle('menu-open',!open)});
-nav?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menuButton?.setAttribute('aria-expanded','false');document.body.classList.remove('menu-open')}));
-const year=document.querySelector('#year');if(year)year.textContent=new Date().getFullYear();
-if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}}),{threshold:.08});document.querySelectorAll('.reveal').forEach(node=>observer.observe(node))}else{document.querySelectorAll('.reveal').forEach(node=>node.classList.add('visible'))}
-const dateInput=document.querySelector('#date-input');if(dateInput){const today=new Date();today.setMinutes(today.getMinutes()-today.getTimezoneOffset());dateInput.min=today.toISOString().slice(0,10)}
-document.querySelector('#quote-form')?.addEventListener('submit',event=>{event.preventDefault();const occasion=document.querySelector('#occasion-input')?.value.trim()||'';const service=document.querySelector('#service-input')?.value.trim()||'';const size=document.querySelector('#size-input')?.value.trim()||'';const date=document.querySelector('#date-input')?.value.trim()||'';const message=document.querySelector('#message-input')?.value.trim()||'';const lines=["Hi Tasmaarah Collection, I'd like to request a quote.",occasion?`Occasion: ${occasion}`:'',service?`Service: ${service}`:'',size?`Preferred size: ${size}`:'',date?`Date needed: ${date}`:'',message?`Details: ${message}`:''].filter(Boolean);window.open(`https://wa.me/27635409729?text=${encodeURIComponent(lines.join('\n'))}`,'_blank','noopener,noreferrer')});
+const menuButton=document.querySelector('.menu-button');
+const nav=document.querySelector('.mobile-nav');
+menuButton?.addEventListener('click',()=>{
+  const open=menuButton.getAttribute('aria-expanded')==='true';
+  menuButton.setAttribute('aria-expanded',String(!open));
+  nav?.classList.toggle('open',!open);
+});
+nav?.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{
+  nav.classList.remove('open');
+  menuButton?.setAttribute('aria-expanded','false');
+}));
