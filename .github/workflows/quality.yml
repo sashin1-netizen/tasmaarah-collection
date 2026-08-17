@@ -38,7 +38,6 @@ jobs:
         run: |
           from pathlib import Path
           import re
-
           root = Path('.')
           missing = []
           for source in ('index.html', 'styles.css', 'script.js'):
@@ -46,12 +45,11 @@ jobs:
               refs = set(re.findall(r'(?:src|href)=[\"\']([^\"\']+)[\"\']', text))
               refs |= set(re.findall(r'url\([\"\']?([^\)\"\']+)', text))
               for ref in refs:
-                  if ref.startswith(('http://', 'https://', 'mailto:', 'tel:', 'data:', '#', 'javascript:')):
+                  if ref.startswith(('http://', 'https://', 'mailto:', 'tel:', 'data:', '#', 'javascript:', '%23')):
                       continue
                   path = ref.split('?', 1)[0].split('#', 1)[0].lstrip('/')
                   if path and not (root / path).exists():
                       missing.append((source, ref))
-
           if missing:
               raise SystemExit('Missing local references: ' + repr(missing))
           print('All referenced local assets exist.')
