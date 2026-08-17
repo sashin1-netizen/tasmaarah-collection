@@ -1,5 +1,69 @@
-/* Approved Tasmaarah hero artwork — exact supplied campaign visual */
-.reference-home .ref-hero{position:relative;display:block;max-width:1536px;width:100%;min-height:0;aspect-ratio:3/2;margin:0 auto;padding:0;overflow:hidden;background:#e8d5bf url('assets/images/file_00000000d5e88243924fe08befb57f2a.png') center center/cover no-repeat}
-.reference-home .ref-stage{display:none!important}.reference-home .ref-copy{position:absolute;inset:0;z-index:3;max-width:none;padding:0;pointer-events:none}.reference-home .ref-copy>*:not(.ref-actions){display:none!important}.reference-home .ref-actions{position:absolute;left:6.6%;bottom:5.2%;display:flex;gap:12px;width:auto;margin:0;pointer-events:auto}.reference-home .ref-actions .btn{min-height:48px;padding:12px 20px;font-size:11px}.reference-home .ref-actions .btn-gold{background:linear-gradient(135deg,#85572b,#aa7538 48%,#c89c64);box-shadow:0 12px 30px rgba(70,40,13,.2)}.reference-home .ref-actions .btn-outline{background:rgba(248,240,230,.72);backdrop-filter:blur(7px)}
-@media(max-width:760px){.reference-home .ref-hero{aspect-ratio:3/2;min-height:0;background-size:cover!important;background-position:center center!important;background-color:#ead7c2}.reference-home .ref-copy{position:absolute;inset:0;padding:0;max-width:none}.reference-home .ref-actions{left:4%;right:4%;bottom:3.5%;display:grid;grid-template-columns:1fr 1fr;gap:8px;width:auto}.reference-home .ref-actions .btn{min-height:38px;padding:8px;font-size:8.5px;letter-spacing:.055em}}
-@media(max-width:430px){.reference-home .ref-hero{aspect-ratio:3/2;background-size:cover!important;background-position:center center!important}.reference-home .ref-actions{left:3%;right:3%;bottom:2.5%;gap:6px}.reference-home .ref-actions .btn{min-height:34px;font-size:7.5px;padding:6px}}
+/* FINAL APPROVED HERO — uses the exact client-approved campaign artwork */
+.reference-home .ref-hero{
+  position:relative;
+  display:block;
+  width:100%;
+  max-width:1536px;
+  aspect-ratio:3/2;
+  min-height:0;
+  margin:0 auto;
+  overflow:hidden;
+  background:#ead7c2 url('assets/images/file_00000000d5e88243924fe08befb57f2a.png') center center/cover no-repeat;
+}
+.reference-home .ref-stage{display:none!important}
+.reference-home .ref-copy{position:absolute;inset:0;z-index:3;max-width:none;padding:0;pointer-events:none;background:none!important}
+.reference-home .ref-copy>*:not(.ref-actions){display:none!important}
+.reference-home .ref-actions{position:absolute;left:6.4%;bottom:4.5%;display:flex;gap:12px;width:auto;margin:0;pointer-events:auto}
+.reference-home .ref-actions .btn{min-height:46px;padding:11px 18px;font-size:10px;letter-spacing:.07em}
+.reference-home .ref-actions .btn-gold{background:linear-gradient(135deg,#805126,#a56f35 48%,#c4945d);color:#fff;box-shadow:0 10px 24px rgba(68,38,13,.22)}
+.reference-home .ref-actions .btn-outline{background:rgba(250,242,232,.86);border:1px solid #8d6236;backdrop-filter:blur(6px)}
+
+/* Desktop rhythm: keep the page composed like the approved visual, not crowded */
+@media(min-width:761px){
+  .reference-home .ref-features{margin-top:0}
+  .reference-home .ref-occ{padding-top:16px}
+  .reference-home .ref-lower{margin-top:8px}
+}
+
+/* Mobile: preserve the full campaign image. Do not crop, stretch or overlay content on it. */
+@media(max-width:760px){
+  .reference-home .ref-header{height:92px!important;padding:0 16px!important}
+  .reference-home .ref-logo img{width:196px!important;height:74px!important}
+  .reference-home .ref-utility{height:40px!important}
+  .reference-home .ref-hero{
+    width:100%;
+    aspect-ratio:3/2;
+    min-height:0!important;
+    background-size:contain!important;
+    background-position:center top!important;
+    background-repeat:no-repeat!important;
+    background-color:#ead7c2;
+    margin:0;
+  }
+  .reference-home .ref-copy{position:absolute;inset:0;padding:0!important;background:none!important}
+  .reference-home .ref-actions{
+    position:absolute;
+    left:4%;right:4%;bottom:3.2%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    width:auto;
+    margin:0;
+  }
+  .reference-home .ref-actions .btn{min-height:38px;padding:8px 7px;font-size:8px;letter-spacing:.045em;white-space:nowrap}
+  .reference-home .ref-features{margin:12px 12px 20px!important;grid-template-columns:1fr 1fr!important;box-shadow:0 10px 26px rgba(67,41,20,.08)}
+  .reference-home .ref-feature{min-height:104px!important;padding:16px 10px!important}
+  .reference-home .ref-occ{padding:4px 12px 20px!important}
+  .reference-home .ref-occ h2{font-size:27px!important;margin-bottom:14px!important}
+  .reference-home .ref-occ-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:9px!important;overflow:visible!important}
+  .reference-home .ref-occ-card{min-width:0!important;width:100%!important;height:170px!important}
+  .reference-home .ref-lower{margin:0 12px 20px!important}
+  .reference-home .ref-sizes,.reference-home .ref-how,.reference-home .ref-cta{padding:20px 16px!important}
+  .reference-home .ref-footer{margin-top:18px}
+}
+@media(max-width:430px){
+  .reference-home .ref-logo img{width:184px!important}
+  .reference-home .ref-actions{left:3%;right:3%;bottom:2.5%;gap:6px}
+  .reference-home .ref-actions .btn{min-height:35px;font-size:7.2px;padding:6px 5px}
+  .reference-home .ref-occ-card{height:150px!important}
+}
