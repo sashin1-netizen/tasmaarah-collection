@@ -18,30 +18,34 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Verify production files
+      - name: Verify production files and pages
         shell: bash
         run: |
           set -euo pipefail
-          test -s index.html
-          test -s styles.css
-          test -s script.js
-          test -s robots.txt
+          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html styles.css script.js robots.txt sitemap.xml; do
+            test -s "$file"
+          done
           test -d assets/images
+          test "$(find assets/images -maxdepth 1 -type f | wc -l)" -ge 20
           grep -qi '<!doctype html>' index.html
           grep -q 'styles.css' index.html
           grep -q 'script.js' index.html
           grep -q 'viewport' index.html
           grep -q 'description' index.html
+          grep -q 'application/ld+json' index.html
+          grep -q 'wa.me/27635409729' index.html contact.html
 
-      - name: Verify referenced local assets
+      - name: Verify referenced local assets and internal links
         shell: python
         run: |
           from pathlib import Path
           import re
           root = Path('.')
           missing = []
-          for source in ('index.html', 'styles.css', 'script.js'):
-              text = (root / source).read_text(encoding='utf-8')
+          html_files = sorted(root.glob('*.html'))
+          sources = html_files + [root / 'styles.css', root / 'script.js']
+          for source in sources:
+              text = source.read_text(encoding='utf-8')
               refs = set(re.findall(r'(?:src|href)=[\"\']([^\"\']+)[\"\']', text))
               refs |= set(re.findall(r'url\([\"\']?([^\)\"\']+)', text))
               for ref in refs:
@@ -49,10 +53,10 @@ jobs:
                       continue
                   path = ref.split('?', 1)[0].split('#', 1)[0].lstrip('/')
                   if path and not (root / path).exists():
-                      missing.append((source, ref))
+                      missing.append((source.name, ref))
           if missing:
               raise SystemExit('Missing local references: ' + repr(missing))
-          print('All referenced local assets exist.')
+          print(f'Validated {len(html_files)} HTML pages and all local references.')
 
       - name: Check JavaScript syntax
         run: node --check script.js
@@ -61,4 +65,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -niE 'localhost|127\.0\.0\.1|TODO|FIXME|lorem ipsum' index.html styles.css script.js robots.txt
+          ! grep -RniE 'localhost|127\.0\.0\.1|TODO|FIXME|lorem ipsum' --include='*.html' --include='*.css' --include='*.js' --include='*.txt' .
+
+      - name: Confirm sitemap coverage
+        shell: python
+        run: |
+          from pathlib import Path
+          sitemap = Path('sitemap.xml').read_text(encoding='utf-8')
+          for page in ('about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html'):
+              if page not in sitemap:
+                  raise SystemExit(f'Missing {page} from sitemap.xml')
+          print('Sitemap covers all public pages.')
