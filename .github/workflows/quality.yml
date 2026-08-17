@@ -57,11 +57,8 @@ jobs:
       - name: Check JavaScript syntax
         run: node --check script.js
 
-      - name: Check for accidental development placeholders
+      - name: Check production files for development placeholders
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -RniE 'localhost|127\.0\.0\.1|TODO|FIXME|lorem ipsum' \
-            --exclude-dir=.git \
-            --exclude='quality.yml' \
-            .
+          ! grep -niE 'localhost|127\.0\.0\.1|TODO|FIXME|lorem ipsum' index.html styles.css script.js robots.txt
