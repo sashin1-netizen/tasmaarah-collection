@@ -5,10 +5,10 @@ if(!isReferenceHome){
   texture.href='texture.css?v=2';
   document.head.appendChild(texture);
 }else{
-  const mobile=document.createElement('link');
-  mobile.rel='stylesheet';
-  mobile.href='mobile-reference-fix.css?v=2';
-  document.head.appendChild(mobile);
+  const approvedHero=document.createElement('link');
+  approvedHero.rel='stylesheet';
+  approvedHero.href='hero-approved.css?v=5';
+  document.head.appendChild(approvedHero);
 }
 
 const menuButton=document.querySelector('.menu-button');
