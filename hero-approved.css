@@ -1,109 +1,88 @@
-/* FINAL APPROVED HERO — exact campaign artwork, blended into the page */
+/* FINAL APPROVED HERO — responsive campaign artwork without squashing */
 .reference-home .ref-hero{
   position:relative;
-  display:block;
   width:100%;
   max-width:1536px;
   aspect-ratio:3/2;
-  min-height:0;
   margin:0 auto;
   overflow:hidden;
   isolation:isolate;
   background:#ead7c2 url('assets/images/file_00000000d5e88243924fe08befb57f2a.png') center center/cover no-repeat;
 }
-.reference-home .ref-hero::after{
-  content:"";
-  position:absolute;
-  left:0;right:0;bottom:-1px;
-  height:18%;
-  z-index:2;
-  pointer-events:none;
-  background:linear-gradient(180deg,rgba(242,226,207,0) 0%,rgba(242,226,207,.42) 52%,#f2e2cf 100%);
-}
 .reference-home .ref-stage{display:none!important}
-.reference-home .ref-copy{position:absolute;inset:0;z-index:4;max-width:none;padding:0;pointer-events:none;background:none!important}
+.reference-home .ref-copy{position:absolute;inset:0;z-index:4;max-width:none;padding:0!important;pointer-events:none;background:none!important}
 .reference-home .ref-copy>*:not(.ref-actions){display:none!important}
-.reference-home .ref-actions{position:absolute;left:6.4%;bottom:4.5%;display:flex;gap:12px;width:auto;margin:0;pointer-events:auto;z-index:5}
+.reference-home .ref-actions{position:absolute;left:6.4%;bottom:5.5%;display:flex;gap:12px;width:auto;margin:0;pointer-events:auto;z-index:5}
 .reference-home .ref-actions .btn{min-height:46px;padding:11px 18px;font-size:10px;letter-spacing:.07em}
 .reference-home .ref-actions .btn-gold{background:linear-gradient(135deg,#805126,#a56f35 48%,#c4945d);color:#fff;box-shadow:0 10px 24px rgba(68,38,13,.22)}
-.reference-home .ref-actions .btn-outline{background:rgba(250,242,232,.9);border:1px solid #8d6236;backdrop-filter:blur(7px)}
+.reference-home .ref-actions .btn-outline{background:rgba(250,242,232,.92);border:1px solid #8d6236}
+
+/* subtle continuation only — never veil the product photography */
+.reference-home .ref-hero:after{content:"";position:absolute;z-index:2;left:0;right:0;bottom:-1px;height:7%;pointer-events:none;background:linear-gradient(to bottom,transparent,#f2e3d2)}
 
 @media(min-width:761px){
-  .reference-home .ref-features{position:relative;z-index:6;margin-top:-28px!important;box-shadow:0 18px 38px rgba(79,49,25,.12)}
-  .reference-home .ref-occ{padding-top:28px}
-  .reference-home .ref-lower{margin-top:10px}
+ .reference-home .ref-features{position:relative;z-index:6;margin-top:-18px!important}
+ .reference-home .ref-occ{padding-top:24px}
 }
 
-/* Mobile: artwork first, actions below it, soft tonal transition into the page. */
 @media(max-width:760px){
-  .reference-home .ref-header{height:92px!important;padding:0 16px!important}
-  .reference-home .ref-logo img{width:196px!important;height:74px!important}
-  .reference-home .ref-utility{height:40px!important}
+  .reference-home .ref-utility{height:38px!important;font-size:10px!important;padding:0 14px!important}
+  .reference-home .ref-social{display:none!important}
+  .reference-home .ref-header{height:86px!important;padding:0 18px!important}
+  .reference-home .ref-logo img{width:190px!important;height:auto!important;max-height:70px!important;object-fit:contain!important}
+  .reference-home .ref-nav{display:none}
+  .reference-home .ref-menu{display:flex!important}
+  .reference-home .ref-search{display:none!important}
 
+  /* Mobile uses the complete 3:2 artwork. No zoom, no crop, no distortion. */
   .reference-home .ref-hero{
     width:100%;
-    aspect-ratio:3/2;
+    height:auto!important;
     min-height:0!important;
-    background-size:cover!important;
-    background-position:center center!important;
+    aspect-ratio:3/2!important;
+    margin:0!important;
+    overflow:hidden!important;
+    background-size:100% 100%!important;
+    background-position:center!important;
     background-repeat:no-repeat!important;
-    background-color:#ead7c2;
-    margin:0 0 84px 0;
-    overflow:visible;
   }
-  .reference-home .ref-hero::before{
-    content:"";
-    position:absolute;
-    inset:auto 0 -42px 0;
-    height:118px;
-    z-index:1;
-    pointer-events:none;
-    background:linear-gradient(180deg,rgba(241,224,205,0) 0%,rgba(241,224,205,.72) 45%,#f1e0cd 78%,#f4e7d7 100%);
-  }
-  .reference-home .ref-hero::after{
-    bottom:-22px;
-    height:24%;
-    background:linear-gradient(180deg,rgba(243,228,210,0) 0%,rgba(243,228,210,.5) 58%,#f2e3d1 100%);
-  }
-  .reference-home .ref-copy{position:absolute;inset:0;padding:0!important;background:none!important;overflow:visible}
-  .reference-home .ref-actions{
-    position:absolute;
-    left:18px;right:18px;
-    bottom:-66px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    width:auto;
-    margin:0;
-    padding:10px;
-    border:1px solid rgba(139,91,45,.16);
-    background:rgba(250,243,234,.82);
-    backdrop-filter:blur(12px);
-    box-shadow:0 14px 30px rgba(74,45,23,.10);
-  }
-  .reference-home .ref-actions .btn{min-height:42px;padding:9px 8px;font-size:8.2px;letter-spacing:.05em;white-space:nowrap}
+  .reference-home .ref-hero:after{height:10%;background:linear-gradient(to bottom,transparent,#f3e5d5)}
+  .reference-home .ref-copy{overflow:hidden!important}
 
-  .reference-home .ref-features{
-    position:relative;
-    z-index:3;
-    margin:0 12px 24px!important;
-    grid-template-columns:1fr 1fr!important;
-    box-shadow:0 14px 34px rgba(67,41,20,.09)
+  /* keep controls clear of the campaign headline */
+  .reference-home .ref-actions{
+    left:auto!important;
+    right:14px!important;
+    bottom:15px!important;
+    width:43%!important;
+    display:flex!important;
+    flex-direction:column!important;
+    gap:6px!important;
+    padding:0!important;
+    background:none!important;
+    border:0!important;
+    box-shadow:none!important;
+    backdrop-filter:none!important;
   }
-  .reference-home .ref-feature{min-height:98px!important;padding:15px 10px!important}
-  .reference-home .ref-occ{padding:8px 12px 24px!important}
-  .reference-home .ref-occ h2{font-size:27px!important;margin-bottom:14px!important;line-height:1.05!important}
+  .reference-home .ref-actions .btn{width:100%!important;min-height:34px!important;padding:7px 5px!important;font-size:7px!important;line-height:1.1!important;white-space:normal!important;text-align:center!important}
+
+  .reference-home .ref-features{position:relative;z-index:3;margin:0!important;grid-template-columns:1fr 1fr!important;box-shadow:none!important;border-radius:0!important}
+  .reference-home .ref-feature{min-height:116px!important;padding:18px 12px!important}
+  .reference-home .ref-feature:last-child{grid-column:1/-1;min-height:82px!important}
+  .reference-home .ref-occ{padding:24px 14px!important}
+  .reference-home .ref-occ h2{font-size:29px!important;line-height:1.05!important;margin-bottom:18px!important}
   .reference-home .ref-occ-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;overflow:visible!important}
-  .reference-home .ref-occ-card{min-width:0!important;width:100%!important;height:166px!important}
-  .reference-home .ref-lower{margin:0 12px 22px!important}
-  .reference-home .ref-sizes,.reference-home .ref-how,.reference-home .ref-cta{padding:20px 16px!important}
-  .reference-home .ref-footer{margin-top:18px}
+  .reference-home .ref-occ-card{min-width:0!important;width:100%!important;height:165px!important}
+  .reference-home .ref-lower{margin:0 14px 22px!important}
+  .reference-home .ref-sizes,.reference-home .ref-how,.reference-home .ref-cta{padding:22px 16px!important}
+  .reference-home .ref-footer{margin-top:16px}
 }
 
 @media(max-width:430px){
-  .reference-home .ref-logo img{width:184px!important}
-  .reference-home .ref-hero{margin-bottom:82px}
-  .reference-home .ref-actions{left:12px;right:12px;bottom:-64px;gap:7px;padding:8px}
-  .reference-home .ref-actions .btn{min-height:39px;font-size:7.4px;padding:7px 5px}
-  .reference-home .ref-occ-card{height:148px!important}
+ .reference-home .ref-header{height:82px!important}
+ .reference-home .ref-logo img{width:174px!important}
+ .reference-home .ref-actions{right:9px!important;bottom:9px!important;width:44%!important;gap:4px!important}
+ .reference-home .ref-actions .btn{min-height:29px!important;font-size:6.2px!important;padding:5px 3px!important}
+ .reference-home .ref-feature{min-height:108px!important}
+ .reference-home .ref-occ-card{height:148px!important}
 }
