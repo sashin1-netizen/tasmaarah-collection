@@ -1,0 +1,40 @@
+/* Tasmaarah 2027 texture + art-direction layer */
+:root{--tc-paper:#f7eee3;--tc-parchment:#ead7c0;--tc-gold:#9f713d;--tc-deep:#1b1511}
+body{position:relative;background:
+radial-gradient(ellipse at 8% 14%,rgba(130,87,47,.10),transparent 25%),
+radial-gradient(ellipse at 92% 82%,rgba(130,87,47,.09),transparent 25%),
+linear-gradient(120deg,#f8f0e6 0%,#ead8c4 48%,#f5e9dc 100%);background-attachment:fixed}
+body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.72;background-image:
+repeating-linear-gradient(0deg,rgba(83,54,31,.020) 0 1px,transparent 1px 4px),
+repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 1px,transparent 1px 5px),
+radial-gradient(circle at 12% 76%,rgba(119,78,42,.08) 0 1px,transparent 1.5px),
+radial-gradient(circle at 82% 22%,rgba(119,78,42,.055) 0 1px,transparent 1.5px);background-size:auto,auto,9px 9px,11px 11px;mix-blend-mode:multiply}
+main{position:relative;overflow:hidden}
+main:before,main:after{content:"";position:absolute;z-index:-1;pointer-events:none;width:420px;height:650px;opacity:.23;filter:blur(.2px);background:
+radial-gradient(ellipse at 48% 12%,transparent 0 56%,rgba(126,83,43,.28) 57% 59%,transparent 60%),
+radial-gradient(ellipse at 58% 28%,transparent 0 58%,rgba(126,83,43,.22) 59% 61%,transparent 62%),
+radial-gradient(ellipse at 40% 47%,transparent 0 60%,rgba(126,83,43,.18) 61% 63%,transparent 64%)}
+main:before{left:-230px;top:310px;transform:rotate(-22deg)}main:after{right:-245px;top:1040px;transform:rotate(21deg) scaleX(-1)}
+.utility-bar{background:linear-gradient(90deg,rgba(103,70,38,.96),rgba(151,111,68,.94),rgba(103,70,38,.96));box-shadow:inset 0 -1px rgba(255,255,255,.12)}
+.site-header{background:rgba(250,244,236,.90);border-bottom:1px solid rgba(132,89,48,.22);box-shadow:0 14px 35px rgba(70,44,23,.07)}
+.hero{position:relative}.hero:before{content:"";position:absolute;inset:14px 0 20px;z-index:-1;background:linear-gradient(95deg,rgba(255,251,245,.68),rgba(239,222,202,.28));border:1px solid rgba(154,111,66,.12);box-shadow:inset 0 0 80px rgba(141,92,49,.05)}
+.hero-main{background:linear-gradient(145deg,#f7eadb,#ddc3a4);box-shadow:0 28px 65px rgba(60,37,19,.18),inset 0 0 0 1px rgba(255,255,255,.62)}
+.hero-main:after,.hero-small:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(125deg,rgba(255,246,229,.10),transparent 48%,rgba(74,42,18,.08));mix-blend-mode:soft-light}
+.hero-main img,.hero-small img{filter:saturate(.92) contrast(1.035) sepia(.035)}
+.feature-grid,.process,.cta,.fact-panel,.quote-form{backdrop-filter:blur(9px)}
+.feature-grid{background:linear-gradient(110deg,rgba(252,247,240,.91),rgba(234,218,199,.84));box-shadow:0 18px 44px rgba(70,43,21,.09),inset 0 0 0 1px rgba(255,255,255,.55)}
+.occasion-section,.work-section{position:relative}.occasion-section:before,.work-section:before{content:"";position:absolute;left:2%;right:2%;top:32px;bottom:32px;z-index:-1;border-top:1px solid rgba(153,106,59,.13);border-bottom:1px solid rgba(153,106,59,.13);background:linear-gradient(90deg,transparent,rgba(255,252,247,.34) 12%,rgba(255,252,247,.34) 88%,transparent)}
+.occasion-card{background:#d5bea3;border:1px solid rgba(123,82,43,.28);box-shadow:0 18px 38px rgba(54,34,18,.12)}
+.occasion-card img{filter:saturate(.90) contrast(1.04) sepia(.025)}
+.occasion-card:after{inset:52% 0 0;background:linear-gradient(transparent,rgba(20,14,10,.96))}
+.occasion-card span{left:0;right:0;bottom:0;padding:17px 18px;background:linear-gradient(90deg,rgba(20,15,12,.93),rgba(27,20,15,.86));border-top:1px solid rgba(212,176,132,.26);text-align:center}.occasion-card b{font-size:23px;text-transform:uppercase;letter-spacing:.045em}.occasion-card small{display:none}
+.editorial{position:relative;border:1px solid rgba(187,145,96,.25)}.editorial:after{content:"";position:absolute;inset:12px;pointer-events:none;border:1px solid rgba(208,168,118,.12)}.editorial-image img{filter:saturate(.88) contrast(1.05) sepia(.04)}
+.process{background:linear-gradient(112deg,rgba(251,246,239,.90),rgba(231,213,193,.84));box-shadow:0 18px 42px rgba(65,40,20,.08)}
+.gallery-preview figure,.catalog-card,.masonry-gallery figure{position:relative;background:linear-gradient(145deg,#f4e6d7,#d9c1a5);border:1px solid rgba(135,91,48,.24);box-shadow:0 16px 38px rgba(53,33,17,.11);overflow:hidden}
+.gallery-preview figure:before,.catalog-card:before,.masonry-gallery figure:before{content:"";position:absolute;inset:7px;z-index:2;border:1px solid rgba(255,255,255,.38);pointer-events:none}
+.gallery-preview img,.catalog-card img,.masonry-gallery img{filter:saturate(.91) contrast(1.045) sepia(.02);transition:transform .55s ease,filter .55s ease}.gallery-preview figure:hover img,.catalog-card:hover img,.masonry-gallery figure:hover img{transform:scale(1.018);filter:saturate(.98) contrast(1.05)}
+.gallery-preview figure:nth-child(2) img,.gallery-preview figure:nth-child(3) img,.catalog-card img{object-fit:cover}
+.page-hero img,.occasion-detail img{filter:saturate(.90) contrast(1.04) sepia(.03);box-shadow:0 22px 50px rgba(58,36,18,.12)}
+.cta{position:relative;background:linear-gradient(108deg,rgba(244,229,211,.94),rgba(226,202,176,.88));box-shadow:0 18px 42px rgba(64,40,20,.09)}.cta:before{content:"";position:absolute;inset:8px;border:1px solid rgba(149,101,54,.15);pointer-events:none}
+.footer{position:relative;background:linear-gradient(120deg,#17120f,#241a13 55%,#15110e)}.footer:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;background:repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 1px,transparent 1px 7px)}
+@media(max-width:700px){body{background:linear-gradient(150deg,#f9f2e8,#ead7c0 54%,#f7ecdf)}main:before{left:-310px;top:220px;opacity:.18}main:after{right:-315px;top:1350px;opacity:.15}.hero:before{inset:6px 5px 12px}.hero-main{box-shadow:0 20px 44px rgba(58,35,18,.16)}.occasion-section:before,.work-section:before{left:0;right:0}.occasion-card{min-width:79vw}.occasion-card span{padding:14px 12px}.occasion-card b{font-size:20px}.gallery-preview figure:before,.catalog-card:before,.masonry-gallery figure:before{inset:5px}.feature-grid{box-shadow:0 14px 32px rgba(60,37,18,.08)}}
