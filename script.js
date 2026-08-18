@@ -4,6 +4,12 @@
   const root=document.documentElement;
   root.classList.add('js');
 
+  const luxuryStyle=document.createElement('link');
+  luxuryStyle.rel='stylesheet';
+  luxuryStyle.href='atelier-luxury.css?v=1';
+  luxuryStyle.dataset.tasmaarahLuxury='true';
+  document.head.appendChild(luxuryStyle);
+
   const safeStorage={
     get(key){try{return localStorage.getItem(key)}catch{return null}},
     set(key,value){try{localStorage.setItem(key,value)}catch{}}
