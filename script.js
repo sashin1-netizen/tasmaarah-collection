@@ -96,3 +96,38 @@ if(gallery.length){
 }
 
 document.querySelectorAll('main img').forEach(img=>{if(!img.closest('.ref-hero')&&!img.hasAttribute('loading'))img.loading='lazy';img.decoding='async'});
+
+// Luxury interactive background: decorative only, never blocks content or input.
+const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const orbit=document.createElement('div');
+orbit.className='texture-orbit';
+orbit.setAttribute('aria-hidden','true');
+orbit.innerHTML='<i class="orb orb-a"></i><i class="orb orb-b"></i><i class="orb orb-c"></i><i class="leaf leaf-a"></i><i class="leaf leaf-b"></i>';
+document.body.prepend(orbit);
+
+if(!reduceMotion){
+  let targetX=50,targetY=22,currentX=50,currentY=22,raf=0;
+  const paint=()=>{
+    currentX+=(targetX-currentX)*.075;
+    currentY+=(targetY-currentY)*.075;
+    document.documentElement.style.setProperty('--tx-x',`${currentX.toFixed(2)}%`);
+    document.documentElement.style.setProperty('--tx-y',`${currentY.toFixed(2)}%`);
+    const dx=(currentX-50)/50,dy=(currentY-50)/50;
+    orbit.style.transform=`translate3d(${(dx*6).toFixed(2)}px,${(dy*5).toFixed(2)}px,0)`;
+    raf=requestAnimationFrame(paint);
+  };
+  const move=(x,y)=>{targetX=Math.max(0,Math.min(100,(x/window.innerWidth)*100));targetY=Math.max(0,Math.min(100,(y/window.innerHeight)*100))};
+  window.addEventListener('pointermove',e=>move(e.clientX,e.clientY),{passive:true});
+  window.addEventListener('touchmove',e=>{const t=e.touches[0];if(t)move(t.clientX,t.clientY)},{passive:true});
+  raf=requestAnimationFrame(paint);
+  window.addEventListener('pagehide',()=>cancelAnimationFrame(raf),{once:true});
+}
+
+// Card glow follows pointer, adding depth without shifting layout.
+document.querySelectorAll('.catalog-card,.occasion-detail article,.custom-grid article,.quote-form,.ref-occ-card').forEach(card=>{
+  card.addEventListener('pointermove',e=>{
+    const r=card.getBoundingClientRect();
+    card.style.setProperty('--card-x',`${((e.clientX-r.left)/r.width*100).toFixed(1)}%`);
+    card.style.setProperty('--card-y',`${((e.clientY-r.top)/r.height*100).toFixed(1)}%`);
+  },{passive:true});
+});
