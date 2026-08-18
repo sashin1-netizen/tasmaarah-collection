@@ -15,6 +15,16 @@
     set(key,value){try{localStorage.setItem(key,value)}catch{}}
   };
 
+  const focusableSelector='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+  const trapTab=(event,container)=>{
+    if(event.key!=='Tab'||!container)return;
+    const focusable=[...container.querySelectorAll(focusableSelector)].filter(el=>el.offsetParent!==null);
+    if(!focusable.length)return;
+    const first=focusable[0],last=focusable[focusable.length-1];
+    if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+  };
+
   const motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');
   const motionButton=document.querySelector('.motion-toggle');
   const savedMotion=safeStorage.get('tasmaarah-motion');
@@ -128,7 +138,11 @@
     });
     closeButton?.addEventListener('click',close);
     quickView.addEventListener('click',event=>{if(event.target===quickView)close()});
-    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&quickView.classList.contains('open'))close()});
+    document.addEventListener('keydown',event=>{
+      if(!quickView.classList.contains('open'))return;
+      if(event.key==='Escape')close();
+      else trapTab(event,quickView);
+    });
   }
 
   const quoteForm=document.querySelector('#quote-form');
@@ -198,14 +212,27 @@
     lightbox.addEventListener('click',event=>{if(event.target===lightbox)close()});
     lightbox.addEventListener('touchstart',event=>{touchStartX=event.touches[0]?.clientX||0},{passive:true});
     lightbox.addEventListener('touchend',event=>{const x=event.changedTouches[0]?.clientX||touchStartX;const delta=x-touchStartX;if(Math.abs(delta)>48)show(index+(delta<0?1:-1))},{passive:true});
-    document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('open'))return;if(event.key==='Escape')close();if(event.key==='ArrowLeft')show(index-1);if(event.key==='ArrowRight')show(index+1)});
+    document.addEventListener('keydown',event=>{
+      if(!lightbox.classList.contains('open'))return;
+      if(event.key==='Escape')close();
+      else if(event.key==='ArrowLeft')show(index-1);
+      else if(event.key==='ArrowRight')show(index+1);
+      else trapTab(event,lightbox);
+    });
   }
 
-  /* Warm the small homepage campaign sets immediately at low priority so fast scrolls never expose empty frames. */
+  /* Prioritise the first story beat; defer the below-fold gallery until scroll or browser idle. */
   const warmCampaign=()=>document.querySelectorAll('.occasion-grid img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
-  const warmGallery=()=>document.querySelectorAll('.gallery-tease img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
+  let galleryWarmed=false;
+  const warmGallery=()=>{
+    if(galleryWarmed)return;
+    galleryWarmed=true;
+    document.querySelectorAll('.gallery-tease img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
+  };
   warmCampaign();
-  warmGallery();
+  window.addEventListener('scroll',warmGallery,{once:true,passive:true});
+  if('requestIdleCallback' in window)requestIdleCallback(warmGallery,{timeout:1800});
+  else setTimeout(warmGallery,1800);
 
   /* Core content always remains visible; reveal motion enhances rather than gates access. */
   const reveals=[...document.querySelectorAll('[data-reveal]')];
