@@ -6,7 +6,7 @@
 
   const art=document.createElement('link');
   art.rel='stylesheet';
-  art.href='atelier-client-ready.css?v=5';
+  art.href='atelier-client-ready.css?v=6';
   art.dataset.tasmaarahArt='true';
   document.head.appendChild(art);
 
@@ -201,13 +201,11 @@
     document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('open'))return;if(event.key==='Escape')close();if(event.key==='ArrowLeft')show(index-1);if(event.key==='ArrowRight')show(index+1)});
   }
 
-  /* Warm only the four campaign cards after the critical hero has loaded. */
+  /* Warm the small homepage campaign sets immediately at low priority so fast scrolls never expose empty frames. */
   const warmCampaign=()=>document.querySelectorAll('.occasion-grid img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
   const warmGallery=()=>document.querySelectorAll('.gallery-tease img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
-  window.addEventListener('load',()=>{
-    setTimeout(warmCampaign,80);
-    if(window.matchMedia('(max-width:700px)').matches)setTimeout(warmGallery,700);
-  },{once:true});
+  warmCampaign();
+  warmGallery();
 
   /* Core content always remains visible; reveal motion enhances rather than gates access. */
   const reveals=[...document.querySelectorAll('[data-reveal]')];
