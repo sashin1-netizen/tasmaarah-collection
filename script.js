@@ -6,7 +6,7 @@
 
   const art=document.createElement('link');
   art.rel='stylesheet';
-  art.href='atelier-client-ready.css?v=4';
+  art.href='atelier-client-ready.css?v=5';
   art.dataset.tasmaarahArt='true';
   document.head.appendChild(art);
 
@@ -201,10 +201,13 @@
     document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('open'))return;if(event.key==='Escape')close();if(event.key==='ArrowLeft')show(index-1);if(event.key==='ArrowRight')show(index+1)});
   }
 
+  /* Warm only the four campaign cards after the critical hero has loaded. */
+  const warmCampaign=()=>document.querySelectorAll('.occasion-grid img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
   const warmGallery=()=>document.querySelectorAll('.gallery-tease img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
-  if(window.matchMedia('(max-width:700px)').matches){
-    window.addEventListener('load',()=>setTimeout(warmGallery,450),{once:true});
-  }
+  window.addEventListener('load',()=>{
+    setTimeout(warmCampaign,80);
+    if(window.matchMedia('(max-width:700px)').matches)setTimeout(warmGallery,700);
+  },{once:true});
 
   /* Core content always remains visible; reveal motion enhances rather than gates access. */
   const reveals=[...document.querySelectorAll('[data-reveal]')];
@@ -213,14 +216,16 @@
       entries.forEach(entry=>{
         if(!entry.isIntersecting)return;
         entry.target.querySelectorAll('img[loading="lazy"]').forEach(img=>{img.loading='eager'});
-        entry.target.classList.add('is-visible');
+        entry.target.classList.remove('reveal-enter');
+        void entry.target.offsetWidth;
+        entry.target.classList.add('reveal-enter');
         observer.unobserve(entry.target);
       });
-    },{threshold:0,rootMargin:'65% 0px 65% 0px'});
-    reveals.forEach((el,i)=>{el.style.transitionDelay=`${Math.min(i%3,2)*55}ms`;observer.observe(el)});
-  }else reveals.forEach(el=>el.classList.add('is-visible'));
+    },{threshold:.06,rootMargin:'20% 0px 20% 0px'});
+    reveals.forEach(el=>observer.observe(el));
+  }
 
-  /* Keep pointermove support desktop-only; mobile does no continuous pointer/touch styling work. */
+  /* Desktop-only pointer work; mobile does no continuous touch styling work. */
   if(window.matchMedia('(pointer:fine)').matches){
     let pointerRaf=0;
     window.addEventListener('pointermove',event=>{
