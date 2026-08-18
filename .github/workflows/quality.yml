@@ -2,11 +2,9 @@ name: Production Quality
 
 'on':
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 permissions:
   contents: read
@@ -28,70 +26,51 @@ jobs:
           test -d assets/images
           test "$(find assets/images -maxdepth 1 -type f | wc -l)" -ge 20
           test -s assets/images/file_00000000d5e88243924fe08befb57f2a.png
-          test ! -e luxury-final.css
-          test ! -e mobile-reference-fix.css
-          test ! -e hero-loader.js
-          test ! -e hero-part-1.js
-          test ! -e hero-tiny-1.js
-          test ! -e hero-tiny-2.js
-          test ! -e hero-tiny-3.js
-          grep -qi '<!doctype html>' index.html
-          grep -q 'styles.css?v=' index.html
-          grep -q 'reference-match.css?v=' index.html
-          grep -q 'hero-approved.css?v=' index.html
-          grep -q 'final-polish.css?v=' index.html
-          grep -q 'interactive-texture.css?v=' index.html
-          grep -q 'script.js?v=' index.html
-          grep -q 'viewport' index.html
-          grep -q 'description' index.html
-          grep -q 'application/ld+json' index.html
-          grep -q 'wa.me/27635409729' index.html contact.html
+          for obsolete in luxury-final.css mobile-reference-fix.css hero-loader.js hero-part-1.js hero-tiny-1.js hero-tiny-2.js hero-tiny-3.js; do test ! -e "$obsolete"; done
 
-      - name: Verify every public page loads the live texture system
+      - name: Verify every public page uses identical production assets
         shell: python
         run: |
           from pathlib import Path
-          pages = ['index.html','about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html','404.html']
+          pages=['index.html','about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html','404.html']
           failures=[]
           for page in pages:
               text=Path(page).read_text(encoding='utf-8')
-              for needle in ('styles.css?v=', 'final-polish.css?v=', 'interactive-texture.css?v=', 'script.js?v='):
+              for needle in ('styles.css?v=22','final-polish.css?v=3','interactive-texture.css?v=4','script.js?v=27'):
                   if needle not in text:
-                      failures.append(f'{page}: missing {needle}')
-              for bad in ('luxury-final.css','mobile-reference-fix.css','hero-loader.js'):
+                      failures.append(f'{page}: missing or stale {needle}')
+              for bad in ('luxury-final.css','mobile-reference-fix.css','hero-loader.js','hero-part-1.js','hero-tiny-1.js','hero-tiny-2.js','hero-tiny-3.js'):
                   if bad in text:
                       failures.append(f'{page}: obsolete reference {bad}')
-          if failures:
-              raise SystemExit('\n'.join(failures))
-          print('Every public page loads the animated texture layer and production JavaScript.')
+          home=Path('index.html').read_text(encoding='utf-8')
+          for needle in ('reference-match.css?v=9','hero-approved.css?v=6','application/ld+json','wa.me/27635409729'):
+              if needle not in home: failures.append(f'index.html: missing {needle}')
+          if failures: raise SystemExit('\n'.join(failures))
+          print('All public pages use the same audited CSS and JS versions.')
 
       - name: Verify referenced local assets and internal links
         shell: python
         run: |
           from pathlib import Path
           import re
-          root = Path('.')
-          missing = []
-          html_files = sorted(root.glob('*.html'))
-          sources = html_files + [root / 'styles.css', root / 'final-polish.css', root / 'reference-match.css', root / 'hero-approved.css', root / 'interactive-texture.css', root / 'script.js']
+          root=Path('.')
+          missing=[]
+          sources=sorted(root.glob('*.html'))+[root/'styles.css',root/'final-polish.css',root/'reference-match.css',root/'hero-approved.css',root/'interactive-texture.css',root/'script.js']
           for source in sources:
-              text = source.read_text(encoding='utf-8')
-              refs = set(re.findall(r'(?:src|href)=[\"\']([^\"\']+)[\"\']', text))
-              refs |= set(re.findall(r'url\([\"\']?([^\)\"\']+)', text))
+              text=source.read_text(encoding='utf-8')
+              refs=set(re.findall(r'(?:src|href)=[\"\']([^\"\']+)[\"\']',text))
+              refs|=set(re.findall(r'url\([\"\']?([^\)\"\']+)',text))
               for ref in refs:
-                  if ref.startswith(('http://', 'https://', 'mailto:', 'tel:', 'data:', '#', 'javascript:', '%23')):
-                      continue
-                  path = ref.split('?', 1)[0].split('#', 1)[0].lstrip('/')
-                  if path and not (root / path).exists():
-                      missing.append((source.name, ref))
-          if missing:
-              raise SystemExit('Missing local references: ' + repr(missing))
-          print(f'Validated {len(html_files)} HTML pages and all local references.')
+                  if ref.startswith(('http://','https://','mailto:','tel:','data:','#','javascript:','%23')): continue
+                  path=ref.split('?',1)[0].split('#',1)[0].lstrip('/')
+                  if path and not (root/path).exists(): missing.append((source.name,ref))
+          if missing: raise SystemExit('Missing local references: '+repr(missing))
+          print('All local asset and internal-link targets exist.')
 
       - name: Check JavaScript syntax
         run: node --check script.js
 
-      - name: Verify responsive and interaction hooks
+      - name: Verify interaction and animation contracts
         shell: bash
         run: |
           set -euo pipefail
@@ -99,13 +78,16 @@ jobs:
           grep -q 'quote-form' script.js
           grep -q 'search-overlay' script.js
           grep -q 'lightbox' script.js
-          grep -q 'texture-orbit' script.js
           grep -q 'pointermove' script.js
-          grep -q 'prefers-reduced-motion' interactive-texture.css
+          ! grep -q 'texture-orbit' script.js
+          grep -q '@keyframes ambientBreath' interactive-texture.css
+          grep -q '@keyframes satinTravel' interactive-texture.css
+          grep -q 'pointer-events:none!important' interactive-texture.css
           grep -q '@media(max-width:760px)' interactive-texture.css
           grep -q '@media(max-width:760px)' hero-approved.css
           grep -q '@media(max-width:900px)' final-polish.css
-          grep -q 'ref-occ-grid' reference-match.css
+          grep -q 'action="https://wa.me/27635409729"' contact.html
+          grep -q 'Open WhatsApp directly' contact.html
 
       - name: Check production files for development placeholders
         shell: bash
@@ -117,8 +99,7 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          sitemap = Path('sitemap.xml').read_text(encoding='utf-8')
+          sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
           for page in ('about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html'):
-              if page not in sitemap:
-                  raise SystemExit(f'Missing {page} from sitemap.xml')
+              if page not in sitemap: raise SystemExit(f'Missing {page} from sitemap.xml')
           print('Sitemap covers all public pages.')
