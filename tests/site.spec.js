@@ -85,7 +85,7 @@ test('mobile navigation works as native progressive enhancement', async ({ page 
 });
 
 test('native mobile menu remains usable with JavaScript disabled', async ({ browser }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 }, hasTouch: true });
   const page = await context.newPage();
   await page.goto('/index.html');
   const menu = page.locator('.mobile-menu');
