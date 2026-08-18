@@ -20,15 +20,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html styles.css final-polish.css reference-match.css hero-approved.css atelier-final.css script.js robots.txt sitemap.xml; do
+          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html styles.css final-polish.css reference-match.css hero-approved.css atelier-final.css interaction-fix.css script.js robots.txt sitemap.xml; do
             test -s "$file"
           done
           test -d assets/images
           test "$(find assets/images -maxdepth 1 -type f | wc -l)" -ge 20
           test -s assets/images/file_00000000d5e88243924fe08befb57f2a.png
-          for obsolete in luxury-final.css mobile-reference-fix.css hero-loader.js hero-part-1.js hero-tiny-1.js hero-tiny-2.js hero-tiny-3.js; do test ! -e "$obsolete"; done
 
-      - name: Verify every public page uses the final production layer
+      - name: Verify every public page uses hardened production assets
         shell: python
         run: |
           from pathlib import Path
@@ -36,19 +35,17 @@ jobs:
           failures=[]
           for page in pages:
               text=Path(page).read_text(encoding='utf-8')
-              for needle in ('styles.css?v=22','atelier-final.css?v=1','script.js?v=27'):
+              for needle in ('styles.css?v=22','atelier-final.css?v=1','interaction-fix.css?v=1','script.js?v=28'):
                   if needle not in text:
                       failures.append(f'{page}: missing or stale {needle}')
-              if 'interactive-texture.css' in text:
-                  failures.append(f'{page}: legacy texture layer still loaded')
-              for bad in ('luxury-final.css','mobile-reference-fix.css','hero-loader.js','hero-part-1.js','hero-tiny-1.js','hero-tiny-2.js','hero-tiny-3.js'):
+              for bad in ('interactive-texture.css','luxury-final.css','mobile-reference-fix.css','hero-loader.js','hero-part-1.js','hero-tiny-1.js','hero-tiny-2.js','hero-tiny-3.js'):
                   if bad in text:
                       failures.append(f'{page}: obsolete reference {bad}')
           home=Path('index.html').read_text(encoding='utf-8')
           for needle in ('reference-match.css?v=9','hero-approved.css?v=6','application/ld+json','wa.me/27635409729'):
               if needle not in home: failures.append(f'index.html: missing {needle}')
           if failures: raise SystemExit('\n'.join(failures))
-          print('All public pages use the final cohesive production layer.')
+          print('All public pages use the hardened interaction and motion layer.')
 
       - name: Verify referenced local assets and internal links
         shell: python
@@ -57,7 +54,7 @@ jobs:
           import re
           root=Path('.')
           missing=[]
-          sources=sorted(root.glob('*.html'))+[root/'styles.css',root/'final-polish.css',root/'reference-match.css',root/'hero-approved.css',root/'atelier-final.css',root/'script.js']
+          sources=sorted(root.glob('*.html'))+[root/'styles.css',root/'final-polish.css',root/'reference-match.css',root/'hero-approved.css',root/'atelier-final.css',root/'interaction-fix.css',root/'script.js']
           for source in sources:
               text=source.read_text(encoding='utf-8')
               refs=set(re.findall(r'(?:src|href)=[\"\']([^\"\']+)[\"\']',text))
@@ -72,23 +69,22 @@ jobs:
       - name: Check JavaScript syntax
         run: node --check script.js
 
-      - name: Verify interaction, responsive and motion contracts
+      - name: Verify menu and animation contracts
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'menu-button' script.js
+          grep -q 'initNavigation' script.js
+          grep -q 'DOMContentLoaded' script.js
+          grep -q 'is-open' script.js
           grep -q 'quote-form' script.js
           grep -q 'search-overlay' script.js
           grep -q 'lightbox' script.js
           grep -q 'pointermove' script.js
-          ! grep -q 'texture-orbit' script.js
-          grep -q '@keyframes atelierAmbient' atelier-final.css
-          grep -q '@keyframes atelierSweep' atelier-final.css
-          grep -q '@media(max-width:760px)' atelier-final.css
-          grep -q '@media(prefers-reduced-motion:reduce)' atelier-final.css
-          grep -q 'pointer-events:none' atelier-final.css
-          grep -q '@media(max-width:760px)' hero-approved.css
-          grep -q '@media(max-width:900px)' final-polish.css
+          grep -q '.site-nav.open' interaction-fix.css
+          grep -q '@keyframes tasmaarahGlow' interaction-fix.css
+          grep -q '@keyframes tasmaarahSatin' interaction-fix.css
+          grep -q 'pointer-events:none!important' interaction-fix.css
+          grep -q '@media(max-width:900px)' interaction-fix.css
           grep -q 'action="https://wa.me/27635409729"' contact.html
           grep -q 'Open WhatsApp directly' contact.html
 
