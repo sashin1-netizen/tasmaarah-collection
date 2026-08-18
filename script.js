@@ -29,7 +29,6 @@
     const summary=mobileMenu.querySelector('summary');
     const panel=mobileMenu.querySelector('.mobile-panel');
     const header=document.querySelector('.site-header');
-    const inertTargets=[document.querySelector('main'),document.querySelector('.footer'),document.querySelector('.floating-wa')].filter(Boolean);
     const positionPanel=()=>{
       if(!panel||!header)return;
       const top=Math.max(0,Math.round(header.getBoundingClientRect().bottom));
@@ -43,7 +42,6 @@
       summary?.setAttribute('aria-label',open?'Close navigation':'Open navigation');
       document.body.classList.toggle('menu-open',open);
       document.body.style.overflow=open?'hidden':'';
-      inertTargets.forEach(node=>{try{node.inert=open}catch{}});
       if(open){positionPanel();panel?.querySelector('a')?.focus({preventScroll:true})}
     });
     panel?.querySelectorAll('a').forEach(link=>link.addEventListener('click',closeMenu));
