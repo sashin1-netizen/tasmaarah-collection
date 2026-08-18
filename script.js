@@ -201,6 +201,10 @@
     document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('open'))return;if(event.key==='Escape')close();if(event.key==='ArrowLeft')show(index-1);if(event.key==='ArrowRight')show(index+1)});
   }
 
+  if(window.matchMedia('(max-width:700px)').matches){
+    document.querySelectorAll('.gallery-tease img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
+  }
+
   /* Core content always remains visible; reveal motion enhances rather than gates access. */
   const reveals=[...document.querySelectorAll('[data-reveal]')];
   if('IntersectionObserver' in window&&!motionQuery.matches){
