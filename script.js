@@ -4,6 +4,12 @@
   const root=document.documentElement;
   root.classList.add('js');
 
+  const art=document.createElement('link');
+  art.rel='stylesheet';
+  art.href='atelier-client-ready.css?v=6';
+  art.dataset.tasmaarahArt='true';
+  document.head.appendChild(art);
+
   const safeStorage={
     get(key){try{return localStorage.getItem(key)}catch{return null}},
     set(key,value){try{localStorage.setItem(key,value)}catch{}}
@@ -76,24 +82,86 @@
     filter();
   }
 
+  if(catalogCards.length){
+    const quickView=document.createElement('div');
+    quickView.className='quick-view';
+    quickView.setAttribute('role','dialog');
+    quickView.setAttribute('aria-modal','true');
+    quickView.setAttribute('aria-label','Collection quick view');
+    quickView.innerHTML='<div class="quick-view-panel"><button class="quick-view-close" type="button" aria-label="Close quick view">×</button><div class="quick-view-media"><img alt=""></div><div class="quick-view-copy"><p class="section-kicker">Tasmaarah Collection</p><h2></h2><p class="quick-view-description"></p><div class="quick-view-actions"><a class="btn btn-gold quick-view-whatsapp" target="_blank" rel="noopener">Request this style on WhatsApp</a><a class="btn btn-outline" href="custom-orders.html">Explore custom options</a></div><p class="quick-view-note">Available options depend on material, size, hire or purchase and custom requirements.</p></div></div>';
+    document.body.appendChild(quickView);
+    const closeButton=quickView.querySelector('.quick-view-close');
+    const image=quickView.querySelector('img');
+    const title=quickView.querySelector('h2');
+    const description=quickView.querySelector('.quick-view-description');
+    const whatsapp=quickView.querySelector('.quick-view-whatsapp');
+    let lastFocus=null;
+    const close=()=>{
+      quickView.classList.remove('open');
+      document.body.classList.remove('quick-view-open');
+      lastFocus?.focus?.();
+    };
+    const open=card=>{
+      const cardImage=card.querySelector('img');
+      const cardTitle=card.querySelector('h2')?.textContent.trim()||'Tasmaarah presentation';
+      const cardDescription=card.querySelector('p')?.textContent.trim()||'';
+      lastFocus=document.activeElement;
+      image.src=cardImage?.currentSrc||cardImage?.src||'';
+      image.alt=cardImage?.alt||cardTitle;
+      title.textContent=cardTitle;
+      description.textContent=cardDescription;
+      const message=`Hi Tasmaarah Collection, I'm interested in the ${cardTitle} style shown on your website. Please can you help me with options and a quote?`;
+      whatsapp.href=`https://wa.me/27635409729?text=${encodeURIComponent(message)}`;
+      quickView.classList.add('open');
+      document.body.classList.add('quick-view-open');
+      closeButton?.focus();
+    };
+    catalogCards.forEach(card=>{
+      const actions=card.querySelector('div');
+      const trigger=document.createElement('button');
+      trigger.type='button';
+      trigger.className='catalog-quick';
+      trigger.textContent='Quick view';
+      trigger.setAttribute('aria-label',`Quick view ${card.querySelector('h2')?.textContent.trim()||'collection piece'}`);
+      actions?.appendChild(trigger);
+      trigger.addEventListener('click',()=>open(card));
+    });
+    closeButton?.addEventListener('click',close);
+    quickView.addEventListener('click',event=>{if(event.target===quickView)close()});
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&quickView.classList.contains('open'))close()});
+  }
+
   const quoteForm=document.querySelector('#quote-form');
-  quoteForm?.addEventListener('submit',event=>{
-    event.preventDefault();
-    if(!quoteForm.reportValidity())return;
-    const data=new FormData(quoteForm);
-    const value=name=>String(data.get(name)||'').trim();
-    const message=[
-      "Hi Tasmaarah Collection, I'd like a quote.",
-      '',
-      `Name: ${value('name')}`,
-      `Occasion: ${value('occasion')}`,
-      `Service: ${value('service')}`,
-      `Material: ${value('material')}`,
-      `Size: ${value('size')}`,
-      `Details: ${value('details')||'Not provided'}`
-    ].join('\n');
-    window.location.href=`https://wa.me/27635409729?text=${encodeURIComponent(message)}`;
-  });
+  if(quoteForm){
+    const preview=document.createElement('div');
+    preview.className='quote-preview';
+    preview.setAttribute('aria-live','polite');
+    quoteForm.insertBefore(preview,quoteForm.querySelector('button[type="submit"]'));
+    const value=name=>String(new FormData(quoteForm).get(name)||'').trim();
+    const updatePreview=()=>{
+      preview.innerHTML=`<b>Occasion</b><span>${value('occasion')||'Not selected'}</span><b>Service</b><span>${value('service')||'Not selected'}</span><b>Material</b><span>${value('material')||'Not selected'}</span><b>Size</b><span>${value('size')||'Not selected'}</span>`;
+    };
+    quoteForm.addEventListener('input',updatePreview);
+    quoteForm.addEventListener('change',updatePreview);
+    updatePreview();
+    quoteForm.addEventListener('submit',event=>{
+      event.preventDefault();
+      if(!quoteForm.reportValidity())return;
+      const data=new FormData(quoteForm);
+      const field=name=>String(data.get(name)||'').trim();
+      const message=[
+        "Hi Tasmaarah Collection, I'd like a quote.",
+        '',
+        `Name: ${field('name')}`,
+        `Occasion: ${field('occasion')}`,
+        `Service: ${field('service')}`,
+        `Material: ${field('material')}`,
+        `Size: ${field('size')}`,
+        `Details: ${field('details')||'Not provided'}`
+      ].join('\n');
+      window.location.href=`https://wa.me/27635409729?text=${encodeURIComponent(message)}`;
+    });
+  }
 
   const galleryImages=[...document.querySelectorAll('.masonry-gallery img')];
   if(galleryImages.length){
@@ -107,8 +175,7 @@
     const image=lightbox.querySelector('img');
     const caption=lightbox.querySelector('figcaption');
     const closeButton=lightbox.querySelector('.lightbox-close');
-    let index=0;
-    let lastFocus=null;
+    let index=0,lastFocus=null,touchStartX=0;
     const show=i=>{
       index=(i+galleryImages.length)%galleryImages.length;
       const source=galleryImages[index];
@@ -129,23 +196,45 @@
     lightbox.querySelector('.lightbox-prev')?.addEventListener('click',()=>show(index-1));
     lightbox.querySelector('.lightbox-next')?.addEventListener('click',()=>show(index+1));
     lightbox.addEventListener('click',event=>{if(event.target===lightbox)close()});
+    lightbox.addEventListener('touchstart',event=>{touchStartX=event.touches[0]?.clientX||0},{passive:true});
+    lightbox.addEventListener('touchend',event=>{const x=event.changedTouches[0]?.clientX||touchStartX;const delta=x-touchStartX;if(Math.abs(delta)>48)show(index+(delta<0?1:-1))},{passive:true});
     document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('open'))return;if(event.key==='Escape')close();if(event.key==='ArrowLeft')show(index-1);if(event.key==='ArrowRight')show(index+1)});
   }
 
-  /* Core content always remains visible. Motion is decorative, never a visibility dependency. */
-  document.querySelectorAll('[data-reveal]').forEach(element=>element.classList.add('is-visible'));
+  /* Warm the small homepage campaign sets immediately at low priority so fast scrolls never expose empty frames. */
+  const warmCampaign=()=>document.querySelectorAll('.occasion-grid img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
+  const warmGallery=()=>document.querySelectorAll('.gallery-tease img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
+  warmCampaign();
+  warmGallery();
 
-  let pointerRaf=0;
-  const updatePointer=(x,y)=>{
-    if(document.body.dataset.motion!=='on')return;
-    cancelAnimationFrame(pointerRaf);
-    pointerRaf=requestAnimationFrame(()=>{
-      root.style.setProperty('--pointer-x',`${Math.max(0,Math.min(100,x/window.innerWidth*100)).toFixed(1)}%`);
-      root.style.setProperty('--pointer-y',`${Math.max(0,Math.min(100,y/window.innerHeight*100)).toFixed(1)}%`);
-    });
-  };
-  window.addEventListener('pointermove',event=>updatePointer(event.clientX,event.clientY),{passive:true});
-  window.addEventListener('touchmove',event=>{const touch=event.touches[0];if(touch)updatePointer(touch.clientX,touch.clientY)},{passive:true});
+  /* Core content always remains visible; reveal motion enhances rather than gates access. */
+  const reveals=[...document.querySelectorAll('[data-reveal]')];
+  if('IntersectionObserver' in window&&!motionQuery.matches){
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting)return;
+        entry.target.querySelectorAll('img[loading="lazy"]').forEach(img=>{img.loading='eager'});
+        entry.target.classList.remove('reveal-enter');
+        void entry.target.offsetWidth;
+        entry.target.classList.add('reveal-enter');
+        observer.unobserve(entry.target);
+      });
+    },{threshold:.06,rootMargin:'20% 0px 20% 0px'});
+    reveals.forEach(el=>observer.observe(el));
+  }
+
+  /* Desktop-only pointer work; mobile does no continuous touch styling work. */
+  if(window.matchMedia('(pointer:fine)').matches){
+    let pointerRaf=0;
+    window.addEventListener('pointermove',event=>{
+      if(document.body.dataset.motion!=='on')return;
+      cancelAnimationFrame(pointerRaf);
+      pointerRaf=requestAnimationFrame(()=>{
+        root.style.setProperty('--pointer-x',`${Math.max(0,Math.min(100,event.clientX/window.innerWidth*100)).toFixed(0)}%`);
+        root.style.setProperty('--pointer-y',`${Math.max(0,Math.min(100,event.clientY/window.innerHeight*100)).toFixed(0)}%`);
+      });
+    },{passive:true});
+  }
 
   document.querySelectorAll('main img').forEach(img=>{
     if(img.classList.contains('hero-art'))return;
