@@ -1,69 +1,73 @@
-/* Tasmaarah Collection — animated luxury texture system */
+/* Tasmaarah Collection — visible animated luxury texture system */
 :root{--tx-gold:#a97740;--tx-gold-soft:#d8b98f;--tx-cream:#f7ecde;--tx-ink:#1f1711;--tx-x:50%;--tx-y:22%}
 html,body{background:#f5e8d8}
 body{position:relative;isolation:isolate}
-body:before,body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-3}
-body:before{background:
- radial-gradient(circle at var(--tx-x) var(--tx-y),rgba(196,145,86,.15),transparent 22%),
- radial-gradient(circle at 12% 28%,rgba(255,255,255,.72),transparent 24%),
- radial-gradient(circle at 88% 70%,rgba(143,88,43,.08),transparent 28%),
- linear-gradient(180deg,#fbf5ed 0%,#f3e3d1 48%,#eedbc6 100%);
- transition:background-position .25s ease}
-body:after{z-index:-2;opacity:.45;background-image:
- repeating-linear-gradient(0deg,rgba(102,65,34,.018) 0 1px,transparent 1px 5px),
- repeating-linear-gradient(90deg,rgba(255,255,255,.022) 0 1px,transparent 1px 7px);
- mix-blend-mode:multiply}
+body:before,body:after{content:"";position:fixed;inset:0;pointer-events:none}
+body:before{z-index:0;background:
+ radial-gradient(circle at var(--tx-x) var(--tx-y),rgba(196,145,86,.22),transparent 24%),
+ radial-gradient(circle at 12% 28%,rgba(255,255,255,.68),transparent 25%),
+ radial-gradient(circle at 88% 70%,rgba(143,88,43,.12),transparent 30%),
+ linear-gradient(180deg,#fbf5ed 0%,#f3e3d1 48%,#eedbc6 100%)}
+body:after{z-index:0;opacity:.5;background-image:
+ repeating-linear-gradient(0deg,rgba(102,65,34,.025) 0 1px,transparent 1px 5px),
+ repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 7px);mix-blend-mode:multiply}
+body>*:not(.texture-orbit){position:relative;z-index:1}
 
-/* floating ornamental layer */
-.texture-orbit{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
-.texture-orbit .orb{position:absolute;border:1px solid rgba(164,111,62,.17);border-radius:50%;filter:blur(.1px);will-change:transform,opacity}
-.texture-orbit .orb:before,.texture-orbit .orb:after{content:"";position:absolute;inset:12%;border:1px solid rgba(164,111,62,.10);border-radius:50%}
-.texture-orbit .orb:after{inset:27%;border-style:dashed;opacity:.7}
+/* fixed ornamental layer intentionally visible above flat backgrounds but below interaction */
+.texture-orbit{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;mix-blend-mode:multiply;opacity:.8}
+.texture-orbit .orb{position:absolute;border:1px solid rgba(164,111,62,.30);border-radius:50%;will-change:transform,opacity}
+.texture-orbit .orb:before,.texture-orbit .orb:after{content:"";position:absolute;inset:12%;border:1px solid rgba(164,111,62,.18);border-radius:50%}
+.texture-orbit .orb:after{inset:27%;border-style:dashed;opacity:.85}
 .texture-orbit .orb-a{width:360px;height:360px;left:-130px;top:18vh;animation:orbFloatA 18s ease-in-out infinite}
 .texture-orbit .orb-b{width:290px;height:290px;right:-100px;top:54vh;animation:orbFloatB 22s ease-in-out infinite}
-.texture-orbit .orb-c{width:190px;height:190px;left:58vw;top:10vh;opacity:.55;animation:orbFloatC 16s ease-in-out infinite}
-.texture-orbit .leaf{position:absolute;width:220px;height:220px;opacity:.16;background:
- radial-gradient(ellipse at 30% 50%,transparent 0 27%,rgba(151,102,57,.42) 28% 29%,transparent 30%),
- radial-gradient(ellipse at 70% 50%,transparent 0 27%,rgba(151,102,57,.42) 28% 29%,transparent 30%),
- linear-gradient(62deg,transparent 49.4%,rgba(151,102,57,.38) 50%,transparent 50.6%);
- filter:blur(.15px);will-change:transform}
+.texture-orbit .orb-c{width:190px;height:190px;left:58vw;top:10vh;opacity:.7;animation:orbFloatC 16s ease-in-out infinite}
+.texture-orbit .leaf{position:absolute;width:220px;height:220px;opacity:.26;background:
+ radial-gradient(ellipse at 30% 50%,transparent 0 27%,rgba(151,102,57,.55) 28% 29%,transparent 30%),
+ radial-gradient(ellipse at 70% 50%,transparent 0 27%,rgba(151,102,57,.55) 28% 29%,transparent 30%),
+ linear-gradient(62deg,transparent 49.4%,rgba(151,102,57,.52) 50%,transparent 50.6%);will-change:transform}
 .texture-orbit .leaf-a{left:-42px;bottom:6vh;transform:rotate(-18deg);animation:leafDriftA 19s ease-in-out infinite}
 .texture-orbit .leaf-b{right:2vw;top:30vh;transform:rotate(26deg) scale(.84);animation:leafDriftB 23s ease-in-out infinite}
 
-/* section-level luxury detail */
-.ref-features,.ref-occ,.ref-lower,.section,.inner-heading,.contact-layout,.catalog-grid,.occasion-detail,.custom-grid,.masonry-gallery{position:relative}
+/* moving satin + botanical detail INSIDE sections so it cannot disappear behind opaque panels */
+main{position:relative;overflow:hidden}
+main:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;background:
+ linear-gradient(115deg,transparent 0 38%,rgba(255,255,255,.16) 47%,rgba(255,255,255,.28) 50%,rgba(255,255,255,.12) 54%,transparent 64%),
+ repeating-linear-gradient(135deg,rgba(154,105,57,.018) 0 1px,transparent 1px 14px);background-size:220% 100%,100% 100%;animation:pageSatin 16s ease-in-out infinite}
+main>*{position:relative;z-index:1}
+.ref-features,.ref-occ,.ref-lower,.section,.inner-heading,.contact-layout,.catalog-grid,.occasion-detail,.custom-grid,.masonry-gallery{position:relative;isolation:isolate}
 .ref-features:after,.ref-occ:before,.ref-lower:before,.section:before,.inner-heading:after,.contact-layout:before{content:"";position:absolute;pointer-events:none;z-index:0}
 .ref-features>* ,.ref-occ>* ,.ref-lower>* ,.section>* ,.inner-heading>* ,.contact-layout>*{position:relative;z-index:1}
-.ref-features:after{inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),transparent);transform:translateX(-120%);animation:satinSweep 11s ease-in-out infinite}
-.ref-occ:before{width:250px;height:250px;right:-70px;top:-50px;border:1px solid rgba(166,112,63,.13);border-radius:50%;box-shadow:0 0 0 28px rgba(166,112,63,.025),0 0 0 58px rgba(166,112,63,.018)}
-.ref-lower:before{inset:0;background:linear-gradient(135deg,rgba(255,255,255,.22),transparent 34%,rgba(169,114,63,.035) 60%,transparent 80%)}
-.inner-heading:after{width:210px;height:210px;right:4%;top:18%;border:1px solid rgba(155,102,54,.15);transform:rotate(45deg);box-shadow:0 0 0 18px rgba(155,102,54,.025)}
-.section:before,.contact-layout:before{width:140px;height:140px;left:-54px;top:12%;border:1px solid rgba(155,102,54,.10);transform:rotate(45deg)}
+.ref-features:after{inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.52),rgba(195,143,86,.08),transparent);transform:translateX(-120%);animation:satinSweep 9s ease-in-out infinite}
+.ref-occ:before{width:280px;height:280px;right:-70px;top:-50px;border:1px solid rgba(166,112,63,.22);border-radius:50%;box-shadow:0 0 0 28px rgba(166,112,63,.04),0 0 0 58px rgba(166,112,63,.025);animation:slowSpin 32s linear infinite}
+.ref-lower:before{inset:0;background:linear-gradient(135deg,rgba(255,255,255,.28),transparent 34%,rgba(169,114,63,.07) 60%,transparent 80%);animation:lowerGlow 9s ease-in-out infinite alternate}
+.inner-heading:after{width:230px;height:230px;right:4%;top:12%;border:1px solid rgba(155,102,54,.24);transform:rotate(45deg);box-shadow:0 0 0 18px rgba(155,102,54,.04),0 0 0 42px rgba(155,102,54,.02);animation:diamondFloat 12s ease-in-out infinite}
+.section:before,.contact-layout:before{width:150px;height:150px;left:-54px;top:12%;border:1px solid rgba(155,102,54,.18);transform:rotate(45deg);animation:diamondFloat 14s ease-in-out infinite reverse}
 
-/* cards: interactive light rather than heavy shadow */
+/* interactive card lighting */
 .catalog-card,.occasion-detail article,.custom-grid article,.quote-form,.ref-occ-card{position:relative;overflow:hidden}
-.catalog-card:before,.occasion-detail article:before,.custom-grid article:before,.quote-form:before,.ref-occ-card:before{content:"";position:absolute;inset:-2px;pointer-events:none;z-index:2;background:radial-gradient(circle at var(--card-x,50%) var(--card-y,50%),rgba(255,242,221,.30),transparent 34%);opacity:0;transition:opacity .28s ease}
+.catalog-card:before,.occasion-detail article:before,.custom-grid article:before,.quote-form:before,.ref-occ-card:before{content:"";position:absolute;inset:-2px;pointer-events:none;z-index:2;background:radial-gradient(circle at var(--card-x,50%) var(--card-y,50%),rgba(255,242,221,.44),rgba(213,168,111,.10) 18%,transparent 38%);opacity:.18;transition:opacity .28s ease}
 .catalog-card:hover:before,.occasion-detail article:hover:before,.custom-grid article:hover:before,.quote-form:hover:before,.ref-occ-card:hover:before{opacity:1}
-.catalog-card,.custom-grid article,.quote-form{border-color:rgba(151,99,54,.20)!important;box-shadow:0 20px 46px rgba(77,47,23,.07)}
-.catalog-card:hover,.custom-grid article:hover{transform:translateY(-3px);box-shadow:0 24px 54px rgba(77,47,23,.11)}
+.catalog-card,.custom-grid article,.quote-form{border-color:rgba(151,99,54,.24)!important;box-shadow:0 20px 46px rgba(77,47,23,.08)}
+.catalog-card:hover,.custom-grid article:hover{transform:translateY(-3px);box-shadow:0 24px 54px rgba(77,47,23,.12)}
 .catalog-card img,.ref-occ-card img,.occasion-detail img{transition:transform .65s cubic-bezier(.2,.7,.2,1),filter .45s ease}.catalog-card:hover img,.ref-occ-card:hover img{transform:scale(1.025);filter:saturate(.96) contrast(1.035)}
+.ref-occ .ref-kicker,.section-kicker{position:relative;display:inline-block}.ref-occ .ref-kicker:after,.section-kicker:after{content:"";display:block;width:54px;height:1px;margin:10px auto 0;background:linear-gradient(90deg,transparent,var(--tx-gold),transparent);animation:lineBreath 3.8s ease-in-out infinite}
 
-/* elegant animated separators */
-.ref-occ .ref-kicker,.section-kicker{position:relative;display:inline-block}.ref-occ .ref-kicker:after,.section-kicker:after{content:"";display:block;width:46px;height:1px;margin:10px auto 0;background:linear-gradient(90deg,transparent,var(--tx-gold),transparent);animation:lineBreath 4.5s ease-in-out infinite}
-
-@keyframes orbFloatA{0%,100%{transform:translate3d(0,0,0) rotate(0);opacity:.42}50%{transform:translate3d(22px,-28px,0) rotate(8deg);opacity:.6}}
-@keyframes orbFloatB{0%,100%{transform:translate3d(0,0,0) rotate(0);opacity:.34}50%{transform:translate3d(-26px,22px,0) rotate(-10deg);opacity:.52}}
-@keyframes orbFloatC{0%,100%{transform:translate3d(0,0,0) scale(1);opacity:.32}50%{transform:translate3d(12px,18px,0) scale(1.08);opacity:.48}}
-@keyframes leafDriftA{0%,100%{transform:translate3d(0,0,0) rotate(-18deg)}50%{transform:translate3d(18px,-24px,0) rotate(-10deg)}}
-@keyframes leafDriftB{0%,100%{transform:translate3d(0,0,0) rotate(26deg) scale(.84)}50%{transform:translate3d(-20px,24px,0) rotate(20deg) scale(.9)}}
-@keyframes satinSweep{0%,72%,100%{transform:translateX(-120%)}84%{transform:translateX(120%)}}
-@keyframes lineBreath{0%,100%{opacity:.42;transform:scaleX(.82)}50%{opacity:1;transform:scaleX(1.14)}}
+@keyframes pageSatin{0%,100%{background-position:-85% 0,0 0}50%{background-position:105% 0,0 0}}
+@keyframes orbFloatA{0%,100%{transform:translate3d(0,0,0) rotate(0);opacity:.5}50%{transform:translate3d(26px,-32px,0) rotate(10deg);opacity:.78}}
+@keyframes orbFloatB{0%,100%{transform:translate3d(0,0,0) rotate(0);opacity:.45}50%{transform:translate3d(-30px,26px,0) rotate(-12deg);opacity:.7}}
+@keyframes orbFloatC{0%,100%{transform:translate3d(0,0,0) scale(1);opacity:.42}50%{transform:translate3d(14px,20px,0) scale(1.1);opacity:.7}}
+@keyframes leafDriftA{0%,100%{transform:translate3d(0,0,0) rotate(-18deg)}50%{transform:translate3d(22px,-28px,0) rotate(-8deg)}}
+@keyframes leafDriftB{0%,100%{transform:translate3d(0,0,0) rotate(26deg) scale(.84)}50%{transform:translate3d(-24px,28px,0) rotate(18deg) scale(.92)}}
+@keyframes satinSweep{0%,65%,100%{transform:translateX(-120%)}82%{transform:translateX(120%)}}
+@keyframes lineBreath{0%,100%{opacity:.45;transform:scaleX(.78)}50%{opacity:1;transform:scaleX(1.22)}}
+@keyframes slowSpin{to{transform:rotate(360deg)}}
+@keyframes diamondFloat{0%,100%{transform:translateY(0) rotate(45deg)}50%{transform:translateY(-16px) rotate(50deg)}}
+@keyframes lowerGlow{from{opacity:.5}to{opacity:1}}
 
 @media(max-width:760px){
  body:before{background:
-  radial-gradient(circle at var(--tx-x) var(--tx-y),rgba(188,133,75,.11),transparent 24%),
+  radial-gradient(circle at var(--tx-x) var(--tx-y),rgba(188,133,75,.16),transparent 26%),
   radial-gradient(circle at 15% 25%,rgba(255,255,255,.55),transparent 25%),
   linear-gradient(180deg,#faf2e8 0%,#f0dfcc 100%)}
- .texture-orbit .orb-a{width:220px;height:220px;left:-110px;top:24vh}.texture-orbit .orb-b{width:200px;height:200px;right:-95px;top:62vh}.texture-orbit .orb-c{display:none}.texture-orbit .leaf{width:150px;height:150px;opacity:.10}.texture-orbit .leaf-b{top:38vh}.inner-heading:after{width:110px;height:110px;right:-36px;top:26%}.section:before,.contact-layout:before{width:86px;height:86px;left:-42px}.ref-occ:before{width:150px;height:150px;right:-76px;top:10px}}
-
-@media(prefers-reduced-motion:reduce){.texture-orbit .orb,.texture-orbit .leaf,.ref-features:after,.ref-occ .ref-kicker:after,.section-kicker:after{animation:none!important}.catalog-card,.custom-grid article,.catalog-card img,.ref-occ-card img{transition:none!important}}
+ .texture-orbit{opacity:.62}.texture-orbit .orb-a{width:210px;height:210px;left:-105px;top:24vh}.texture-orbit .orb-b{width:190px;height:190px;right:-90px;top:62vh}.texture-orbit .orb-c{display:none}.texture-orbit .leaf{width:145px;height:145px;opacity:.18}.texture-orbit .leaf-b{top:38vh}.inner-heading:after{width:120px;height:120px;right:-36px;top:26%}.section:before,.contact-layout:before{width:90px;height:90px;left:-42px}.ref-occ:before{width:160px;height:160px;right:-76px;top:10px}main:before{opacity:.75}}
+@media(prefers-reduced-motion:reduce){.texture-orbit .orb,.texture-orbit .leaf,.ref-features:after,.ref-occ .ref-kicker:after,.section-kicker:after,main:before,.ref-occ:before,.inner-heading:after,.section:before,.contact-layout:before,.ref-lower:before{animation:none!important}.catalog-card,.custom-grid article,.catalog-card img,.ref-occ-card img{transition:none!important}}
