@@ -137,6 +137,7 @@
     document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('open'))return;if(event.key==='Escape')close();if(event.key==='ArrowLeft')show(index-1);if(event.key==='ArrowRight')show(index+1)});
   }
 
+  /* Core content always remains visible; reveal motion only enhances the experience. */
   const reveals=[...document.querySelectorAll('[data-reveal]')];
   if('IntersectionObserver' in window&&!motionQuery.matches){
     const observer=new IntersectionObserver(entries=>{
