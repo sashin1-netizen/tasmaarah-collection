@@ -4,11 +4,11 @@
   const root=document.documentElement;
   root.classList.add('js');
 
-  const luxuryStyle=document.createElement('link');
-  luxuryStyle.rel='stylesheet';
-  luxuryStyle.href='atelier-luxury.css?v=1';
-  luxuryStyle.dataset.tasmaarahLuxury='true';
-  document.head.appendChild(luxuryStyle);
+  const art=document.createElement('link');
+  art.rel='stylesheet';
+  art.href='atelier-client-ready.css?v=1';
+  art.dataset.tasmaarahArt='true';
+  document.head.appendChild(art);
 
   const safeStorage={
     get(key){try{return localStorage.getItem(key)}catch{return null}},
@@ -113,8 +113,7 @@
     const image=lightbox.querySelector('img');
     const caption=lightbox.querySelector('figcaption');
     const closeButton=lightbox.querySelector('.lightbox-close');
-    let index=0;
-    let lastFocus=null;
+    let index=0,lastFocus=null;
     const show=i=>{
       index=(i+galleryImages.length)%galleryImages.length;
       const source=galleryImages[index];
@@ -138,16 +137,27 @@
     document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('open'))return;if(event.key==='Escape')close();if(event.key==='ArrowLeft')show(index-1);if(event.key==='ArrowRight')show(index+1)});
   }
 
-  /* Core content always remains visible. Motion is decorative, never a visibility dependency. */
-  document.querySelectorAll('[data-reveal]').forEach(element=>element.classList.add('is-visible'));
+  const reveals=[...document.querySelectorAll('[data-reveal]')];
+  if('IntersectionObserver' in window&&!motionQuery.matches){
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}
+      });
+    },{threshold:.13,rootMargin:'0px 0px -7% 0px'});
+    reveals.forEach((el,i)=>{el.style.transitionDelay=`${Math.min(i%4,3)*70}ms`;observer.observe(el)});
+  }else reveals.forEach(el=>el.classList.add('is-visible'));
 
   let pointerRaf=0;
   const updatePointer=(x,y)=>{
     if(document.body.dataset.motion!=='on')return;
     cancelAnimationFrame(pointerRaf);
     pointerRaf=requestAnimationFrame(()=>{
-      root.style.setProperty('--pointer-x',`${Math.max(0,Math.min(100,x/window.innerWidth*100)).toFixed(1)}%`);
-      root.style.setProperty('--pointer-y',`${Math.max(0,Math.min(100,y/window.innerHeight*100)).toFixed(1)}%`);
+      const px=Math.max(0,Math.min(100,x/window.innerWidth*100)).toFixed(1)+'%';
+      const py=Math.max(0,Math.min(100,y/window.innerHeight*100)).toFixed(1)+'%';
+      root.style.setProperty('--pointer-x',px);
+      root.style.setProperty('--pointer-y',py);
+      root.style.setProperty('--mx',px);
+      root.style.setProperty('--my',py);
     });
   };
   window.addEventListener('pointermove',event=>updatePointer(event.clientX,event.clientY),{passive:true});
