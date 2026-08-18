@@ -28,18 +28,41 @@ jobs:
           test -d assets/images
           test "$(find assets/images -maxdepth 1 -type f | wc -l)" -ge 20
           test -s assets/images/file_00000000d5e88243924fe08befb57f2a.png
+          test ! -e luxury-final.css
+          test ! -e mobile-reference-fix.css
+          test ! -e hero-loader.js
+          test ! -e hero-part-1.js
+          test ! -e hero-tiny-1.js
+          test ! -e hero-tiny-2.js
+          test ! -e hero-tiny-3.js
           grep -qi '<!doctype html>' index.html
           grep -q 'styles.css?v=' index.html
           grep -q 'reference-match.css?v=' index.html
           grep -q 'hero-approved.css?v=' index.html
+          grep -q 'final-polish.css?v=' index.html
           grep -q 'script.js?v=' index.html
           grep -q 'viewport' index.html
           grep -q 'description' index.html
           grep -q 'application/ld+json' index.html
           grep -q 'wa.me/27635409729' index.html contact.html
-          ! grep -q 'luxury-final.css' index.html
-          ! grep -q 'mobile-reference-fix.css' index.html
-          ! grep -q 'hero-loader.js' index.html
+
+      - name: Verify every public page loads stable CSS and JS directly
+        shell: python
+        run: |
+          from pathlib import Path
+          pages = ['index.html','about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html','404.html']
+          failures=[]
+          for page in pages:
+              text=Path(page).read_text(encoding='utf-8')
+              for needle in ('styles.css?v=', 'final-polish.css?v=', 'script.js?v='):
+                  if needle not in text:
+                      failures.append(f'{page}: missing {needle}')
+              for bad in ('luxury-final.css','mobile-reference-fix.css','hero-loader.js'):
+                  if bad in text:
+                      failures.append(f'{page}: obsolete reference {bad}')
+          if failures:
+              raise SystemExit('\n'.join(failures))
+          print('All public pages use deterministic production assets.')
 
       - name: Verify referenced local assets and internal links
         shell: python
