@@ -20,7 +20,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html site.css script.js robots.txt sitemap.xml; do
+          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html site.css script.js robots.txt sitemap.xml package.json playwright.config.js tests/site.spec.js; do
             test -s "$file"
           done
           test -d assets/images
@@ -40,7 +40,7 @@ jobs:
           failures=[]
           for page in pages:
               text=Path(page).read_text(encoding='utf-8')
-              for needle in ('site.css?v=1','script.js?v=31','class="mobile-menu"','class="motion-toggle"','class="skip-link"'):
+              for needle in ('site.css?v=1','script.js?v=33','class="mobile-menu"','class="motion-toggle"','class="skip-link"'):
                   if needle not in text: failures.append(f'{page}: missing {needle}')
               for old in banned:
                   if old in text: failures.append(f'{page}: legacy stylesheet reference {old}')
@@ -50,7 +50,7 @@ jobs:
           for needle in ('application/ld+json','class="hero-art"','fetchpriority="high"','width="1536"','height="1024"','wa.me/27635409729'):
               if needle not in home: failures.append(f'index.html: missing {needle}')
           if failures: raise SystemExit('\n'.join(failures))
-          print('All public pages use one production stylesheet and one interaction layer.')
+          print('All public pages use one production stylesheet and the current interaction build.')
 
       - name: Verify local assets and internal links
         shell: python
@@ -89,7 +89,10 @@ jobs:
           print('Local links, assets and document IDs validated.')
 
       - name: Check JavaScript syntax
-        run: node --check script.js
+        run: |
+          node --check script.js
+          node --check playwright.config.js
+          node --check tests/site.spec.js
 
       - name: Verify resilient navigation and interaction contracts
         shell: bash
@@ -127,3 +130,27 @@ jobs:
           for page in ('about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html'):
               if page not in sitemap: raise SystemExit(f'Missing {page} from sitemap.xml')
           print('Sitemap covers every indexable public page.')
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install browser test dependencies
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Run responsive browser acceptance suite
+        run: npm run test:e2e
+
+      - name: Upload browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failure-evidence
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
