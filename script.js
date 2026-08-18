@@ -1,18 +1,5 @@
 const isReferenceHome=document.body.classList.contains('reference-home');
 
-// Load only the shared production polish dynamically. The homepage hero stylesheet is
-// already linked in index.html; loading it again caused stale/duplicate cascade issues.
-const polish=document.createElement('link');
-polish.rel='stylesheet';
-polish.href='final-polish.css?v=1';
-document.head.appendChild(polish);
-if(!isReferenceHome){
-  const texture=document.createElement('link');
-  texture.rel='stylesheet';
-  texture.href='texture.css?v=2';
-  document.head.appendChild(texture);
-}
-
 const menuButton=document.querySelector('.menu-button');
 const nav=document.querySelector('.site-nav');
 function setMenu(open){
@@ -31,8 +18,6 @@ window.addEventListener('resize',()=>{if(window.innerWidth>900)setMenu(false)});
 const current=(location.pathname.split('/').pop()||'index.html').toLowerCase();
 nav?.querySelectorAll('a').forEach(a=>{const target=(a.getAttribute('href')||'').split('#')[0].toLowerCase();if(target===current){a.classList.add('active');a.setAttribute('aria-current','page')}});
 
-// Real search behaviour: the home search icon opens a search panel and the shop page
-// filters cards from the query string or live input.
 const homeSearch=document.querySelector('.ref-search');
 if(homeSearch){
   homeSearch.addEventListener('click',e=>{
@@ -110,5 +95,4 @@ if(gallery.length){
   document.addEventListener('keydown',e=>{if(!box.classList.contains('open'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')show(index-1);if(e.key==='ArrowRight')show(index+1)});
 }
 
-// Make non-critical content images lighter on first paint without affecting the hero/logo.
 document.querySelectorAll('main img').forEach(img=>{if(!img.closest('.ref-hero')&&!img.hasAttribute('loading'))img.loading='lazy';img.decoding='async'});
