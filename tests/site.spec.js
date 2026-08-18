@@ -12,6 +12,27 @@ const publicPages = [
   ['404', '/404.html']
 ];
 
+async function scrollThrough(page) {
+  await page.evaluate(async () => {
+    await new Promise(resolve => {
+      let last = -1;
+      const step = Math.max(420, Math.floor(window.innerHeight * .72));
+      const tick = () => {
+        const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        const next = Math.min(max, window.scrollY + step);
+        window.scrollTo(0, next);
+        if (next === max || next === last) return setTimeout(resolve, 250);
+        last = next;
+        setTimeout(tick, 55);
+      };
+      tick();
+    });
+  });
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(250);
+  await page.evaluate(() => window.scrollTo(0, 0));
+}
+
 for (const [name, path] of publicPages) {
   test(`${name} renders without overflow or runtime errors`, async ({ page }) => {
     const errors = [];
@@ -38,6 +59,13 @@ test('approved hero is the LCP candidate and primary CTAs are usable', async ({ 
   await expect(buttons).toHaveCount(2);
   await expect(buttons.nth(0)).toHaveAttribute('href', /wa\.me\/27635409729/);
   await expect(buttons.nth(1)).toHaveAttribute('href', 'shop.html');
+});
+
+test('homepage real photography loads as the user scrolls', async ({ page }) => {
+  await page.goto('/index.html');
+  await scrollThrough(page);
+  const failed = await page.locator('main img').evaluateAll(images => images.filter(img => !img.complete || img.naturalWidth === 0).map(img => img.getAttribute('src')));
+  expect(failed).toEqual([]);
 });
 
 test('mobile navigation works as native progressive enhancement', async ({ page }, testInfo) => {
@@ -113,7 +141,6 @@ test('contact form validates and composes a WhatsApp enquiry', async ({ page }) 
   await expect(form).toBeVisible();
   await expect(form).toHaveAttribute('action', 'https://api.whatsapp.com/send');
   await expect(page.locator('a[href*="wa.me/27635409729"]')).not.toHaveCount(0);
-
   await page.route('https://wa.me/**', route => route.abort());
   await page.locator('input[name="name"]').fill('QA Tester');
   await page.locator('select[name="occasion"]').selectOption({ label: 'Birthday' });
@@ -133,10 +160,11 @@ test('phone email and WhatsApp conversion actions are present', async ({ page })
   await expect(page.locator('.floating-wa')).toHaveAttribute('href', /wa\.me\/27635409729/);
 });
 
-test('capture visual acceptance evidence', async ({ page }, testInfo) => {
+test('capture visual acceptance evidence after real scrolling', async ({ page }, testInfo) => {
   fs.mkdirSync('visual-evidence', { recursive: true });
   for (const [name, path] of [['home','/index.html'],['about','/about.html'],['contact','/contact.html']]) {
-    await page.goto(path, { waitUntil: 'networkidle' });
+    await page.goto(path, { waitUntil: 'domcontentloaded' });
+    await scrollThrough(page);
     await page.screenshot({ path: `visual-evidence/${testInfo.project.name}-${name}.png`, fullPage: true });
   }
 });
