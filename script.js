@@ -42,6 +42,7 @@
       summary?.setAttribute('aria-expanded',String(open));
       summary?.setAttribute('aria-label',open?'Close navigation':'Open navigation');
       document.body.classList.toggle('menu-open',open);
+      document.body.style.overflow=open?'hidden':'';
       inertTargets.forEach(node=>{try{node.inert=open}catch{}});
       if(open){positionPanel();panel?.querySelector('a')?.focus({preventScroll:true})}
     });
@@ -133,16 +134,8 @@
     document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('open'))return;if(event.key==='Escape')close();if(event.key==='ArrowLeft')show(index-1);if(event.key==='ArrowRight')show(index+1)});
   }
 
-  const revealTargets=[...document.querySelectorAll('[data-reveal]')];
-  if(revealTargets.length){
-    revealTargets.forEach(el=>el.classList.add('reveal'));
-    if('IntersectionObserver' in window&&document.body.dataset.motion==='on'){
-      const observer=new IntersectionObserver(entries=>{
-        entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}});
-      },{threshold:.12,rootMargin:'0px 0px -6% 0px'});
-      revealTargets.forEach(el=>observer.observe(el));
-    }else revealTargets.forEach(el=>el.classList.add('is-visible'));
-  }
+  /* Core content always remains visible. Motion is decorative, never a visibility dependency. */
+  document.querySelectorAll('[data-reveal]').forEach(element=>element.classList.add('is-visible'));
 
   let pointerRaf=0;
   const updatePointer=(x,y)=>{
@@ -157,7 +150,8 @@
   window.addEventListener('touchmove',event=>{const touch=event.touches[0];if(touch)updatePointer(touch.clientX,touch.clientY)},{passive:true});
 
   document.querySelectorAll('main img').forEach(img=>{
+    if(img.classList.contains('hero-art'))return;
     img.decoding='async';
-    if(!img.hasAttribute('loading')&&!img.classList.contains('hero-art'))img.loading='lazy';
+    if(!img.hasAttribute('loading'))img.loading='lazy';
   });
 })();
