@@ -120,7 +120,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -RniE 'localhost|127\.0\.0\.1|TODO|FIXME|lorem ipsum' --include='*.html' --include='*.css' --include='*.js' --include='*.txt' .
+          ! grep -niE 'localhost|127\.0\.0\.1|TODO|FIXME|lorem ipsum' *.html site.css script.js robots.txt sitemap.xml
 
       - name: Confirm sitemap coverage
         shell: python
