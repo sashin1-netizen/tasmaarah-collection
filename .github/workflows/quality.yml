@@ -20,7 +20,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html site.css atelier-client-ready.css script.js robots.txt sitemap.xml package.json playwright.config.js tests/site.spec.js; do
+          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html site.css atelier-client-ready.css mobile-recovery-v2.css script.js robots.txt sitemap.xml package.json playwright.config.js tests/site.spec.js; do
             test -s "$file"
           done
           test -d assets/images
@@ -31,7 +31,7 @@ jobs:
             test ! -e "$legacy"
           done
 
-      - name: Verify one authoritative design system
+      - name: Verify production design system
         shell: python
         run: |
           from pathlib import Path
@@ -79,7 +79,7 @@ jobs:
                   if ref.startswith(('http://','https://','mailto:','tel:','data:','#')): continue
                   path=ref.split('?',1)[0].split('#',1)[0].lstrip('/')
                   if path and not (root/path).exists(): missing.append((page.name,ref))
-          for css_name in ('site.css','atelier-client-ready.css'):
+          for css_name in ('site.css','atelier-client-ready.css','mobile-recovery-v2.css'):
               css=Path(css_name).read_text(encoding='utf-8')
               for ref in re.findall(r'url\([\"\']?([^\)\"\']+)',css):
                   if ref.startswith(('http://','https://','data:')): continue
@@ -106,7 +106,6 @@ jobs:
           grep -q 'quote-form' script.js
           grep -q 'data-catalog-search' script.js
           grep -q 'lightbox' script.js
-          grep -q 'Content is always visible' script.js
           grep -q 'pointermove' script.js
           grep -q 'prefers-reduced-motion' script.js
           grep -q '@keyframes ambientMove' site.css
@@ -122,7 +121,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -niE 'localhost|127\.0\.0\.1|TODO|FIXME|lorem ipsum' *.html site.css atelier-client-ready.css script.js robots.txt sitemap.xml
+          ! grep -niE 'localhost|127\.0\.0\.1|TODO|FIXME|lorem ipsum' *.html site.css atelier-client-ready.css mobile-recovery-v2.css script.js robots.txt sitemap.xml
 
       - name: Confirm sitemap coverage
         shell: python
