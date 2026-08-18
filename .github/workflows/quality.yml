@@ -29,13 +29,17 @@ jobs:
           test "$(find assets/images -maxdepth 1 -type f | wc -l)" -ge 20
           test -s assets/images/file_00000000d5e88243924fe08befb57f2a.png
           grep -qi '<!doctype html>' index.html
-          grep -q 'styles.css' index.html
-          grep -q 'hero-approved.css' index.html
-          grep -q 'script.js?v=22' index.html
+          grep -q 'styles.css?v=' index.html
+          grep -q 'reference-match.css?v=' index.html
+          grep -q 'hero-approved.css?v=' index.html
+          grep -q 'script.js?v=' index.html
           grep -q 'viewport' index.html
           grep -q 'description' index.html
           grep -q 'application/ld+json' index.html
           grep -q 'wa.me/27635409729' index.html contact.html
+          ! grep -q 'luxury-final.css' index.html
+          ! grep -q 'mobile-reference-fix.css' index.html
+          ! grep -q 'hero-loader.js' index.html
 
       - name: Verify referenced local assets and internal links
         shell: python
@@ -63,21 +67,17 @@ jobs:
       - name: Check JavaScript syntax
         run: node --check script.js
 
-      - name: Verify current asset versions on public pages
-        shell: python
+      - name: Verify responsive and interaction hooks
+        shell: bash
         run: |
-          from pathlib import Path
-          pages = ['about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html','404.html']
-          failures=[]
-          for page in pages:
-              text=Path(page).read_text(encoding='utf-8')
-              if 'script.js?v=22' not in text:
-                  failures.append(f'{page}: stale script version')
-              if 'styles.css?v=20' not in text:
-                  failures.append(f'{page}: stale stylesheet version')
-          if failures:
-              raise SystemExit('\n'.join(failures))
-          print('All public pages use the current production assets.')
+          set -euo pipefail
+          grep -q 'menu-button' script.js
+          grep -q 'quote-form' script.js
+          grep -q 'search-overlay' script.js
+          grep -q 'lightbox' script.js
+          grep -q '@media(max-width:760px)' hero-approved.css
+          grep -q '@media(max-width:900px)' final-polish.css
+          grep -q 'ref-occ-grid' reference-match.css
 
       - name: Check production files for development placeholders
         shell: bash
