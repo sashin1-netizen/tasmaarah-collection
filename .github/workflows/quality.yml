@@ -27,13 +27,16 @@ jobs:
           test "$(find assets/images -maxdepth 1 -type f | wc -l)" -ge 20
           test -s assets/images/tasmaarah-logo.webp
           test -s assets/images/file_00000000d5e88243924fe08befb57f2a.png
+          for legacy in styles.css final-polish.css reference-match.css hero-approved.css atelier-final.css interaction-fix.css interactive-texture.css texture.css luxury-final.css mobile-reference-fix.css; do
+            test ! -e "$legacy"
+          done
 
       - name: Verify one authoritative design system
         shell: python
         run: |
           from pathlib import Path
           pages=['index.html','about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html','404.html']
-          banned=['styles.css','final-polish.css','reference-match.css','hero-approved.css','atelier-final.css','interaction-fix.css','interactive-texture.css','luxury-final.css','mobile-reference-fix.css']
+          banned=['styles.css','final-polish.css','reference-match.css','hero-approved.css','atelier-final.css','interaction-fix.css','interactive-texture.css','texture.css','luxury-final.css','mobile-reference-fix.css']
           failures=[]
           for page in pages:
               text=Path(page).read_text(encoding='utf-8')
