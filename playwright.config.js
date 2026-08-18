@@ -20,9 +20,9 @@ module.exports = defineConfig({
     timeout: 15000
   },
   projects: [
-    { name: 'mobile-360', use: { browserName: 'chromium', viewport: { width: 360, height: 800 }, isMobile: true, hasTouch: true } },
-    { name: 'mobile-390', use: { browserName: 'chromium', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true } },
-    { name: 'mobile-430', use: { browserName: 'chromium', viewport: { width: 430, height: 932 }, isMobile: true, hasTouch: true } },
+    { name: 'mobile-360', use: { browserName: 'chromium', viewport: { width: 360, height: 800 }, hasTouch: true } },
+    { name: 'mobile-390', use: { browserName: 'chromium', viewport: { width: 390, height: 844 }, hasTouch: true } },
+    { name: 'mobile-430', use: { browserName: 'chromium', viewport: { width: 430, height: 932 }, hasTouch: true } },
     { name: 'tablet-768', use: { browserName: 'chromium', viewport: { width: 768, height: 1024 }, hasTouch: true } },
     { name: 'tablet-1024', use: { browserName: 'chromium', viewport: { width: 1024, height: 1366 }, hasTouch: true } },
     { name: 'desktop-1366', use: { browserName: 'chromium', viewport: { width: 1366, height: 768 } } },
