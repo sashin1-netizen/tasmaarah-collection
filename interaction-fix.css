@@ -1,0 +1,50 @@
+/* Interaction hardening + clearly visible luxury motion */
+:root{--pointer-x:50%;--pointer-y:28%}
+
+/* Never let decorative layers intercept controls */
+body::before,body::after,main::before,main::after,section::before,section::after,.page-hero::before,.page-hero::after,.inner-heading::before,.inner-heading::after,.contact-layout::before,.contact-layout::after{pointer-events:none!important}
+a,button,input,select,textarea,label,.menu-button,.site-nav,.ref-nav,.ref-actions,.floating-wa,.search-overlay,.lightbox{pointer-events:auto!important}
+
+/* Visible ambient motion across every page */
+body::after{content:"";position:fixed;inset:-18%;z-index:-1;background:
+ radial-gradient(circle at var(--pointer-x) var(--pointer-y),rgba(196,145,86,.24),transparent 20%),
+ radial-gradient(circle at 18% 35%,rgba(255,255,255,.48),transparent 24%),
+ radial-gradient(circle at 78% 68%,rgba(145,88,42,.13),transparent 26%),
+ conic-gradient(from 15deg at 50% 50%,transparent 0 31%,rgba(255,255,255,.10) 36%,transparent 42% 100%);
+ filter:blur(2px);animation:tasmaarahGlow 9s ease-in-out infinite alternate;transform:translate3d(0,0,0)}
+main::before{content:"";position:absolute;inset:0;z-index:0;background:
+ repeating-linear-gradient(135deg,rgba(128,82,40,.035) 0 1px,transparent 1px 18px),
+ linear-gradient(105deg,transparent 0 35%,rgba(255,255,255,.26) 47%,rgba(207,160,102,.10) 52%,rgba(255,255,255,.19) 58%,transparent 68%);
+ background-size:100% 100%,230% 100%;animation:tasmaarahSatin 8s ease-in-out infinite}
+main>*{position:relative;z-index:1}
+.section-kicker::after,.ref-occ>.ref-kicker::after{animation:tasmaarahLine 2.8s ease-in-out infinite!important}
+.catalog-card,.ref-occ-card,.occasion-detail article,.custom-grid article{transition:transform .28s ease,box-shadow .28s ease,filter .28s ease!important}
+.catalog-card:hover,.ref-occ-card:hover,.custom-grid article:hover{transform:translateY(-4px) scale(1.004)!important}
+
+/* Mobile menu: explicit, fixed, above everything */
+@media(max-width:900px){
+ body.menu-open{overflow:hidden!important}
+ .menu-button,.ref-menu{display:flex!important;position:relative!important;z-index:10002!important;cursor:pointer!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent}
+ .menu-button span,.ref-menu span{transition:transform .24s ease,opacity .24s ease!important;transform-origin:center}
+ .menu-button.is-open span:nth-child(1),.ref-menu.is-open span:nth-child(1){transform:translateY(8.5px) rotate(45deg)!important}
+ .menu-button.is-open span:nth-child(2),.ref-menu.is-open span:nth-child(2){opacity:0!important}
+ .menu-button.is-open span:nth-child(3),.ref-menu.is-open span:nth-child(3){transform:translateY(-8.5px) rotate(-45deg)!important}
+ .site-nav,.reference-home .ref-nav{display:none!important;position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;z-index:10000!important;background:rgba(248,240,230,.985)!important;backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important;padding:122px 24px 36px!important;overflow-y:auto!important;grid-template-columns:1fr!important;align-content:start!important;justify-content:stretch!important;gap:0!important;box-shadow:none!important}
+ .site-nav.open,.reference-home .ref-nav.open{display:grid!important}
+ .site-nav a,.reference-home .ref-nav a{display:block!important;width:100%!important;padding:14px 4px!important;border-bottom:1px solid rgba(130,84,42,.15)!important;font:500 24px/1.15 var(--serif)!important;text-transform:none!important;letter-spacing:0!important;color:#21160f!important}
+ .site-nav a.active,.reference-home .ref-nav a.active{color:#96632f!important}
+ .site-header,.ref-header{position:relative!important;z-index:10001!important}
+}
+
+/* Motion is intentionally still present on mobile, just softer */
+@media(max-width:760px){
+ body::after{opacity:.78;animation-duration:11s}
+ main::before{background-size:100% 100%,260% 100%;animation-duration:9s}
+}
+
+@keyframes tasmaarahGlow{0%{transform:translate3d(-1.5%,-1%,0) scale(1);opacity:.72}100%{transform:translate3d(1.8%,1.2%,0) scale(1.035);opacity:1}}
+@keyframes tasmaarahSatin{0%,100%{background-position:0 0,-105% 0}50%{background-position:0 0,108% 0}}
+@keyframes tasmaarahLine{0%,100%{opacity:.35;transform:scaleX(.75)}50%{opacity:1;transform:scaleX(1.28)}}
+
+/* Accessibility: preserve menu/functionality while reducing, not eliminating, ambience */
+@media(prefers-reduced-motion:reduce){body::after{animation-duration:20s!important}main::before{animation-duration:18s!important}.section-kicker::after,.ref-occ>.ref-kicker::after{animation-duration:6s!important}.catalog-card,.ref-occ-card,.occasion-detail article,.custom-grid article{transition:none!important}}
