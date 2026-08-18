@@ -36,7 +36,7 @@ jobs:
           failures=[]
           for page in pages:
               text=Path(page).read_text(encoding='utf-8')
-              for needle in ('styles.css?v=22','final-polish.css?v=3','interactive-texture.css?v=4','script.js?v=27'):
+              for needle in ('styles.css?v=22','final-polish.css?v=3','interactive-texture.css?v=5','script.js?v=27'):
                   if needle not in text:
                       failures.append(f'{page}: missing or stale {needle}')
               for bad in ('luxury-final.css','mobile-reference-fix.css','hero-loader.js','hero-part-1.js','hero-tiny-1.js','hero-tiny-2.js','hero-tiny-3.js'):
