@@ -6,7 +6,7 @@
 
   const art=document.createElement('link');
   art.rel='stylesheet';
-  art.href='atelier-client-ready.css?v=3';
+  art.href='atelier-client-ready.css?v=4';
   art.dataset.tasmaarahArt='true';
   document.head.appendChild(art);
 
@@ -201,8 +201,9 @@
     document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('open'))return;if(event.key==='Escape')close();if(event.key==='ArrowLeft')show(index-1);if(event.key==='ArrowRight')show(index+1)});
   }
 
+  const warmGallery=()=>document.querySelectorAll('.gallery-tease img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
   if(window.matchMedia('(max-width:700px)').matches){
-    document.querySelectorAll('.gallery-tease img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
+    window.addEventListener('load',()=>setTimeout(warmGallery,450),{once:true});
   }
 
   /* Core content always remains visible; reveal motion enhances rather than gates access. */
@@ -215,25 +216,22 @@
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       });
-    },{threshold:0,rootMargin:'80% 0px 80% 0px'});
-    reveals.forEach((el,i)=>{el.style.transitionDelay=`${Math.min(i%4,3)*70}ms`;observer.observe(el)});
+    },{threshold:0,rootMargin:'65% 0px 65% 0px'});
+    reveals.forEach((el,i)=>{el.style.transitionDelay=`${Math.min(i%3,2)*55}ms`;observer.observe(el)});
   }else reveals.forEach(el=>el.classList.add('is-visible'));
 
-  let pointerRaf=0;
-  const updatePointer=(x,y)=>{
-    if(document.body.dataset.motion!=='on')return;
-    cancelAnimationFrame(pointerRaf);
-    pointerRaf=requestAnimationFrame(()=>{
-      const px=Math.max(0,Math.min(100,x/window.innerWidth*100)).toFixed(1)+'%';
-      const py=Math.max(0,Math.min(100,y/window.innerHeight*100)).toFixed(1)+'%';
-      root.style.setProperty('--pointer-x',px);
-      root.style.setProperty('--pointer-y',py);
-      root.style.setProperty('--mx',px);
-      root.style.setProperty('--my',py);
-    });
-  };
-  window.addEventListener('pointermove',event=>updatePointer(event.clientX,event.clientY),{passive:true});
-  window.addEventListener('touchmove',event=>{const touch=event.touches[0];if(touch)updatePointer(touch.clientX,touch.clientY)},{passive:true});
+  /* Keep pointermove support desktop-only; mobile does no continuous pointer/touch styling work. */
+  if(window.matchMedia('(pointer:fine)').matches){
+    let pointerRaf=0;
+    window.addEventListener('pointermove',event=>{
+      if(document.body.dataset.motion!=='on')return;
+      cancelAnimationFrame(pointerRaf);
+      pointerRaf=requestAnimationFrame(()=>{
+        root.style.setProperty('--pointer-x',`${Math.max(0,Math.min(100,event.clientX/window.innerWidth*100)).toFixed(0)}%`);
+        root.style.setProperty('--pointer-y',`${Math.max(0,Math.min(100,event.clientY/window.innerHeight*100)).toFixed(0)}%`);
+      });
+    },{passive:true});
+  }
 
   document.querySelectorAll('main img').forEach(img=>{
     if(img.classList.contains('hero-art'))return;
