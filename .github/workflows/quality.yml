@@ -22,7 +22,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html styles.css final-polish.css reference-match.css hero-approved.css script.js robots.txt sitemap.xml; do
+          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html styles.css final-polish.css reference-match.css hero-approved.css interactive-texture.css script.js robots.txt sitemap.xml; do
             test -s "$file"
           done
           test -d assets/images
@@ -40,6 +40,7 @@ jobs:
           grep -q 'reference-match.css?v=' index.html
           grep -q 'hero-approved.css?v=' index.html
           grep -q 'final-polish.css?v=' index.html
+          grep -q 'interactive-texture.css?v=' index.html
           grep -q 'script.js?v=' index.html
           grep -q 'viewport' index.html
           grep -q 'description' index.html
@@ -72,7 +73,7 @@ jobs:
           root = Path('.')
           missing = []
           html_files = sorted(root.glob('*.html'))
-          sources = html_files + [root / 'styles.css', root / 'final-polish.css', root / 'reference-match.css', root / 'hero-approved.css', root / 'script.js']
+          sources = html_files + [root / 'styles.css', root / 'final-polish.css', root / 'reference-match.css', root / 'hero-approved.css', root / 'interactive-texture.css', root / 'script.js']
           for source in sources:
               text = source.read_text(encoding='utf-8')
               refs = set(re.findall(r'(?:src|href)=[\"\']([^\"\']+)[\"\']', text))
@@ -98,6 +99,10 @@ jobs:
           grep -q 'quote-form' script.js
           grep -q 'search-overlay' script.js
           grep -q 'lightbox' script.js
+          grep -q 'texture-orbit' script.js
+          grep -q 'pointermove' script.js
+          grep -q 'prefers-reduced-motion' interactive-texture.css
+          grep -q '@media(max-width:760px)' interactive-texture.css
           grep -q '@media(max-width:760px)' hero-approved.css
           grep -q '@media(max-width:900px)' final-polish.css
           grep -q 'ref-occ-grid' reference-match.css
