@@ -1,25 +1,36 @@
 # Tasmaarah Collection
 
-Official website for Tasmaarah Collection. A premium gifting and presentation business offering kunchas, trays, boxes, custom orders, hire, purchase and professional gift setting. Designed and developed by Prime Presence Atelier.
+Official website for Tasmaarah Collection, a Durban gifting and presentation business offering kunchas, trays, boxes, custom orders, hire, purchase and professional gift setting. Designed and developed by Prime Presence Atelier.
 
-## Production build status
+## Production architecture
 
-Implemented:
+The public site deliberately uses a small, stable stack:
 
-- responsive desktop, tablet and mobile homepage
-- Tasmaarah's real logo and genuine client photography
-- direct optimised WebP image assets; no generated product substitutes
-- Hire, Purchase and Professional Gift Setting positioning
-- Wood, Perspex and Glass material options
+- `site.css` — the single authoritative responsive design system
+- `script.js` — progressive enhancement for filtering, WhatsApp quote composition, gallery lightbox, reveal effects and pointer-responsive lighting
+- semantic HTML pages for Home, About, Collection, Occasions, Custom Orders, Gallery, Contact and 404
+- GitHub Pages for static hosting
+
+The mobile menu is implemented with native HTML `details` / `summary`, so navigation remains operable even if JavaScript is delayed or unavailable.
+
+## Production features
+
+- responsive mobile-first layouts for phone, tablet and desktop
+- Tasmaarah’s real logo and genuine client photography
+- approved campaign artwork used as the homepage LCP image
+- hire, purchase and professional gift setting positioning
+- wood, Perspex and glass material options
 - common sizes: 15×15cm, 20×20cm and 30×30cm
 - custom sizing and quote-led ordering
-- Weddings, Birthdays, Year-End & Functions and Special Gifts
-- WhatsApp-first quote flow with structured enquiry details
-- Reservoir Hills location wording
-- courier-services wording
-- FAQ, mobile navigation and keyboard/focus states
-- SEO metadata, Open Graph metadata and Organization structured data
-- lazy-loaded portfolio imagery and reduced-motion support
+- Weddings, Birthdays, Year-End Functions and Special Occasions journeys
+- WhatsApp-first quote flow with a direct fallback link
+- collection search/filter
+- accessible gallery lightbox with keyboard controls
+- visible focus states, skip links and native controls
+- motion toggle plus reduced-motion handling
+- animated champagne background, satin sweeps and restrained interactive lighting
+- SEO metadata, Open Graph metadata, LocalBusiness structured data, sitemap and robots file
+- lazy-loaded below-the-fold imagery
 - Prime Presence Atelier credit
 
 ## Photography policy
@@ -31,12 +42,12 @@ The site uses genuine photographs supplied by Tasmaarah Collection. Product imag
 - WhatsApp: 063 540 9729
 - Call or WhatsApp: 074 378 8958
 - Email: tasmaarahcollection@gmail.com
-- Based in: Reservoir Hills
+- Based in: Reservoir Hills, Durban
 - Delivery wording: Courier services available
 
 Do not change the delivery wording to nationwide delivery unless the client confirms it.
 
-## Client/owner details still required before public launch
+## Client details still required before a custom-domain launch
 
 These items are deliberately not invented in the codebase:
 
@@ -44,11 +55,35 @@ These items are deliberately not invented in the codebase:
 - hire deposit, damage and return terms
 - confirmed production lead times / turnaround wording
 - final collection and courier terms
-- production domain and hosting
+- production custom domain
 
-## Final launch checks
+## Quality gate
 
-Before publishing to the client domain, complete a real-browser acceptance pass on desktop and mobile, verify WhatsApp/call/email actions on physical devices, run Lighthouse/accessibility checks, and perform the final domain/HTTPS/search-indexing smoke test.
+`.github/workflows/quality.yml` checks:
+
+- required production files and real image assets
+- a single authoritative CSS architecture
+- no legacy stylesheet references
+- local links and assets
+- duplicate IDs
+- JavaScript syntax
+- native mobile navigation contract
+- animation and reduced-motion hooks
+- WhatsApp form fallback
+- sitemap coverage
+- development placeholders
+
+## Acceptance standard
+
+Before client sign-off, verify the deployed GitHub Pages URL in real Chrome/Safari-class browsers on:
+
+- narrow mobile around 360px
+- common mobile around 390–430px
+- tablet around 768–1024px
+- laptop around 1366px
+- large desktop around 1920px
+
+Test navigation, all links and buttons, WhatsApp, phone/email actions, collection filter, gallery lightbox, contact form, focus/keyboard behaviour, image loading, horizontal overflow and motion controls.
 
 ## Local preview
 
