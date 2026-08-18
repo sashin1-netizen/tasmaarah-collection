@@ -1,4 +1,10 @@
 const isReferenceHome=document.body.classList.contains('reference-home');
+if(!document.querySelector('link[href*="interactive-texture.css"]')){
+  const tx=document.createElement('link');
+  tx.rel='stylesheet';
+  tx.href='interactive-texture.css?v=1';
+  document.head.appendChild(tx);
+}
 
 const menuButton=document.querySelector('.menu-button');
 const nav=document.querySelector('.site-nav');
@@ -97,7 +103,6 @@ if(gallery.length){
 
 document.querySelectorAll('main img').forEach(img=>{if(!img.closest('.ref-hero')&&!img.hasAttribute('loading'))img.loading='lazy';img.decoding='async'});
 
-// Luxury interactive background: decorative only, never blocks content or input.
 const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const orbit=document.createElement('div');
 orbit.className='texture-orbit';
@@ -123,7 +128,6 @@ if(!reduceMotion){
   window.addEventListener('pagehide',()=>cancelAnimationFrame(raf),{once:true});
 }
 
-// Card glow follows pointer, adding depth without shifting layout.
 document.querySelectorAll('.catalog-card,.occasion-detail article,.custom-grid article,.quote-form,.ref-occ-card').forEach(card=>{
   card.addEventListener('pointermove',e=>{
     const r=card.getBoundingClientRect();
