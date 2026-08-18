@@ -22,14 +22,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html styles.css script.js robots.txt sitemap.xml; do
+          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html styles.css final-polish.css reference-match.css hero-approved.css script.js robots.txt sitemap.xml; do
             test -s "$file"
           done
           test -d assets/images
           test "$(find assets/images -maxdepth 1 -type f | wc -l)" -ge 20
+          test -s assets/images/file_00000000d5e88243924fe08befb57f2a.png
           grep -qi '<!doctype html>' index.html
           grep -q 'styles.css' index.html
-          grep -q 'script.js' index.html
+          grep -q 'hero-approved.css' index.html
+          grep -q 'script.js?v=22' index.html
           grep -q 'viewport' index.html
           grep -q 'description' index.html
           grep -q 'application/ld+json' index.html
@@ -43,7 +45,7 @@ jobs:
           root = Path('.')
           missing = []
           html_files = sorted(root.glob('*.html'))
-          sources = html_files + [root / 'styles.css', root / 'script.js']
+          sources = html_files + [root / 'styles.css', root / 'final-polish.css', root / 'reference-match.css', root / 'hero-approved.css', root / 'script.js']
           for source in sources:
               text = source.read_text(encoding='utf-8')
               refs = set(re.findall(r'(?:src|href)=[\"\']([^\"\']+)[\"\']', text))
@@ -60,6 +62,22 @@ jobs:
 
       - name: Check JavaScript syntax
         run: node --check script.js
+
+      - name: Verify current asset versions on public pages
+        shell: python
+        run: |
+          from pathlib import Path
+          pages = ['about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html','404.html']
+          failures=[]
+          for page in pages:
+              text=Path(page).read_text(encoding='utf-8')
+              if 'script.js?v=22' not in text:
+                  failures.append(f'{page}: stale script version')
+              if 'styles.css?v=20' not in text:
+                  failures.append(f'{page}: stale stylesheet version')
+          if failures:
+              raise SystemExit('\n'.join(failures))
+          print('All public pages use the current production assets.')
 
       - name: Check production files for development placeholders
         shell: bash
