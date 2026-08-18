@@ -6,8 +6,10 @@ Official website for Tasmaarah Collection, a Durban gifting and presentation bus
 
 The public site deliberately uses a small, stable stack:
 
-- `site.css` — the single authoritative responsive design system
-- `script.js` — progressive enhancement for filtering, WhatsApp quote composition, gallery lightbox, reveal effects and pointer-responsive lighting
+- `site.css` — the core responsive design system
+- `homepage-luxury.css` — homepage campaign art-direction layer used on the current redesign branch
+- `atelier-luxury.css` — sitewide luxury presentation layer for image staging, editorial framing and premium surfaces on the current redesign branch
+- `script.js` — progressive enhancement for filtering, WhatsApp quote composition, gallery lightbox, reveal effects, pointer-responsive lighting and loading of the sitewide luxury presentation layer
 - semantic HTML pages for Home, About, Collection, Occasions, Custom Orders, Gallery, Contact and 404
 - GitHub Pages for static hosting
 
@@ -29,13 +31,14 @@ The mobile menu is implemented with native HTML `details` / `summary`, so naviga
 - visible focus states, skip links and native controls
 - motion toggle plus reduced-motion handling
 - animated champagne background, satin sweeps and restrained interactive lighting
+- luxury image staging using layered frames, campaign crops, gallery matting and editorial depth while preserving genuine product imagery
 - SEO metadata, Open Graph metadata, LocalBusiness structured data, sitemap and robots file
 - lazy-loaded below-the-fold imagery
 - Prime Presence Atelier credit
 
 ## Photography policy
 
-The site uses genuine photographs supplied by Tasmaarah Collection. Product imagery must not be replaced with AI-generated representations or materially altered in a way that misrepresents actual products or completed work.
+The site uses genuine photographs supplied by Tasmaarah Collection. Product imagery must not be replaced with AI-generated representations or materially altered in a way that misrepresents actual products or completed work. Luxury presentation effects must frame, stage and light the genuine imagery rather than inventing replacement products.
 
 ## Contact details
 
@@ -62,7 +65,7 @@ These items are deliberately not invented in the codebase:
 `.github/workflows/quality.yml` checks:
 
 - required production files and real image assets
-- a single authoritative CSS architecture
+- core stylesheet architecture
 - no legacy stylesheet references
 - local links and assets
 - duplicate IDs
