@@ -47,7 +47,7 @@ jobs:
           grep -q 'application/ld+json' index.html
           grep -q 'wa.me/27635409729' index.html contact.html
 
-      - name: Verify every public page loads stable CSS and JS directly
+      - name: Verify every public page loads the live texture system
         shell: python
         run: |
           from pathlib import Path
@@ -55,7 +55,7 @@ jobs:
           failures=[]
           for page in pages:
               text=Path(page).read_text(encoding='utf-8')
-              for needle in ('styles.css?v=', 'final-polish.css?v=', 'script.js?v='):
+              for needle in ('styles.css?v=', 'final-polish.css?v=', 'interactive-texture.css?v=', 'script.js?v='):
                   if needle not in text:
                       failures.append(f'{page}: missing {needle}')
               for bad in ('luxury-final.css','mobile-reference-fix.css','hero-loader.js'):
@@ -63,7 +63,7 @@ jobs:
                       failures.append(f'{page}: obsolete reference {bad}')
           if failures:
               raise SystemExit('\n'.join(failures))
-          print('All public pages use deterministic production assets.')
+          print('Every public page loads the animated texture layer and production JavaScript.')
 
       - name: Verify referenced local assets and internal links
         shell: python
