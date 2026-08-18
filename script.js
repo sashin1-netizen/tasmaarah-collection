@@ -6,7 +6,7 @@
 
   const art=document.createElement('link');
   art.rel='stylesheet';
-  art.href='atelier-client-ready.css?v=1';
+  art.href='atelier-client-ready.css?v=2';
   art.dataset.tasmaarahArt='true';
   document.head.appendChild(art);
 
@@ -82,6 +82,56 @@
     filter();
   }
 
+  if(catalogCards.length){
+    const quickView=document.createElement('div');
+    quickView.className='quick-view';
+    quickView.setAttribute('role','dialog');
+    quickView.setAttribute('aria-modal','true');
+    quickView.setAttribute('aria-label','Collection quick view');
+    quickView.innerHTML='<div class="quick-view-panel"><button class="quick-view-close" type="button" aria-label="Close quick view">×</button><div class="quick-view-media"><img alt=""></div><div class="quick-view-copy"><p class="section-kicker">Tasmaarah Collection</p><h2></h2><p class="quick-view-description"></p><div class="quick-view-actions"><a class="btn btn-gold quick-view-whatsapp" target="_blank" rel="noopener">Request this style on WhatsApp</a><a class="btn btn-outline" href="custom-orders.html">Explore custom options</a></div><p class="quick-view-note">Available options depend on material, size, hire or purchase and custom requirements.</p></div></div>';
+    document.body.appendChild(quickView);
+    const closeButton=quickView.querySelector('.quick-view-close');
+    const image=quickView.querySelector('img');
+    const title=quickView.querySelector('h2');
+    const description=quickView.querySelector('.quick-view-description');
+    const whatsapp=quickView.querySelector('.quick-view-whatsapp');
+    let lastFocus=null;
+    const close=()=>{
+      quickView.classList.remove('open');
+      document.body.classList.remove('quick-view-open');
+      lastFocus?.focus?.();
+    };
+    const open=card=>{
+      const cardImage=card.querySelector('img');
+      const cardTitle=card.querySelector('h2')?.textContent.trim()||'Tasmaarah presentation';
+      const cardDescription=card.querySelector('p')?.textContent.trim()||'';
+      lastFocus=document.activeElement;
+      image.src=cardImage?.currentSrc||cardImage?.src||'';
+      image.alt=cardImage?.alt||cardTitle;
+      title.textContent=cardTitle;
+      description.textContent=cardDescription;
+      const message=`Hi Tasmaarah Collection, I'm interested in the ${cardTitle} style shown on your website. Please can you help me with options and a quote?`;
+      whatsapp.href=`https://wa.me/27635409729?text=${encodeURIComponent(message)}`;
+      quickView.classList.add('open');
+      document.body.classList.add('quick-view-open');
+      closeButton?.focus();
+    };
+    catalogCards.forEach(card=>{
+      const actions=card.querySelector('div');
+      const trigger=document.createElement('button');
+      trigger.type='button';
+      trigger.className='catalog-quick';
+      trigger.textContent='Quick view';
+      trigger.setAttribute('aria-label',`Quick view ${card.querySelector('h2')?.textContent.trim()||'collection piece'}`);
+      actions?.appendChild(trigger);
+      trigger.addEventListener('click',()=>open(card));
+      card.querySelector('img')?.addEventListener('dblclick',()=>open(card));
+    });
+    closeButton?.addEventListener('click',close);
+    quickView.addEventListener('click',event=>{if(event.target===quickView)close()});
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&quickView.classList.contains('open'))close()});
+  }
+
   const quoteForm=document.querySelector('#quote-form');
   quoteForm?.addEventListener('submit',event=>{
     event.preventDefault();
@@ -137,7 +187,7 @@
     document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('open'))return;if(event.key==='Escape')close();if(event.key==='ArrowLeft')show(index-1);if(event.key==='ArrowRight')show(index+1)});
   }
 
-  /* Core content always remains visible; reveal motion only enhances the experience. */
+  /* Core content always remains visible; reveal motion enhances rather than gates access. */
   const reveals=[...document.querySelectorAll('[data-reveal]')];
   if('IntersectionObserver' in window&&!motionQuery.matches){
     const observer=new IntersectionObserver(entries=>{
