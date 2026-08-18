@@ -1,70 +1,41 @@
-/* Tasmaarah Collection — production-safe animated luxury background */
-:root{--tx-gold:#a97740;--tx-gold2:#d5ad79;--tx-cream:#f7ecde;--tx-x:50%;--tx-y:30%}
-html{background:#f4e5d3}
-body{position:relative;isolation:isolate;background:linear-gradient(180deg,#fbf5ed 0%,#f3e3d1 48%,#eedbc6 100%)!important;overflow-x:hidden}
-
-/* CSS-only ambient motion: remains visible even if JavaScript is unavailable. */
-body::before{content:"";position:fixed;inset:-18%;z-index:0;pointer-events:none;background:
- radial-gradient(circle at 18% 22%,rgba(255,255,255,.78) 0 8%,transparent 27%),
- radial-gradient(circle at 82% 28%,rgba(189,132,73,.22) 0 7%,transparent 29%),
- radial-gradient(circle at 24% 78%,rgba(209,166,111,.18) 0 8%,transparent 30%),
- repeating-linear-gradient(135deg,rgba(137,91,49,.032) 0 1px,transparent 1px 16px);
- background-size:120% 120%,135% 135%,125% 125%,100% 100%;animation:ambientDrift 13s ease-in-out infinite alternate;will-change:transform,background-position}
-body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.72;background:
- linear-gradient(112deg,transparent 0 37%,rgba(255,255,255,.28) 46%,rgba(217,176,124,.12) 51%,rgba(255,255,255,.22) 56%,transparent 66%);
- background-size:230% 100%;animation:satinPageSweep 8s ease-in-out infinite}
-body>*{position:relative;z-index:1}
-
-/* No decorative layer may ever intercept a click. */
-.texture-orbit,.texture-orbit *{pointer-events:none!important}
-.texture-orbit{position:fixed;inset:0;z-index:0!important;overflow:hidden;opacity:.72;mix-blend-mode:multiply}
-.texture-orbit .orb{position:absolute;border:1.5px solid rgba(156,101,52,.34);border-radius:50%;animation:orbPulse 7s ease-in-out infinite}
-.texture-orbit .orb::before,.texture-orbit .orb::after{content:"";position:absolute;border-radius:50%;inset:13%;border:1px solid rgba(156,101,52,.18)}
-.texture-orbit .orb::after{inset:29%;border-style:dashed}
-.texture-orbit .orb-a{width:320px;height:320px;left:-120px;top:19vh}
-.texture-orbit .orb-b{width:250px;height:250px;right:-90px;top:58vh;animation-delay:-2.3s}
-.texture-orbit .orb-c{width:170px;height:170px;left:61vw;top:12vh;animation-delay:-4.2s}
-.texture-orbit .leaf{position:absolute;width:190px;height:190px;opacity:.23;background:radial-gradient(ellipse at 30% 50%,transparent 0 27%,rgba(151,102,57,.58) 28% 29%,transparent 30%),radial-gradient(ellipse at 70% 50%,transparent 0 27%,rgba(151,102,57,.58) 28% 29%,transparent 30%),linear-gradient(62deg,transparent 49.4%,rgba(151,102,57,.50) 50%,transparent 50.6%);animation:leafFloat 9s ease-in-out infinite}
-.texture-orbit .leaf-a{left:-32px;bottom:7vh;transform:rotate(-18deg)}
-.texture-orbit .leaf-b{right:1vw;top:33vh;transform:rotate(24deg) scale(.82);animation-delay:-3s}
-
-/* Visible section texture and movement on every public page. */
-main{position:relative;overflow:hidden}
-main::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:repeating-linear-gradient(45deg,rgba(151,101,55,.026) 0 1px,transparent 1px 20px);animation:patternSlide 16s linear infinite}
-main>*{position:relative;z-index:1}
-.section,.inner-heading,.contact-layout,.catalog-grid,.occasion-detail,.custom-grid,.masonry-gallery,.ref-features,.ref-occ,.ref-lower{position:relative;isolation:isolate}
-.section::before,.inner-heading::after,.contact-layout::before,.ref-occ::before,.ref-lower::before,.ref-features::after{content:"";position:absolute;pointer-events:none!important;z-index:0}
-.section>* ,.inner-heading>* ,.contact-layout>* ,.ref-occ>* ,.ref-lower>* ,.ref-features>*{position:relative;z-index:1}
-.inner-heading::after{width:220px;height:220px;right:-38px;top:8%;border:1px solid rgba(151,99,53,.22);box-shadow:0 0 0 22px rgba(151,99,53,.035),0 0 0 48px rgba(151,99,53,.02);transform:rotate(45deg);animation:diamondFloat 8s ease-in-out infinite}
-.section::before,.contact-layout::before{width:140px;height:140px;left:-52px;top:14%;border:1px solid rgba(151,99,53,.18);transform:rotate(45deg);animation:diamondFloat 10s ease-in-out infinite reverse}
-.ref-occ::before{width:240px;height:240px;right:-72px;top:-40px;border:1px solid rgba(151,99,53,.22);border-radius:50%;box-shadow:0 0 0 30px rgba(151,99,53,.035);animation:ringRotate 18s linear infinite}
-.ref-features::after{inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.56),rgba(194,140,82,.10),transparent);transform:translateX(-115%);animation:sectionSweep 6.5s ease-in-out infinite}
-.ref-lower::before{inset:0;background:radial-gradient(circle at 20% 30%,rgba(255,255,255,.26),transparent 28%),radial-gradient(circle at 82% 65%,rgba(178,120,62,.08),transparent 32%);animation:lowerGlow 5s ease-in-out infinite alternate}
-
-/* Interactive depth without covering links/buttons. */
-.catalog-card,.occasion-detail article,.custom-grid article,.quote-form,.ref-occ-card{position:relative;overflow:hidden;transition:transform .25s ease,box-shadow .25s ease}
-.catalog-card::before,.occasion-detail article::before,.custom-grid article::before,.quote-form::before,.ref-occ-card::before{content:"";position:absolute;inset:-1px;z-index:0;pointer-events:none!important;background:radial-gradient(circle at var(--card-x,50%) var(--card-y,50%),rgba(255,244,227,.50),rgba(205,158,101,.11) 20%,transparent 42%);opacity:.3;transition:opacity .25s ease}
+/* Tasmaarah Collection — production-safe animated luxury texture system */
+:root{--tx-gold:#a97740;--tx-gold-soft:#d8b98f;--tx-x:50%;--tx-y:22%}
+html{background:#f5e8d8}
+body{position:relative;overflow-x:hidden;background:
+ radial-gradient(circle at var(--tx-x) var(--tx-y),rgba(188,132,72,.18),transparent 24%),
+ radial-gradient(circle at 10% 22%,rgba(255,255,255,.62),transparent 26%),
+ radial-gradient(circle at 88% 72%,rgba(137,84,40,.10),transparent 29%),
+ linear-gradient(180deg,#fbf4eb 0%,#f3e3d1 50%,#eddbc6 100%)!important;
+ animation:ambientBreath 10s ease-in-out infinite}
+main{position:relative;background:
+ repeating-linear-gradient(135deg,rgba(151,99,54,.028) 0 1px,transparent 1px 18px),
+ linear-gradient(118deg,transparent 0 37%,rgba(255,255,255,.16) 45%,rgba(255,255,255,.34) 50%,rgba(255,255,255,.12) 56%,transparent 65%);
+ background-size:100% 100%,220% 100%;animation:satinTravel 15s ease-in-out infinite}
+.ref-features,.ref-occ,.ref-lower,.section,.inner-heading,.page-hero,.contact-layout,.catalog-grid,.occasion-detail,.custom-grid,.masonry-gallery{position:relative;isolation:isolate}
+.ref-features:before,.ref-occ:before,.ref-lower:before,.section:before,.inner-heading:before,.page-hero:before,.contact-layout:before{content:"";position:absolute;pointer-events:none!important;z-index:-1}
+.ref-features:before{inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.48),rgba(188,132,72,.09),transparent);background-size:220% 100%;animation:satinTravel 9s ease-in-out infinite}
+.ref-occ:before{width:280px;height:280px;right:-70px;top:-40px;border:1px solid rgba(164,108,58,.24);border-radius:50%;box-shadow:0 0 0 28px rgba(164,108,58,.04),0 0 0 58px rgba(164,108,58,.025);animation:ornamentSpin 34s linear infinite}
+.ref-lower:before{inset:0;background:radial-gradient(circle at 82% 16%,rgba(202,160,107,.13),transparent 28%),linear-gradient(135deg,rgba(255,255,255,.22),transparent 38%);animation:lowerGlow 7s ease-in-out infinite alternate}
+.inner-heading:before,.page-hero:before,.contact-layout:before,.section:before{width:160px;height:160px;border:1px solid rgba(155,102,54,.20);transform:rotate(45deg);box-shadow:0 0 0 20px rgba(155,102,54,.025);animation:diamondDrift 11s ease-in-out infinite}
+.inner-heading:before{right:5%;top:20%}.page-hero:before{right:1%;top:12%}.contact-layout:before{right:2%;top:8%}.section:before{left:-62px;top:12%;animation-direction:reverse}
+.catalog-grid,.occasion-detail,.custom-grid,.masonry-gallery,.content-split{background-image:radial-gradient(circle at 20% 30%,rgba(255,255,255,.22),transparent 20%),repeating-linear-gradient(45deg,rgba(153,100,54,.020) 0 1px,transparent 1px 12px);background-size:140% 140%,100% 100%;animation:patternDrift 18s ease-in-out infinite}
+.catalog-card,.occasion-detail article,.custom-grid article,.quote-form,.ref-occ-card{position:relative;overflow:hidden;transition:transform .28s ease,box-shadow .28s ease}
+.catalog-card:after,.occasion-detail article:after,.custom-grid article:after,.quote-form:after,.ref-occ-card:after{content:"";position:absolute;inset:0;pointer-events:none!important;z-index:0;background:radial-gradient(circle at var(--card-x,50%) var(--card-y,50%),rgba(255,244,225,.34),rgba(211,165,106,.08) 20%,transparent 40%);opacity:.25;transition:opacity .25s ease}
 .catalog-card>* ,.occasion-detail article>* ,.custom-grid article>* ,.quote-form>* ,.ref-occ-card>*{position:relative;z-index:1}
-.catalog-card:hover,.custom-grid article:hover,.ref-occ-card:hover{transform:translateY(-3px);box-shadow:0 22px 48px rgba(70,43,22,.12)}
-.catalog-card:hover::before,.occasion-detail article:hover::before,.custom-grid article:hover::before,.quote-form:hover::before,.ref-occ-card:hover::before{opacity:1}
-
-/* Explicit interaction safety for all controls. */
-a,button,input,select,textarea{pointer-events:auto!important}
-.btn,.menu-button,.ref-actions,.ref-actions a,.site-nav,.site-nav a,.ref-nav,.ref-nav a,.ref-icons,.ref-icons a,.header-quote,.floating-wa,.search-overlay,.search-overlay *,.lightbox,.lightbox *{position:relative;z-index:50!important;pointer-events:auto!important}
-.ref-copy{pointer-events:none!important}.ref-copy .ref-actions,.ref-copy .ref-actions *{pointer-events:auto!important}
-
-.section-kicker,.ref-occ .ref-kicker{position:relative;display:inline-block}.section-kicker::after,.ref-occ .ref-kicker::after{content:"";display:block;width:58px;height:1px;margin:10px auto 0;background:linear-gradient(90deg,transparent,var(--tx-gold),transparent);animation:lineBreath 2.8s ease-in-out infinite}
-
-@keyframes ambientDrift{0%{transform:translate3d(-1.5%,-1%,0) scale(1);background-position:0 0,100% 0,0 100%,0 0}100%{transform:translate3d(1.5%,1.2%,0) scale(1.035);background-position:8% 4%,92% 8%,6% 93%,20px 12px}}
-@keyframes satinPageSweep{0%,100%{background-position:-100% 0}50%{background-position:110% 0}}
-@keyframes patternSlide{to{background-position:40px 40px}}
-@keyframes orbPulse{0%,100%{transform:translateY(0) scale(1);opacity:.45}50%{transform:translateY(-18px) scale(1.04);opacity:.9}}
-@keyframes leafFloat{0%,100%{translate:0 0}50%{translate:14px -18px}}
-@keyframes diamondFloat{0%,100%{transform:translateY(0) rotate(45deg)}50%{transform:translateY(-14px) rotate(49deg)}}
-@keyframes ringRotate{to{transform:rotate(360deg)}}
-@keyframes sectionSweep{0%,60%,100%{transform:translateX(-115%)}78%{transform:translateX(115%)}}
-@keyframes lowerGlow{from{opacity:.45}to{opacity:1}}
-@keyframes lineBreath{0%,100%{opacity:.4;transform:scaleX(.78)}50%{opacity:1;transform:scaleX(1.25)}}
-
-@media(max-width:760px){body::before{opacity:.92}.texture-orbit{opacity:.48}.texture-orbit .orb-a{width:190px;height:190px;left:-95px}.texture-orbit .orb-b{width:170px;height:170px;right:-85px}.texture-orbit .orb-c{display:none}.texture-orbit .leaf{width:130px;height:130px;opacity:.16}.inner-heading::after{width:120px;height:120px;right:-54px}.section::before,.contact-layout::before{width:90px;height:90px;left:-48px}.ref-occ::before{width:150px;height:150px;right:-78px}.ref-features::after{animation-duration:7.5s}}
-@media(prefers-reduced-motion:reduce){body::before,body::after,main::before,.texture-orbit .orb,.texture-orbit .leaf,.inner-heading::after,.section::before,.contact-layout::before,.ref-occ::before,.ref-features::after,.ref-lower::before,.section-kicker::after,.ref-occ .ref-kicker::after{animation:none!important}.catalog-card,.occasion-detail article,.custom-grid article,.quote-form,.ref-occ-card{transition:none!important}}
+.catalog-card:hover,.custom-grid article:hover,.ref-occ-card:hover{transform:translateY(-3px);box-shadow:0 22px 52px rgba(77,47,23,.12)}
+.catalog-card:hover:after,.occasion-detail article:hover:after,.custom-grid article:hover:after,.quote-form:hover:after,.ref-occ-card:hover:after{opacity:.9}
+.catalog-card img,.ref-occ-card img,.occasion-detail img{transition:transform .6s cubic-bezier(.2,.7,.2,1),filter .4s ease}.catalog-card:hover img,.ref-occ-card:hover img{transform:scale(1.025);filter:saturate(.96) contrast(1.035)}
+.section-kicker,.ref-occ .ref-kicker{position:relative;display:inline-block}.section-kicker:after,.ref-occ .ref-kicker:after{content:"";display:block;width:56px;height:1px;margin:10px auto 0;background:linear-gradient(90deg,transparent,var(--tx-gold),transparent);animation:lineBreath 3.5s ease-in-out infinite}
+.site-header,.ref-header{box-shadow:0 8px 26px rgba(78,48,24,.06),0 1px 0 rgba(169,116,62,.12)}
+.footer,.ref-footer{position:relative;overflow:hidden}.footer:before,.ref-footer:before{content:"";position:absolute;inset:0;pointer-events:none!important;z-index:0;background:linear-gradient(110deg,transparent 0 38%,rgba(216,185,143,.06) 50%,transparent 62%);background-size:220% 100%;animation:satinTravel 16s ease-in-out infinite}.footer>* ,.ref-footer>*{position:relative;z-index:1}
+/* Interaction safety */
+a,button,input,select,textarea,label,.menu-button,.site-nav,.ref-nav,.ref-actions,.search-overlay,.lightbox,.floating-wa{pointer-events:auto!important;position:relative;z-index:5}.ref-copy{pointer-events:none!important}.ref-copy .ref-actions,.ref-copy .ref-actions *{pointer-events:auto!important}
+@keyframes ambientBreath{0%,100%{background-position:50% 22%,0 0,0 0,0 0}50%{background-position:54% 26%,0 0,0 0,0 0}}
+@keyframes satinTravel{0%,100%{background-position:-90% 0}50%{background-position:110% 0}}
+@keyframes ornamentSpin{to{transform:rotate(360deg)}}
+@keyframes diamondDrift{0%,100%{transform:translateY(0) rotate(45deg)}50%{transform:translateY(-14px) rotate(50deg)}}
+@keyframes lowerGlow{from{opacity:.55}to{opacity:1}}
+@keyframes patternDrift{0%,100%{background-position:0 0,0 0}50%{background-position:20% 12%,0 0}}
+@keyframes lineBreath{0%,100%{opacity:.45;transform:scaleX(.8)}50%{opacity:1;transform:scaleX(1.22)}}
+@media(max-width:760px){body{animation-duration:12s;background:radial-gradient(circle at var(--tx-x) var(--tx-y),rgba(188,132,72,.13),transparent 28%),linear-gradient(180deg,#faf2e8 0%,#f0dfcc 100%)!important}main{background-size:100% 100%,260% 100%}.ref-occ:before{width:160px;height:160px;right:-72px;top:18px}.inner-heading:before,.page-hero:before,.contact-layout:before,.section:before{width:92px;height:92px}.inner-heading:before{right:-34px}.page-hero:before,.contact-layout:before{right:-42px}}
+@media(prefers-reduced-motion:reduce){body,main,.ref-features:before,.ref-occ:before,.ref-lower:before,.section:before,.inner-heading:before,.page-hero:before,.contact-layout:before,.catalog-grid,.occasion-detail,.custom-grid,.masonry-gallery,.content-split,.section-kicker:after,.ref-occ .ref-kicker:after,.footer:before,.ref-footer:before{animation:none!important}.catalog-card,.custom-grid article,.ref-occ-card,.catalog-card img,.ref-occ-card img{transition:none!important}}
