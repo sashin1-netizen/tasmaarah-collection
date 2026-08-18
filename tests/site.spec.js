@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test');
+const fs = require('fs');
 
 const publicPages = [
   ['home', '/index.html'],
@@ -53,6 +54,18 @@ test('mobile navigation works as native progressive enhancement', async ({ page 
   await page.keyboard.press('Escape');
   await expect(menu).not.toHaveAttribute('open', '');
   await expect(summary).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('native mobile menu remains usable with JavaScript disabled', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const page = await context.newPage();
+  await page.goto('/index.html');
+  const menu = page.locator('.mobile-menu');
+  await expect(menu.locator('summary')).toBeVisible();
+  await menu.locator('summary').click();
+  await expect(menu).toHaveAttribute('open', '');
+  await expect(menu.locator('a[href="contact.html"]')).toBeVisible();
+  await context.close();
 });
 
 test('background motion is visible and can be paused', async ({ page }) => {
@@ -118,4 +131,12 @@ test('phone email and WhatsApp conversion actions are present', async ({ page })
   await expect(page.locator('a[href="tel:+27743788958"]')).not.toHaveCount(0);
   await expect(page.locator('a[href="mailto:tasmaarahcollection@gmail.com"]')).not.toHaveCount(0);
   await expect(page.locator('.floating-wa')).toHaveAttribute('href', /wa\.me\/27635409729/);
+});
+
+test('capture visual acceptance evidence', async ({ page }, testInfo) => {
+  fs.mkdirSync('visual-evidence', { recursive: true });
+  for (const [name, path] of [['home','/index.html'],['about','/about.html'],['contact','/contact.html']]) {
+    await page.goto(path, { waitUntil: 'networkidle' });
+    await page.screenshot({ path: `visual-evidence/${testInfo.project.name}-${name}.png`, fullPage: true });
+  }
 });
