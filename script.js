@@ -6,7 +6,7 @@
 
   const art=document.createElement('link');
   art.rel='stylesheet';
-  art.href='atelier-client-ready.css?v=2';
+  art.href='atelier-client-ready.css?v=3';
   art.dataset.tasmaarahArt='true';
   document.head.appendChild(art);
 
@@ -125,7 +125,6 @@
       trigger.setAttribute('aria-label',`Quick view ${card.querySelector('h2')?.textContent.trim()||'collection piece'}`);
       actions?.appendChild(trigger);
       trigger.addEventListener('click',()=>open(card));
-      card.querySelector('img')?.addEventListener('dblclick',()=>open(card));
     });
     closeButton?.addEventListener('click',close);
     quickView.addEventListener('click',event=>{if(event.target===quickView)close()});
@@ -133,23 +132,36 @@
   }
 
   const quoteForm=document.querySelector('#quote-form');
-  quoteForm?.addEventListener('submit',event=>{
-    event.preventDefault();
-    if(!quoteForm.reportValidity())return;
-    const data=new FormData(quoteForm);
-    const value=name=>String(data.get(name)||'').trim();
-    const message=[
-      "Hi Tasmaarah Collection, I'd like a quote.",
-      '',
-      `Name: ${value('name')}`,
-      `Occasion: ${value('occasion')}`,
-      `Service: ${value('service')}`,
-      `Material: ${value('material')}`,
-      `Size: ${value('size')}`,
-      `Details: ${value('details')||'Not provided'}`
-    ].join('\n');
-    window.location.href=`https://wa.me/27635409729?text=${encodeURIComponent(message)}`;
-  });
+  if(quoteForm){
+    const preview=document.createElement('div');
+    preview.className='quote-preview';
+    preview.setAttribute('aria-live','polite');
+    quoteForm.insertBefore(preview,quoteForm.querySelector('button[type="submit"]'));
+    const value=name=>String(new FormData(quoteForm).get(name)||'').trim();
+    const updatePreview=()=>{
+      preview.innerHTML=`<b>Occasion</b><span>${value('occasion')||'Not selected'}</span><b>Service</b><span>${value('service')||'Not selected'}</span><b>Material</b><span>${value('material')||'Not selected'}</span><b>Size</b><span>${value('size')||'Not selected'}</span>`;
+    };
+    quoteForm.addEventListener('input',updatePreview);
+    quoteForm.addEventListener('change',updatePreview);
+    updatePreview();
+    quoteForm.addEventListener('submit',event=>{
+      event.preventDefault();
+      if(!quoteForm.reportValidity())return;
+      const data=new FormData(quoteForm);
+      const field=name=>String(data.get(name)||'').trim();
+      const message=[
+        "Hi Tasmaarah Collection, I'd like a quote.",
+        '',
+        `Name: ${field('name')}`,
+        `Occasion: ${field('occasion')}`,
+        `Service: ${field('service')}`,
+        `Material: ${field('material')}`,
+        `Size: ${field('size')}`,
+        `Details: ${field('details')||'Not provided'}`
+      ].join('\n');
+      window.location.href=`https://wa.me/27635409729?text=${encodeURIComponent(message)}`;
+    });
+  }
 
   const galleryImages=[...document.querySelectorAll('.masonry-gallery img')];
   if(galleryImages.length){
@@ -163,7 +175,7 @@
     const image=lightbox.querySelector('img');
     const caption=lightbox.querySelector('figcaption');
     const closeButton=lightbox.querySelector('.lightbox-close');
-    let index=0,lastFocus=null;
+    let index=0,lastFocus=null,touchStartX=0;
     const show=i=>{
       index=(i+galleryImages.length)%galleryImages.length;
       const source=galleryImages[index];
@@ -184,6 +196,8 @@
     lightbox.querySelector('.lightbox-prev')?.addEventListener('click',()=>show(index-1));
     lightbox.querySelector('.lightbox-next')?.addEventListener('click',()=>show(index+1));
     lightbox.addEventListener('click',event=>{if(event.target===lightbox)close()});
+    lightbox.addEventListener('touchstart',event=>{touchStartX=event.touches[0]?.clientX||0},{passive:true});
+    lightbox.addEventListener('touchend',event=>{const x=event.changedTouches[0]?.clientX||touchStartX;const delta=x-touchStartX;if(Math.abs(delta)>48)show(index+(delta<0?1:-1))},{passive:true});
     document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('open'))return;if(event.key==='Escape')close();if(event.key==='ArrowLeft')show(index-1);if(event.key==='ArrowRight')show(index+1)});
   }
 
