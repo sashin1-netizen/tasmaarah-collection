@@ -6,7 +6,7 @@ body::before{animation:none!important;will-change:auto!important;background:radi
 body::after{animation:none!important;mix-blend-mode:normal!important;opacity:.12!important}
 .site-header,.mobile-panel,.value-strip,.process-card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 .site-header{background:rgba(251,247,241,.985)!important}.mobile-panel{background:#fbf6ef!important}.value-strip,.process-card{background:#fffaf4!important}
-main::before{animation:none!important;background:linear-gradient(112deg,transparent 16%,rgba(255,255,255,.24) 46%,rgba(188,136,80,.055) 51%,transparent 76%)!important}
+main::before{background:linear-gradient(112deg,transparent 16%,rgba(255,255,255,.24) 46%,rgba(188,136,80,.055) 51%,transparent 76%)!important;animation:satinSweep 18s ease-in-out infinite!important;will-change:transform,opacity}
 main::after{animation:none!important;opacity:.28}
 
 /* Hero: approved campaign art, never arbitrarily cropped. */
@@ -53,6 +53,7 @@ main::after{animation:none!important;opacity:.28}
 /* Content is ALWAYS visible. JS adds a short compositor-friendly entrance only. */
 .js [data-reveal]{opacity:1!important;transform:none!important}
 .js [data-reveal].reveal-enter{animation:luxReveal .62s cubic-bezier(.2,.7,.2,1) both}
+@keyframes satinSweep{0%,100%{transform:translate3d(-2%,0,0);opacity:.12}50%{transform:translate3d(2%,0,0);opacity:.22}}
 @keyframes luxReveal{from{opacity:.64;transform:translate3d(0,16px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
 .btn{position:relative;overflow:hidden}.btn::after{content:"";position:absolute;inset:0;transform:translate3d(-130%,0,0);background:linear-gradient(100deg,transparent,rgba(255,255,255,.25),transparent);transition:transform .5s ease}.btn:hover::after{transform:translate3d(130%,0,0)}
 
