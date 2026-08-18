@@ -1,0 +1,1 @@
+(()=>{const has=document.querySelector('link[href*="atelier-client-ready.css"]');if(has)return;const link=document.createElement('link');link.rel='stylesheet';link.href='deadline-first-paint.css?v=1';link.dataset.tasmaarahArt='true';document.head.appendChild(link)})();

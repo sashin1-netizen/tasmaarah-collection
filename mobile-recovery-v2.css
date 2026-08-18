@@ -1,0 +1,106 @@
+/* Tasmaarah Collection — final mobile-first recovery */
+@media (max-width:980px){
+  html,body{overflow-x:hidden!important;background:#f7eee4!important}
+  .utility-bar{height:auto!important;padding:7px 14px!important;background:linear-gradient(90deg,#28180f,#8a5a30)!important}
+  .utility-inner{min-height:0!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;font-size:10px!important;letter-spacing:.04em!important}
+  .utility-inner>span:nth-child(2){display:none!important}
+  .utility-actions{display:flex!important;align-items:center!important;gap:8px!important}
+  .utility-actions a{font-size:10px!important;color:#fff7ef!important;font-weight:600!important;letter-spacing:.06em!important}
+  .motion-toggle{display:none!important}
+
+  .site-header{position:sticky!important;top:0!important;z-index:80!important;background:rgba(255,250,244,.985)!important;box-shadow:0 7px 22px rgba(43,25,13,.08)!important;backdrop-filter:blur(14px)!important}
+  .header-inner{min-height:72px!important;padding:0 14px!important;display:grid!important;grid-template-columns:38px 1fr auto!important;gap:8px!important;align-items:center!important}
+  .mobile-menu{display:block!important;justify-self:start!important}
+  .mobile-menu summary{width:36px!important;height:36px!important;display:grid!important;place-content:center!important;gap:5px!important;padding:0!important;border:0!important;background:transparent!important}
+  .mobile-menu summary span{display:block!important;width:23px!important;height:1.5px!important;background:#2b1b12!important;border-radius:999px!important}
+  .brand{justify-self:center!important;display:flex!important;align-items:center!important;min-width:0!important}
+  .brand img{width:158px!important;max-width:44vw!important;max-height:50px!important;object-fit:contain!important;filter:contrast(1.04)!important}
+  .desktop-nav{display:none!important}
+  .header-quote{justify-self:end!important;width:auto!important;height:auto!important;min-width:0!important;padding:11px 12px!important;border:0!important;border-radius:999px!important;background:#2a190f!important;color:#fff8ef!important;font-size:8px!important;line-height:1!important;letter-spacing:.13em!important;text-transform:uppercase!important;box-shadow:0 7px 16px rgba(42,25,15,.13)!important}
+
+  .campaign-hero{min-height:0!important;padding:0!important;display:flex!important;flex-direction:column!important;gap:0!important;background:#f5e7d8!important;overflow:hidden!important}
+  .campaign-stage{order:1!important;position:relative!important;width:100%!important;height:min(116vw,515px)!important;min-height:440px!important;max-height:515px!important;overflow:hidden!important;background:radial-gradient(circle at 78% 12%,rgba(255,255,255,.9),transparent 26%),linear-gradient(150deg,#f4e3d1 0%,#dcb58f 55%,#b57c50 100%)!important;isolation:isolate!important}
+  .campaign-stage::before{content:""!important;position:absolute!important;inset:-20% -45%!important;background:linear-gradient(108deg,transparent 35%,rgba(255,255,255,.42) 48%,transparent 61%)!important;animation:mobileLightSweep 5.8s ease-in-out infinite!important;z-index:10!important;pointer-events:none!important;mix-blend-mode:screen!important}
+  .campaign-stage::after{content:""!important;position:absolute!important;left:0!important;right:0!important;bottom:0!important;height:24%!important;background:linear-gradient(180deg,transparent,rgba(49,27,13,.18))!important;z-index:8!important;pointer-events:none!important}
+  .campaign-stage figure{position:absolute!important;margin:0!important;overflow:hidden!important;border:3px solid rgba(255,250,244,.96)!important;box-shadow:0 18px 40px rgba(50,27,12,.22)!important;background:#ead3bd!important;will-change:transform!important}
+  .campaign-stage img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;opacity:1!important;filter:saturate(1.02) contrast(1.035)!important}
+  .stage-main{inset:5% 5% 5% 5%!important;z-index:2!important;transform:rotate(-.8deg)!important;animation:mobileHeroFloat 6.1s ease-in-out infinite!important;background:#dfb993!important}
+  .stage-main img{content:url('assets/images/1000502774.webp')!important;object-position:center 45%!important;opacity:1!important}
+  .stage-top{width:35%!important;height:28%!important;right:1%!important;top:3%!important;z-index:5!important;transform:rotate(3deg)!important;animation:mobileCardFloatA 5.5s ease-in-out infinite!important}
+  .stage-top img{object-position:center!important}
+  .stage-bottom{width:38%!important;height:27%!important;right:1%!important;bottom:2%!important;z-index:6!important;transform:rotate(-2deg)!important;animation:mobileCardFloatB 6s ease-in-out infinite!important}
+  .stage-detail{width:29%!important;height:23%!important;left:1%!important;bottom:2%!important;z-index:7!important;transform:rotate(2deg)!important;animation:mobileCardFloatC 5.2s ease-in-out infinite!important}
+  .stage-mark{display:none!important}
+
+  .campaign-copy{order:2!important;position:relative!important;z-index:12!important;width:100%!important;max-width:none!important;padding:40px 22px 44px!important;text-align:center!important;background:linear-gradient(180deg,#fffaf4 0%,#f3e3d3 100%)!important}
+  .campaign-copy .section-kicker{display:block!important;margin:0 0 14px!important;font-size:8px!important;letter-spacing:.23em!important;color:#8b5b37!important}
+  .campaign-copy .section-kicker::after{display:none!important}
+  .campaign-copy h1{max-width:none!important;margin:0 0 21px!important;font-size:clamp(47px,14.5vw,67px)!important;line-height:.84!important;letter-spacing:-.055em!important;color:#21140e!important}
+  .campaign-copy h1 em{display:block!important;color:#965d33!important}
+  .campaign-copy>p:not(.section-kicker){max-width:34ch!important;margin:0 auto!important;font-size:14.5px!important;line-height:1.62!important;color:#5c4435!important}
+  .hero-actions{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;margin-top:24px!important}
+  .hero-actions .btn{width:100%!important;min-height:50px!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;letter-spacing:.13em!important}
+  .campaign-signature{justify-content:center!important;gap:10px 15px!important;margin-top:21px!important;padding-top:18px!important}
+  .campaign-signature span{font-size:7.5px!important;letter-spacing:.11em!important}
+
+  .value-strip{display:flex!important;overflow-x:auto!important;scroll-snap-type:x mandatory!important;padding:0!important;background:#25170f!important;scrollbar-width:none!important}
+  .value-strip::-webkit-scrollbar{display:none!important}
+  .value-item{min-width:76vw!important;scroll-snap-align:start!important;padding:24px 20px!important;border-right:1px solid rgba(239,214,186,.14)!important}
+  .value-item h2{font-size:14px!important}.value-item p{font-size:11px!important}
+
+  main img:not(.hero-art){opacity:1!important;visibility:visible!important;background:#ead8c4!important}
+  .image-ready{opacity:1!important;visibility:visible!important}
+  [data-reveal]{opacity:1!important;transform:none!important;visibility:visible!important}
+  [data-reveal].reveal-enter{animation:mobileReveal .68s cubic-bezier(.2,.7,.2,1) both!important}
+
+  .home-section{padding:68px 18px!important}
+  .section-head{max-width:100%!important}
+  .section-head h2{font-size:clamp(40px,12.4vw,58px)!important;line-height:.91!important;letter-spacing:-.045em!important}
+  .section-head p:last-child{font-size:14.5px!important;line-height:1.62!important}
+  .catalog-grid{grid-template-columns:1fr!important;gap:28px!important}
+  .catalog-card,.catalog-card:nth-child(3n+2),.catalog-card:nth-child(3n+3){margin-top:0!important}
+  .catalog-card{padding:7px!important;background:#fffaf4!important}
+  .catalog-card img{aspect-ratio:4/4.65!important;object-fit:cover!important}
+  .catalog-card div{padding:20px 12px 12px!important}
+
+  .occasion-grid{display:grid!important;grid-template-columns:1fr!important;gap:17px!important}
+  .occasion-card,.occasion-card:nth-child(1),.occasion-card:nth-child(2),.occasion-card:nth-child(3),.occasion-card:nth-child(4){grid-column:auto!important;margin:0!important;min-height:420px!important}
+  .occasion-card img{object-fit:cover!important;opacity:1!important}
+  .occasion-card b{font-size:38px!important}
+
+  .campaign-spread{display:flex!important;flex-direction:column!important;padding:72px 18px!important;gap:32px!important}
+  .campaign-spread-copy h2{font-size:47px!important;line-height:.9!important}
+  .campaign-spread-grid{width:100%!important;min-height:500px!important;gap:8px!important}
+  .campaign-spread-grid img{opacity:1!important;visibility:visible!important}
+
+  .editorial-band{display:flex!important;flex-direction:column!important;margin:0 14px!important;border-radius:2px!important;overflow:hidden!important}
+  .editorial-band>img{width:100%!important;min-height:350px!important;max-height:430px!important;object-fit:cover!important;opacity:1!important}
+  .editorial-copy{padding:36px 21px!important}
+
+  .process-wrap{padding-inline:15px!important}
+  .gallery-grid img,.gallery-tease img{opacity:1!important;visibility:visible!important;background:#ead8c4!important}
+  .cta{margin:0 14px 28px!important;padding:38px 22px!important;gap:24px!important}
+  .cta .btn{width:100%!important;min-height:50px!important}
+
+  .floating-wa{width:52px!important;height:52px!important;right:12px!important;bottom:12px!important;z-index:45!important;box-shadow:0 10px 24px rgba(42,25,15,.2)!important}
+}
+
+@media(max-width:420px){
+  .utility-inner>span:first-child{max-width:56vw!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .brand img{width:146px!important}
+  .header-quote{padding:10px 10px!important;font-size:7.5px!important}
+  .campaign-stage{height:min(116vw,488px)!important;min-height:430px!important}
+  .campaign-copy{padding:37px 18px 41px!important}
+  .campaign-copy h1{font-size:clamp(46px,14.7vw,61px)!important}
+}
+
+@keyframes mobileLightSweep{0%,100%{transform:translateX(-22%) skewX(-8deg);opacity:.16}50%{transform:translateX(30%) skewX(-8deg);opacity:.62}}
+@keyframes mobileHeroFloat{0%,100%{transform:rotate(-.8deg) translate3d(0,0,0) scale(1)}50%{transform:rotate(-.15deg) translate3d(0,-7px,0) scale(1.008)}}
+@keyframes mobileCardFloatA{0%,100%{transform:rotate(3deg) translate3d(0,0,0)}50%{transform:rotate(1.9deg) translate3d(-4px,6px,0)}}
+@keyframes mobileCardFloatB{0%,100%{transform:rotate(-2deg) translate3d(0,0,0)}50%{transform:rotate(-.9deg) translate3d(-6px,-5px,0)}}
+@keyframes mobileCardFloatC{0%,100%{transform:rotate(2deg) translate3d(0,0,0)}50%{transform:rotate(2.8deg) translate3d(4px,-5px,0)}}
+@keyframes mobileReveal{from{opacity:.01;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+@media(prefers-reduced-motion:reduce){
+  .campaign-stage::before,.stage-main,.stage-top,.stage-bottom,.stage-detail,[data-reveal].reveal-enter{animation:none!important}
+}

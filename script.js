@@ -1,271 +1,127 @@
 (()=>{
   'use strict';
-
   const root=document.documentElement;
   root.classList.add('js');
 
-  const art=document.createElement('link');
-  art.rel='stylesheet';
-  art.href='atelier-client-ready.css?v=6';
-  art.dataset.tasmaarahArt='true';
-  document.head.appendChild(art);
-
-  const safeStorage={
-    get(key){try{return localStorage.getItem(key)}catch{return null}},
-    set(key,value){try{localStorage.setItem(key,value)}catch{}}
+  const addCss=(href,key)=>{
+    if(document.querySelector(`[data-${key}]`))return;
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href=href;
+    link.dataset[key]='true';
+    document.head.appendChild(link);
   };
+  addCss('atelier-client-ready.css?v=10','tasmaarahArt');
+  addCss('mobile-recovery-v2.css?v=2','tasmaarahMobile');
 
-  const focusableSelector='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
-  const trapTab=(event,container)=>{
-    if(event.key!=='Tab'||!container)return;
-    const focusable=[...container.querySelectorAll(focusableSelector)].filter(el=>el.offsetParent!==null);
-    if(!focusable.length)return;
-    const first=focusable[0],last=focusable[focusable.length-1];
-    if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
-    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
-  };
-
-  const motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const safeStorage={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}}};
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
   const motionButton=document.querySelector('.motion-toggle');
-  const savedMotion=safeStorage.get('tasmaarah-motion');
   const setMotion=enabled=>{
     document.body.dataset.motion=enabled?'on':'off';
-    if(motionButton){
-      motionButton.textContent=enabled?'Pause motion':'Play motion';
-      motionButton.setAttribute('aria-pressed',String(!enabled));
-      motionButton.setAttribute('aria-label',enabled?'Pause decorative motion':'Play decorative motion');
-    }
+    if(motionButton){motionButton.textContent=enabled?'Pause motion':'Play motion';motionButton.setAttribute('aria-pressed',String(!enabled));motionButton.setAttribute('aria-label',enabled?'Pause decorative motion':'Play decorative motion')}
     safeStorage.set('tasmaarah-motion',enabled?'on':'off');
   };
-  setMotion(savedMotion?savedMotion==='on':!motionQuery.matches);
+  const saved=safeStorage.get('tasmaarah-motion');
+  setMotion(saved?saved==='on':!reduce.matches);
   motionButton?.addEventListener('click',()=>setMotion(document.body.dataset.motion!=='on'));
 
-  const mobileMenu=document.querySelector('.mobile-menu');
-  if(mobileMenu){
-    const summary=mobileMenu.querySelector('summary');
-    const panel=mobileMenu.querySelector('.mobile-panel');
-    const header=document.querySelector('.site-header');
-    const positionPanel=()=>{
-      if(!panel||!header)return;
-      const top=Math.max(0,Math.round(header.getBoundingClientRect().bottom));
-      panel.style.top=`${top}px`;
-      panel.style.height=`calc(100dvh - ${top}px)`;
-    };
-    const closeMenu=()=>{mobileMenu.open=false};
-    mobileMenu.addEventListener('toggle',()=>{
-      const open=mobileMenu.open;
-      summary?.setAttribute('aria-expanded',String(open));
-      summary?.setAttribute('aria-label',open?'Close navigation':'Open navigation');
-      document.body.classList.toggle('menu-open',open);
-      document.body.style.overflow=open?'hidden':'';
-      if(open){positionPanel();panel?.querySelector('a')?.focus({preventScroll:true})}
+  const progress=document.createElement('div');
+  progress.className='page-progress';progress.setAttribute('aria-hidden','true');
+  document.body.appendChild(progress);
+  let scrollRaf=0;
+  const updateScrollState=()=>{
+    cancelAnimationFrame(scrollRaf);
+    scrollRaf=requestAnimationFrame(()=>{
+      const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
+      progress.style.transform=`scaleX(${Math.min(1,scrollY/max)})`;
+      document.body.classList.toggle('has-scrolled',scrollY>24);
     });
-    panel?.querySelectorAll('a').forEach(link=>link.addEventListener('click',closeMenu));
-    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&mobileMenu.open){closeMenu();summary?.focus()}});
-    document.addEventListener('pointerdown',event=>{if(mobileMenu.open&&!mobileMenu.contains(event.target))closeMenu()},{passive:true});
-    window.addEventListener('resize',()=>{if(window.innerWidth>980&&mobileMenu.open)closeMenu();else if(mobileMenu.open)positionPanel()},{passive:true});
-    window.addEventListener('scroll',()=>{if(mobileMenu.open)positionPanel()},{passive:true});
+  };
+  addEventListener('scroll',updateScrollState,{passive:true});updateScrollState();
+
+  const menu=document.querySelector('.mobile-menu');
+  if(menu){
+    const summary=menu.querySelector('summary'),panel=menu.querySelector('.mobile-panel'),header=document.querySelector('.site-header');
+    const position=()=>{if(!panel||!header)return;const top=Math.max(0,Math.round(header.getBoundingClientRect().bottom));panel.style.top=`${top}px`;panel.style.height=`calc(100dvh - ${top}px)`};
+    const close=()=>{menu.open=false};
+    menu.addEventListener('toggle',()=>{const open=menu.open;summary?.setAttribute('aria-expanded',String(open));summary?.setAttribute('aria-label',open?'Close navigation':'Open navigation');document.body.classList.toggle('menu-open',open);document.body.style.overflow=open?'hidden':'';if(open){position();panel?.querySelector('a')?.focus({preventScroll:true})}});
+    panel?.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){close();summary?.focus()}});
+    document.addEventListener('pointerdown',e=>{if(menu.open&&!menu.contains(e.target))close()},{passive:true});
+    addEventListener('resize',()=>{if(innerWidth>980&&menu.open)close();else if(menu.open)position()},{passive:true});
   }
 
   const current=(location.pathname.split('/').pop()||'index.html').toLowerCase();
-  document.querySelectorAll('.desktop-nav a,.mobile-panel a').forEach(link=>{
-    const target=(link.getAttribute('href')||'').split('#')[0].toLowerCase();
-    if(target===current)link.setAttribute('aria-current','page');
+  document.querySelectorAll('.desktop-nav a,.mobile-panel a').forEach(a=>{const target=(a.getAttribute('href')||'').split('#')[0].toLowerCase();if(target===current)a.setAttribute('aria-current','page')});
+
+  const hero=document.querySelector('.hero-art');
+  if(hero){hero.loading='eager';hero.fetchPriority='high';hero.decoding='sync'}
+  const images=[...document.querySelectorAll('main img')];
+  images.forEach(img=>{
+    if(img!==hero){img.decoding='async';if(!img.hasAttribute('loading'))img.loading='lazy'}
+    const ready=()=>img.classList.add('image-ready');
+    if(img.complete)ready();else img.addEventListener('load',ready,{once:true});
   });
-
-  const catalogCards=[...document.querySelectorAll('.catalog-card')];
-  const catalogSearch=document.querySelector('[data-catalog-search]');
-  const emptyState=document.querySelector('.empty-state');
-  if(catalogCards.length&&catalogSearch){
-    const filter=()=>{
-      const query=catalogSearch.value.trim().toLowerCase();
-      let visible=0;
-      catalogCards.forEach(card=>{
-        const hit=!query||card.textContent.toLowerCase().includes(query);
-        card.hidden=!hit;
-        if(hit)visible++;
-      });
-      emptyState?.classList.toggle('show',visible===0);
-    };
-    catalogSearch.value=new URLSearchParams(location.search).get('q')||'';
-    catalogSearch.addEventListener('input',filter);
-    filter();
+  const lazy=images.filter(img=>img!==hero&&img.loading==='lazy');
+  if('IntersectionObserver'in window){
+    const imageObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(!entry.isIntersecting)return;const img=entry.target;img.loading='eager';img.fetchPriority='low';imageObserver.unobserve(img)}),{rootMargin:'140% 0px 140% 0px',threshold:0});
+    lazy.forEach(img=>imageObserver.observe(img));
   }
 
-  if(catalogCards.length){
-    const quickView=document.createElement('div');
-    quickView.className='quick-view';
-    quickView.setAttribute('role','dialog');
-    quickView.setAttribute('aria-modal','true');
-    quickView.setAttribute('aria-label','Collection quick view');
-    quickView.innerHTML='<div class="quick-view-panel"><button class="quick-view-close" type="button" aria-label="Close quick view">×</button><div class="quick-view-media"><img alt=""></div><div class="quick-view-copy"><p class="section-kicker">Tasmaarah Collection</p><h2></h2><p class="quick-view-description"></p><div class="quick-view-actions"><a class="btn btn-gold quick-view-whatsapp" target="_blank" rel="noopener">Request this style on WhatsApp</a><a class="btn btn-outline" href="custom-orders.html">Explore custom options</a></div><p class="quick-view-note">Available options depend on material, size, hire or purchase and custom requirements.</p></div></div>';
-    document.body.appendChild(quickView);
-    const closeButton=quickView.querySelector('.quick-view-close');
-    const image=quickView.querySelector('img');
-    const title=quickView.querySelector('h2');
-    const description=quickView.querySelector('.quick-view-description');
-    const whatsapp=quickView.querySelector('.quick-view-whatsapp');
-    let lastFocus=null;
-    const close=()=>{
-      quickView.classList.remove('open');
-      document.body.classList.remove('quick-view-open');
-      lastFocus?.focus?.();
-    };
-    const open=card=>{
-      const cardImage=card.querySelector('img');
-      const cardTitle=card.querySelector('h2')?.textContent.trim()||'Tasmaarah presentation';
-      const cardDescription=card.querySelector('p')?.textContent.trim()||'';
-      lastFocus=document.activeElement;
-      image.src=cardImage?.currentSrc||cardImage?.src||'';
-      image.alt=cardImage?.alt||cardTitle;
-      title.textContent=cardTitle;
-      description.textContent=cardDescription;
-      const message=`Hi Tasmaarah Collection, I'm interested in the ${cardTitle} style shown on your website. Please can you help me with options and a quote?`;
-      whatsapp.href=`https://wa.me/27635409729?text=${encodeURIComponent(message)}`;
-      quickView.classList.add('open');
-      document.body.classList.add('quick-view-open');
-      closeButton?.focus();
-    };
-    catalogCards.forEach(card=>{
-      const actions=card.querySelector('div');
-      const trigger=document.createElement('button');
-      trigger.type='button';
-      trigger.className='catalog-quick';
-      trigger.textContent='Quick view';
-      trigger.setAttribute('aria-label',`Quick view ${card.querySelector('h2')?.textContent.trim()||'collection piece'}`);
-      actions?.appendChild(trigger);
-      trigger.addEventListener('click',()=>open(card));
-    });
-    closeButton?.addEventListener('click',close);
-    quickView.addEventListener('click',event=>{if(event.target===quickView)close()});
-    document.addEventListener('keydown',event=>{
-      if(!quickView.classList.contains('open'))return;
-      if(event.key==='Escape')close();
-      else trapTab(event,quickView);
-    });
+  if('IntersectionObserver'in window&&!reduce.matches){
+    const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(!entry.isIntersecting)return;entry.target.classList.add('reveal-enter');revealObserver.unobserve(entry.target)}),{rootMargin:'15% 0px',threshold:.04});
+    document.querySelectorAll('[data-reveal]').forEach(el=>revealObserver.observe(el));
   }
 
-  const quoteForm=document.querySelector('#quote-form');
-  if(quoteForm){
-    const preview=document.createElement('div');
-    preview.className='quote-preview';
-    preview.setAttribute('aria-live','polite');
-    quoteForm.insertBefore(preview,quoteForm.querySelector('button[type="submit"]'));
-    const value=name=>String(new FormData(quoteForm).get(name)||'').trim();
-    const updatePreview=()=>{
-      preview.innerHTML=`<b>Occasion</b><span>${value('occasion')||'Not selected'}</span><b>Service</b><span>${value('service')||'Not selected'}</span><b>Material</b><span>${value('material')||'Not selected'}</span><b>Size</b><span>${value('size')||'Not selected'}</span>`;
-    };
-    quoteForm.addEventListener('input',updatePreview);
-    quoteForm.addEventListener('change',updatePreview);
-    updatePreview();
-    quoteForm.addEventListener('submit',event=>{
-      event.preventDefault();
-      if(!quoteForm.reportValidity())return;
-      const data=new FormData(quoteForm);
-      const field=name=>String(data.get(name)||'').trim();
-      const message=[
-        "Hi Tasmaarah Collection, I'd like a quote.",
-        '',
-        `Name: ${field('name')}`,
-        `Occasion: ${field('occasion')}`,
-        `Service: ${field('service')}`,
-        `Material: ${field('material')}`,
-        `Size: ${field('size')}`,
-        `Details: ${field('details')||'Not provided'}`
-      ].join('\n');
-      window.location.href=`https://wa.me/27635409729?text=${encodeURIComponent(message)}`;
-    });
+  const focusable='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+  const trap=(e,box)=>{if(e.key!=='Tab')return;const all=[...box.querySelectorAll(focusable)].filter(el=>el.offsetParent!==null);if(!all.length)return;const first=all[0],last=all[all.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}};
+
+  const cards=[...document.querySelectorAll('.catalog-card')];
+  const search=document.querySelector('[data-catalog-search]');
+  const empty=document.querySelector('.empty-state');
+  if(cards.length&&search){
+    const toolbar=search.closest('.catalog-toolbar');
+    const filters=document.createElement('div');filters.className='catalog-filters';filters.setAttribute('aria-label','Filter collection');
+    const options=['All',...cards.map(c=>c.querySelector('h2')?.textContent.trim()).filter(Boolean)];
+    let active='All';
+    const apply=()=>{const q=search.value.trim().toLowerCase();let visible=0;cards.forEach(card=>{const title=card.querySelector('h2')?.textContent.trim()||'';const hitText=!q||card.textContent.toLowerCase().includes(q);const hitFilter=active==='All'||title===active;card.hidden=!(hitText&&hitFilter);if(!card.hidden)visible++});empty?.classList.toggle('show',visible===0)};
+    [...new Set(options)].forEach(label=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.className='catalog-filter';if(label==='All')b.classList.add('active');b.addEventListener('click',()=>{active=label;filters.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));apply()});filters.appendChild(b)});
+    toolbar?.appendChild(filters);
+    search.value=new URLSearchParams(location.search).get('q')||'';
+    search.addEventListener('input',apply);apply();
   }
 
-  const galleryImages=[...document.querySelectorAll('.masonry-gallery img')];
-  if(galleryImages.length){
-    const lightbox=document.createElement('div');
-    lightbox.className='lightbox';
-    lightbox.setAttribute('role','dialog');
-    lightbox.setAttribute('aria-modal','true');
-    lightbox.setAttribute('aria-label','Gallery viewer');
-    lightbox.innerHTML='<button class="lightbox-close" type="button" aria-label="Close gallery">×</button><button class="lightbox-prev" type="button" aria-label="Previous image">‹</button><figure><img alt=""><figcaption></figcaption></figure><button class="lightbox-next" type="button" aria-label="Next image">›</button>';
-    document.body.appendChild(lightbox);
-    const image=lightbox.querySelector('img');
-    const caption=lightbox.querySelector('figcaption');
-    const closeButton=lightbox.querySelector('.lightbox-close');
-    let index=0,lastFocus=null,touchStartX=0;
-    const show=i=>{
-      index=(i+galleryImages.length)%galleryImages.length;
-      const source=galleryImages[index];
-      image.src=source.currentSrc||source.src;
-      image.alt=source.alt||'Tasmaarah Collection presentation';
-      caption.textContent=source.alt||'Tasmaarah Collection presentation';
-    };
-    const open=i=>{lastFocus=document.activeElement;show(i);lightbox.classList.add('open');document.body.classList.add('lightbox-open');closeButton?.focus()};
-    const close=()=>{lightbox.classList.remove('open');document.body.classList.remove('lightbox-open');lastFocus?.focus?.()};
-    galleryImages.forEach((img,i)=>{
-      img.tabIndex=0;
-      img.setAttribute('role','button');
-      img.setAttribute('aria-label',`Open image: ${img.alt||'Tasmaarah Collection presentation'}`);
-      img.addEventListener('click',()=>open(i));
-      img.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();open(i)}});
-    });
-    closeButton?.addEventListener('click',close);
-    lightbox.querySelector('.lightbox-prev')?.addEventListener('click',()=>show(index-1));
-    lightbox.querySelector('.lightbox-next')?.addEventListener('click',()=>show(index+1));
-    lightbox.addEventListener('click',event=>{if(event.target===lightbox)close()});
-    lightbox.addEventListener('touchstart',event=>{touchStartX=event.touches[0]?.clientX||0},{passive:true});
-    lightbox.addEventListener('touchend',event=>{const x=event.changedTouches[0]?.clientX||touchStartX;const delta=x-touchStartX;if(Math.abs(delta)>48)show(index+(delta<0?1:-1))},{passive:true});
-    document.addEventListener('keydown',event=>{
-      if(!lightbox.classList.contains('open'))return;
-      if(event.key==='Escape')close();
-      else if(event.key==='ArrowLeft')show(index-1);
-      else if(event.key==='ArrowRight')show(index+1);
-      else trapTab(event,lightbox);
-    });
+  if(cards.length){
+    const dialog=document.createElement('div');dialog.className='quick-view';dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label','Collection quick view');
+    dialog.innerHTML='<div class="quick-view-panel"><button class="quick-view-close" type="button" aria-label="Close quick view">×</button><div class="quick-view-media"><img alt=""></div><div class="quick-view-copy"><p class="section-kicker">Tasmaarah Collection</p><h2></h2><p class="quick-view-description"></p><div class="quick-view-actions"><a class="btn btn-gold quick-view-whatsapp" target="_blank" rel="noopener">Request this style on WhatsApp</a><a class="btn btn-outline" href="custom-orders.html">Explore custom options</a></div><p class="quick-view-note">Available options depend on material, size, hire or purchase and custom requirements.</p></div></div>';
+    document.body.appendChild(dialog);
+    const closeBtn=dialog.querySelector('.quick-view-close'),img=dialog.querySelector('img'),title=dialog.querySelector('h2'),desc=dialog.querySelector('.quick-view-description'),wa=dialog.querySelector('.quick-view-whatsapp');let last=null;
+    const close=()=>{dialog.classList.remove('open');document.body.classList.remove('quick-view-open');last?.focus?.()};
+    const open=card=>{const source=card.querySelector('img'),name=card.querySelector('h2')?.textContent.trim()||'Tasmaarah presentation';last=document.activeElement;img.src=source?.currentSrc||source?.src||'';img.alt=source?.alt||name;title.textContent=name;desc.textContent=card.querySelector('p')?.textContent.trim()||'';wa.href=`https://wa.me/27635409729?text=${encodeURIComponent(`Hi Tasmaarah Collection, I'm interested in the ${name} style shown on your website. Please can you help me with options and a quote?`)}`;dialog.classList.add('open');document.body.classList.add('quick-view-open');closeBtn?.focus()};
+    cards.forEach(card=>{const area=card.querySelector('div');const b=document.createElement('button');b.type='button';b.className='catalog-quick';b.textContent='Quick view';b.setAttribute('aria-label',`Quick view ${card.querySelector('h2')?.textContent.trim()||'collection piece'}`);area?.appendChild(b);b.addEventListener('click',()=>open(card))});
+    closeBtn?.addEventListener('click',close);dialog.addEventListener('click',e=>{if(e.target===dialog)close()});document.addEventListener('keydown',e=>{if(!dialog.classList.contains('open'))return;if(e.key==='Escape')close();else trap(e,dialog)});
   }
 
-  /* Prioritise the first story beat; defer the below-fold gallery until scroll or browser idle. */
-  const warmCampaign=()=>document.querySelectorAll('.occasion-grid img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
-  let galleryWarmed=false;
-  const warmGallery=()=>{
-    if(galleryWarmed)return;
-    galleryWarmed=true;
-    document.querySelectorAll('.gallery-tease img[loading="lazy"]').forEach(img=>{img.loading='eager';img.fetchPriority='low'});
-  };
-  warmCampaign();
-  window.addEventListener('scroll',warmGallery,{once:true,passive:true});
-  if('requestIdleCallback' in window)requestIdleCallback(warmGallery,{timeout:1800});
-  else setTimeout(warmGallery,1800);
-
-  /* Core content always remains visible; reveal motion enhances rather than gates access. */
-  const reveals=[...document.querySelectorAll('[data-reveal]')];
-  if('IntersectionObserver' in window&&!motionQuery.matches){
-    const observer=new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        if(!entry.isIntersecting)return;
-        entry.target.querySelectorAll('img[loading="lazy"]').forEach(img=>{img.loading='eager'});
-        entry.target.classList.remove('reveal-enter');
-        void entry.target.offsetWidth;
-        entry.target.classList.add('reveal-enter');
-        observer.unobserve(entry.target);
-      });
-    },{threshold:.06,rootMargin:'20% 0px 20% 0px'});
-    reveals.forEach(el=>observer.observe(el));
+  const form=document.querySelector('#quote-form');
+  if(form){
+    const preview=document.createElement('div');preview.className='quote-preview';preview.setAttribute('aria-live','polite');form.insertBefore(preview,form.querySelector('button[type="submit"]'));
+    const val=name=>String(new FormData(form).get(name)||'').trim();
+    const render=()=>{preview.innerHTML=`<b>Occasion</b><span>${val('occasion')||'Not selected'}</span><b>Service</b><span>${val('service')||'Not selected'}</span><b>Material</b><span>${val('material')||'Not selected'}</span><b>Size</b><span>${val('size')||'Not selected'}</span>`};
+    form.addEventListener('input',render);form.addEventListener('change',render);render();
+    form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const d=new FormData(form),f=n=>String(d.get(n)||'').trim();const msg=["Hi Tasmaarah Collection, I'd like a quote.",'',`Name: ${f('name')}`,`Occasion: ${f('occasion')}`,`Service: ${f('service')}`,`Material: ${f('material')}`,`Size: ${f('size')}`,`Details: ${f('details')||'Not provided'}`].join('\n');location.href=`https://wa.me/27635409729?text=${encodeURIComponent(msg)}`});
   }
 
-  /* Desktop-only pointer work; mobile does no continuous touch styling work. */
-  if(window.matchMedia('(pointer:fine)').matches){
-    let pointerRaf=0;
-    window.addEventListener('pointermove',event=>{
-      if(document.body.dataset.motion!=='on')return;
-      cancelAnimationFrame(pointerRaf);
-      pointerRaf=requestAnimationFrame(()=>{
-        root.style.setProperty('--pointer-x',`${Math.max(0,Math.min(100,event.clientX/window.innerWidth*100)).toFixed(0)}%`);
-        root.style.setProperty('--pointer-y',`${Math.max(0,Math.min(100,event.clientY/window.innerHeight*100)).toFixed(0)}%`);
-      });
-    },{passive:true});
+  const gallery=[...document.querySelectorAll('.masonry-gallery img')];
+  if(gallery.length){
+    const box=document.createElement('div');box.className='lightbox';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label','Gallery viewer');box.innerHTML='<button class="lightbox-close" type="button" aria-label="Close gallery">×</button><button class="lightbox-prev" type="button" aria-label="Previous image">‹</button><figure><img alt=""><figcaption></figcaption></figure><button class="lightbox-next" type="button" aria-label="Next image">›</button>';document.body.appendChild(box);
+    const img=box.querySelector('img'),cap=box.querySelector('figcaption'),closeBtn=box.querySelector('.lightbox-close');let index=0,last=null,touchX=0;
+    const show=i=>{index=(i+gallery.length)%gallery.length;const s=gallery[index];img.src=s.currentSrc||s.src;img.alt=s.alt||'Tasmaarah Collection presentation';cap.textContent=s.alt||'Tasmaarah Collection presentation'};
+    const open=i=>{last=document.activeElement;show(i);box.classList.add('open');document.body.classList.add('lightbox-open');closeBtn?.focus()};
+    const close=()=>{box.classList.remove('open');document.body.classList.remove('lightbox-open');last?.focus?.()};
+    gallery.forEach((image,i)=>{image.tabIndex=0;image.setAttribute('role','button');image.setAttribute('aria-label',`Open image: ${image.alt||'Tasmaarah Collection presentation'}`);image.addEventListener('click',()=>open(i));image.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open(i)}})});
+    closeBtn?.addEventListener('click',close);box.querySelector('.lightbox-prev')?.addEventListener('click',()=>show(index-1));box.querySelector('.lightbox-next')?.addEventListener('click',()=>show(index+1));box.addEventListener('click',e=>{if(e.target===box)close()});box.addEventListener('touchstart',e=>touchX=e.touches[0]?.clientX||0,{passive:true});box.addEventListener('touchend',e=>{const delta=(e.changedTouches[0]?.clientX||touchX)-touchX;if(Math.abs(delta)>48)show(index+(delta<0?1:-1))},{passive:true});document.addEventListener('keydown',e=>{if(!box.classList.contains('open'))return;if(e.key==='Escape')close();else if(e.key==='ArrowLeft')show(index-1);else if(e.key==='ArrowRight')show(index+1);else trap(e,box)});
   }
 
-  document.querySelectorAll('main img').forEach(img=>{
-    if(img.classList.contains('hero-art'))return;
-    img.decoding='async';
-    if(!img.hasAttribute('loading'))img.loading='lazy';
-  });
+  if(matchMedia('(pointer:fine)').matches){let raf=0;addEventListener('pointermove',e=>{if(document.body.dataset.motion!=='on')return;cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{root.style.setProperty('--pointer-x',`${Math.max(0,Math.min(100,e.clientX/innerWidth*100)).toFixed(0)}%`);root.style.setProperty('--pointer-y',`${Math.max(0,Math.min(100,e.clientY/innerHeight*100)).toFixed(0)}%`)})},{passive:true})}
 })();
