@@ -21,7 +21,8 @@ jobs:
         run: |
           from pathlib import Path
           pages=['index.html','about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html','404.html']
-          required=['site.css','client-final.css','stability-lock.css','script.js','robots.txt','sitemap.xml','package.json','playwright.config.js','tests/site.spec.js']
+          media_pages=['index.html','about.html','shop.html','occasions.html','custom-orders.html','gallery.html']
+          required=['site.css','client-final.css','stability-lock.css','premium-media.css','script.js','robots.txt','sitemap.xml','package.json','playwright.config.js','tests/site.spec.js','tests/media.spec.js']
           for f in pages+required:
               if not Path(f).is_file() or Path(f).stat().st_size == 0: raise SystemExit(f'Missing/empty: {f}')
           if len(list(Path('assets/images').glob('*'))) < 20: raise SystemExit('Too few production images')
@@ -31,12 +32,18 @@ jobs:
                   if needle not in text: raise SystemExit(f'{page}: missing {needle}')
               if 'motion-toggle' in text: raise SystemExit(f'{page}: client-facing motion control must not be present')
               if text.count('<h1') != 1: raise SystemExit(f'{page}: expected exactly one h1')
+          for page in media_pages:
+              if 'premium-media.css?v=1' not in Path(page).read_text(encoding='utf-8'):
+                  raise SystemExit(f'{page}: premium media treatment missing')
           home=Path('index.html').read_text(encoding='utf-8')
           for needle in ('class="hero-art"','fetchpriority="high"','wa.me/27635409729','https://www.instagram.com/boxes_tasmaarah_collection','application/ld+json'):
               if needle not in home: raise SystemExit(f'index.html missing {needle}')
           lock=Path('stability-lock.css').read_text(encoding='utf-8')
           for needle in ('.motion-toggle{display:none!important}','.mobile-menu[open]>.mobile-panel','position:fixed!important','width:100vw!important','.masonry-gallery figure','prefers-reduced-motion'):
               if needle not in lock: raise SystemExit(f'stability-lock.css missing {needle}')
+          media=Path('premium-media.css').read_text(encoding='utf-8')
+          for needle in ('.catalog-card>img','object-fit:contain!important','.masonry-gallery img','.lightbox img','.occasion-detail article>img'):
+              if needle not in media: raise SystemExit(f'premium-media.css missing {needle}')
           print('Production contract validated.')
 
       - name: Verify local links and image alternatives
@@ -64,6 +71,7 @@ jobs:
           node --check script.js
           node --check playwright.config.js
           node --check tests/site.spec.js
+          node --check tests/media.spec.js
 
       - name: Verify critical interaction contracts
         shell: bash
