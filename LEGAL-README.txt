@@ -1,0 +1,1 @@
+Implemented public website legal transparency pages: Privacy & Cookies, Website & Order Terms, Returns/Cancellations/Refunds, and Legal & Supplier Information. Contact form now references the relevant policies. Outstanding owner-supplied statutory identity and PAIA/POPIA operational details are documented separately.
