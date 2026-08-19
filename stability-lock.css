@@ -1,0 +1,68 @@
+/* Tasmaarah Collection — responsive stability lock. Loaded last on every page. */
+html,body{max-width:100%;overflow-x:hidden}
+
+/* Never let decorative layers intercept taps. */
+body::before,body::after,main::before,main::after,.campaign-stage::before,.campaign-stage::after,.occasion-card::before,.occasion-card::after{pointer-events:none!important}
+
+/* Keep mobile navigation as a true fixed full-width panel. */
+@media(max-width:980px){
+  .mobile-menu{display:block!important;position:static!important;z-index:auto!important}
+  .mobile-menu>summary{position:relative!important;z-index:10002!important}
+  .mobile-menu[open] .mobile-panel{
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    width:100vw!important;
+    max-width:100vw!important;
+    margin:0!important;
+    transform:none!important;
+    z-index:10001!important;
+    background:#fbf6ef!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    box-shadow:0 24px 60px rgba(36,22,12,.18)!important;
+  }
+  .mobile-panel a{width:100%!important;max-width:none!important;white-space:normal!important}
+  body.menu-open{overflow:hidden!important}
+}
+
+/* Mobile homepage: approved artwork first, actions immediately after it. */
+@media(max-width:640px){
+  .campaign-hero{display:flex!important;flex-direction:column!important;padding:0 0 18px!important;min-height:0!important;overflow:hidden!important}
+  .campaign-stage{order:1!important;position:relative!important;width:100%!important;aspect-ratio:3/2!important;min-height:0!important;height:auto!important;margin:0!important}
+  .campaign-stage .stage-main{display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important}
+  .campaign-stage .stage-main img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;transform:none!important}
+  .campaign-copy{order:2!important;position:relative!important;inset:auto!important;width:100%!important;height:auto!important;padding:12px 14px 0!important;pointer-events:auto!important}
+  .campaign-copy>.section-kicker,.campaign-copy>h1,.campaign-copy>p:not(.section-kicker),.campaign-signature{display:none!important}
+  .hero-actions{position:static!important;display:grid!important;grid-template-columns:1fr!important;gap:9px!important;width:100%!important;margin:0!important;left:auto!important;bottom:auto!important}
+  .hero-actions .btn{width:100%!important;min-height:48px!important;padding:11px 12px!important;font-size:8px!important;letter-spacing:.08em!important;white-space:normal!important}
+
+  /* Header stays stable when menu is opened. */
+  .site-header{min-height:74px!important}
+  .header-inner{height:74px!important;min-height:74px!important;padding:7px 12px!important;grid-template-columns:46px minmax(0,1fr) 78px!important;gap:6px!important}
+  .brand{justify-self:center!important;min-width:0!important}
+  .brand img{width:132px!important;height:54px!important;object-fit:contain!important}
+  .header-quote{min-width:74px!important;max-width:78px!important;min-height:36px!important;padding:0 7px!important;font-size:7.5px!important;letter-spacing:.08em!important;line-height:1.1!important;text-align:center!important}
+
+  /* Prevent service content from being clipped by decorative/floating controls. */
+  .value-strip{position:relative!important;z-index:2!important;margin:0 12px!important;overflow:hidden!important}
+  .value-item{min-width:0!important;overflow:hidden!important}
+  .value-item h2,.value-item p{max-width:100%!important;overflow-wrap:anywhere!important}
+
+  /* One clear WhatsApp control only. */
+  .floating-wa{right:14px!important;left:auto!important;bottom:14px!important;width:58px!important;height:58px!important;min-width:58px!important;min-height:58px!important;border-radius:50%!important;padding:0!important;display:grid!important;place-items:center!important;font-size:0!important;line-height:1!important;z-index:9998!important;overflow:hidden!important}
+  .floating-wa::before{content:"WA"!important;display:block!important;font:600 11px/1 var(--sans)!important;letter-spacing:.04em!important;color:#fff!important}
+  .floating-wa::after{content:none!important;display:none!important}
+
+  .footer{padding-bottom:88px!important}
+}
+
+/* Visible, restrained motion without moving layout. */
+body[data-motion="on"]::before{animation:ambientMove 14s ease-in-out infinite alternate!important}
+body[data-motion="on"] main::before{animation:satinSweep 11s ease-in-out infinite!important}
+body[data-motion="on"] .campaign-stage::before{animation:tcHeroSweep 8s ease-in-out infinite!important}
+body[data-motion="off"]::before,body[data-motion="off"] main::before,body[data-motion="off"] .campaign-stage::before{animation-play-state:paused!important}
+
+@media(prefers-reduced-motion:reduce){
+  body::before,main::before,.campaign-stage::before{animation:none!important}
+}
