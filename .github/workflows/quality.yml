@@ -39,6 +39,9 @@ jobs:
           script=Path('script.js').read_text(encoding='utf-8')
           for needle in ('desktop-polish.css?v=2','site-experience.css?v=1','cookie-notice','social-icons','lightbox-enquire','data-catalog-search'):
               if needle not in script: raise SystemExit(f'script.js missing {needle}')
+          pw=Path('playwright.config.js').read_text(encoding='utf-8')
+          for needle in ("browserName: 'chromium'","browserName: 'firefox'","browserName: 'webkit'","iPhone 13 Mini","iPad Pro 11"):
+              if needle not in pw: raise SystemExit(f'playwright.config.js missing cross-browser contract: {needle}')
           print('Production contract validated.')
       - name: Verify local links and image alternatives
         shell: python
@@ -72,8 +75,8 @@ jobs:
       - name: Install browser test dependencies
         run: |
           npm install --no-audit --no-fund
-          npx playwright install --with-deps chromium
-      - name: Run responsive browser acceptance suite
+          npx playwright install --with-deps chromium firefox webkit
+      - name: Run Chromium Firefox and WebKit acceptance suite
         run: npm run test:e2e
       - name: Upload visual acceptance evidence
         if: always()
