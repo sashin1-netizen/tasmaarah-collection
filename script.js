@@ -5,6 +5,16 @@ const safeStorage={get(k){try{return localStorage.getItem(k)}catch{return null}}
 const focusableSelector='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 const trapTab=(e,c)=>{if(e.key!=='Tab'||!c)return;const f=[...c.querySelectorAll(focusableSelector)].filter(x=>x.offsetParent!==null);if(!f.length)return;const a=f[0],b=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();b.focus()}else if(!e.shiftKey&&document.activeElement===b){e.preventDefault();a.focus()}};
 
+/* Official social profile — injected consistently across every public page. */
+const instagramUrl='https://www.instagram.com/boxes_tasmaarah_collection';
+const makeInstagram=(className,label)=>{const a=document.createElement('a');a.href=instagramUrl;a.target='_blank';a.rel='noopener noreferrer';a.className=className;a.textContent=label;a.setAttribute('aria-label','Tasmaarah Collection on Instagram');return a};
+const utilityActions=document.querySelector('.utility-actions');
+if(utilityActions&&!utilityActions.querySelector('.instagram-link'))utilityActions.insertBefore(makeInstagram('instagram-link','Instagram'),utilityActions.querySelector('.motion-toggle'));
+const mobilePanelSocial=document.querySelector('.mobile-panel');
+if(mobilePanelSocial&&!mobilePanelSocial.querySelector('.mobile-instagram')){const quote=mobilePanelSocial.querySelector('.mobile-quote');const link=makeInstagram('mobile-instagram','Instagram ↗');quote?mobilePanelSocial.insertBefore(link,quote):mobilePanelSocial.appendChild(link)}
+const footerContact=document.querySelector('.footer>div:nth-of-type(3)');
+if(footerContact&&!footerContact.querySelector('.footer-instagram'))footerContact.appendChild(makeInstagram('footer-instagram','Instagram @boxes_tasmaarah_collection'));
+
 /* Motion is on by default unless the OS requests reduced motion; an explicit site choice wins. */
 const motionQuery=matchMedia('(prefers-reduced-motion: reduce)'),motionButton=document.querySelector('.motion-toggle'),motionKey='tasmaarah-motion-v3';
 let saved=safeStorage.get(motionKey);
@@ -13,18 +23,22 @@ setMotion(saved?saved==='on':!motionQuery.matches,false);
 motionButton?.addEventListener('click',()=>{saved=document.body.dataset.motion==='on'?'off':'on';setMotion(saved==='on',true)});
 motionQuery.addEventListener?.('change',e=>{if(!safeStorage.get(motionKey))setMotion(!e.matches,false)});
 
-/* Native <details> is the no-JS fallback; this layer adds exact viewport sizing, focus containment and state cleanup. */
+/* Mobile navigation: native <details> is the no-JS fallback. JS explicitly owns the tap state on supported mobile browsers so Android/Chrome cannot leave the menu in an inconsistent state. */
 const menu=document.querySelector('.mobile-menu');
 if(menu){
   const summary=menu.querySelector('summary'),panel=menu.querySelector('.mobile-panel'),header=document.querySelector('.site-header');
-  const positionPanel=()=>{if(!panel||!header)return;const top=Math.max(0,Math.round(header.getBoundingClientRect().bottom));Object.assign(panel.style,{top:`${top}px`,height:`calc(100dvh - ${top}px)`,left:'0',right:'0',width:'100vw',maxWidth:'100vw',position:'fixed',margin:'0'})};
-  const close=()=>{menu.open=false};
-  menu.addEventListener('toggle',()=>{const open=menu.open;summary?.setAttribute('aria-expanded',String(open));summary?.setAttribute('aria-label',open?'Close navigation':'Open navigation');document.body.classList.toggle('menu-open',open);document.body.style.overflow=open?'hidden':'';if(open){positionPanel();requestAnimationFrame(()=>{positionPanel();panel?.querySelector('a')?.focus({preventScroll:true})})}});
+  if(panel&&!panel.id)panel.id='mobile-navigation-panel';
+  if(summary&&panel)summary.setAttribute('aria-controls',panel.id);
+  const positionPanel=()=>{if(!panel||!header)return;const top=Math.max(0,Math.round(header.getBoundingClientRect().bottom));root.style.setProperty('--mobile-menu-top',`${top}px`);Object.assign(panel.style,{top:`${top}px`,height:`calc(100dvh - ${top}px)`,left:'0',right:'0',width:'100vw',maxWidth:'100vw',position:'fixed',margin:'0'})};
+  const setOpen=open=>{if(menu.open!==open)menu.open=open};
+  const close=()=>setOpen(false);
+  summary?.addEventListener('click',e=>{if(innerWidth<=980){e.preventDefault();setOpen(!menu.open)}});
+  menu.addEventListener('toggle',()=>{const open=menu.open;summary?.setAttribute('aria-expanded',String(open));summary?.setAttribute('aria-label',open?'Close navigation':'Open navigation');document.body.classList.toggle('menu-open',open);document.body.style.overflow=open?'hidden':'';if(open){positionPanel();requestAnimationFrame(()=>{positionPanel();panel?.querySelector('a')?.focus({preventScroll:true})})}else if(panel){panel.removeAttribute('style')}});
   panel?.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){close();summary?.focus()}else if(menu.open)trapTab(e,panel)});
   document.addEventListener('pointerdown',e=>{if(menu.open&&!menu.contains(e.target))close()},{passive:true});
   addEventListener('resize',()=>{if(innerWidth>980&&menu.open)close();else if(menu.open)positionPanel()},{passive:true});
-  addEventListener('orientationchange',()=>setTimeout(()=>menu.open&&positionPanel(),120),{passive:true});
+  addEventListener('orientationchange',()=>setTimeout(()=>menu.open&&positionPanel(),160),{passive:true});
 }
 
 const resetTransientUI=()=>{if(menu?.open)menu.open=false;document.body.classList.remove('menu-open','lightbox-open');document.body.style.overflow=''};
