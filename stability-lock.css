@@ -26,10 +26,19 @@ body[data-motion="off"]::before,body[data-motion="off"] main::before,body[data-m
 @media(hover:hover){.btn:hover,.header-quote:hover{transform:translateY(-2px)}.catalog-card a:hover,.text-link:hover{color:var(--gold,#9a6837)}}
 :focus-visible{outline:2px solid #74491f!important;outline-offset:3px!important}
 
+/* Official Instagram touchpoints. */
+.instagram-link,.footer-instagram,.mobile-instagram{font-family:var(--sans,Arial,sans-serif)!important}
+.instagram-link{text-transform:uppercase;letter-spacing:.08em;font-size:9px!important}
+.mobile-instagram{color:#8a5c30!important}
+.footer-instagram{display:inline-flex!important;margin-top:6px;color:#d4b084!important;text-decoration:none!important;overflow-wrap:anywhere;font-size:11px!important;line-height:1.45!important}
+@media(hover:hover){.instagram-link:hover,.footer-instagram:hover,.mobile-instagram:hover{opacity:.72}}
+
 /* Keep mobile navigation a true fixed viewport panel. Native <details> still works without JS. */
 @media(max-width:980px){
   .mobile-menu{display:block!important;position:static!important;z-index:auto!important}
-  .mobile-menu>summary{position:relative!important;z-index:10002!important;border-radius:50%}
+  .mobile-menu>summary{position:relative!important;z-index:10002!important;border-radius:50%;cursor:pointer!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent;user-select:none}
+  .mobile-menu:not([open])>.mobile-panel{display:none!important}
+  .mobile-menu[open]>.mobile-panel{display:block!important}
   .mobile-menu[open] .mobile-panel{
     position:fixed!important;
     left:0!important;right:0!important;
@@ -80,6 +89,7 @@ body[data-motion="off"]::before,body[data-motion="off"] main::before,body[data-m
   .footer{padding-bottom:max(88px,calc(74px + env(safe-area-inset-bottom)))!important}
   .footer a[href^="mailto:"]{overflow-wrap:anywhere}
 }
+@media(max-width:700px){.utility-actions .instagram-link{display:none!important}}
 
 /* Gallery lightbox behaves like a premium modal, including the enquiry action. */
 .lightbox{overscroll-behavior:contain}
