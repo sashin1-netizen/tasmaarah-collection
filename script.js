@@ -2,6 +2,7 @@
 'use strict';
 const d=document,w=window,root=d.documentElement;root.classList.add('js');
 const exp=d.querySelector('link[href^="site-experience.css"]');if(exp)exp.href='site-experience.css?v=9';
+const polish=d.querySelector('link[href^="final-polish.css"]');if(polish)polish.href='final-polish.css?v=4';
 const addCss=(href,key)=>{if(d.querySelector(`[data-${key}]`))return;const l=d.createElement('link');l.rel='stylesheet';l.href=href;l.dataset[key]='';d.head.appendChild(l)};
 if(matchMedia('(min-width:981px)').matches){const fn=()=>addCss('desktop-polish.css?v=2','desktopPolish');'requestIdleCallback'in w?w.requestIdleCallback(fn,{timeout:700}):setTimeout(fn,0)}
 const instagram='https://www.instagram.com/boxes_tasmaarah_collection';
