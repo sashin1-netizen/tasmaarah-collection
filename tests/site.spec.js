@@ -30,7 +30,7 @@ test('every indexable page has production SEO essentials', async ({ page }) => {
     await expect(page.locator('meta[name="description"]')).toHaveCount(1);
     await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
     await expect(page.locator('meta[name="viewport"]')).toHaveCount(1);
-    await expect(page.locator('link[href*="stability-lock.css?v=2"]')).toHaveCount(1);
+    await expect(page.locator('link[href*="stability-lock.css?v=3"]')).toHaveCount(1);
   }
 });
 
@@ -49,14 +49,23 @@ test('mobile hero preserves complete artwork and places CTAs after it', async ({
 
 test('homepage real photography loads after scrolling', async ({ page }) => { await page.goto('/index.html'); await scrollThrough(page); const failed=await page.locator('main img').evaluateAll(imgs=>imgs.filter(i=>!i.complete||i.naturalWidth===0).map(i=>i.getAttribute('src'))); expect(failed).toEqual([]) });
 
-test('mobile navigation is full width, trapped and dismissible', async ({ page }, testInfo) => {
+test('mobile navigation toggles reliably by tap, is full width and dismisses with Escape', async ({ page }, testInfo) => {
   test.skip(!testInfo.project.name.startsWith('mobile'),'Mobile navigation contract'); await page.goto('/index.html'); const menu=page.locator('.mobile-menu'),summary=menu.locator('summary'),panel=menu.locator('.mobile-panel');
   await summary.click(); await expect(menu).toHaveAttribute('open',''); await expect(panel).toBeVisible(); await expect(summary).toHaveAttribute('aria-expanded','true');
-  const box=await panel.boundingBox(); expect(box.width).toBeGreaterThanOrEqual((await page.evaluate(()=>innerWidth))-2); expect(box.x).toBeLessThanOrEqual(1);
-  await expect(page.locator('.floating-wa')).toBeHidden(); await page.keyboard.press('Escape'); await expect(menu).not.toHaveAttribute('open',''); await expect(summary).toHaveAttribute('aria-expanded','false');
+  const box=await panel.boundingBox(); expect(box.width).toBeGreaterThanOrEqual((await page.evaluate(()=>innerWidth))-2); expect(box.x).toBeLessThanOrEqual(1); await expect(page.locator('.floating-wa')).toBeHidden();
+  await summary.click(); await expect(menu).not.toHaveAttribute('open',''); await expect(summary).toHaveAttribute('aria-expanded','false');
+  await summary.click(); await expect(menu).toHaveAttribute('open',''); await page.keyboard.press('Escape'); await expect(menu).not.toHaveAttribute('open',''); await expect(summary).toHaveAttribute('aria-expanded','false');
 });
 
 test('native mobile menu remains usable with JavaScript disabled', async ({ browser }) => { const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844},hasTouch:true}); const page=await context.newPage(); await page.goto('/index.html'); const menu=page.locator('.mobile-menu'); await menu.locator('summary').click(); await expect(menu).toHaveAttribute('open',''); await expect(menu.locator('a[href="contact.html"]')).toBeVisible(); await context.close() });
+
+test('official Instagram profile is exposed in desktop, mobile and footer contexts', async ({ page }) => {
+  await page.goto('/index.html'); const href='https://www.instagram.com/boxes_tasmaarah_collection';
+  await expect(page.locator('.instagram-link')).toHaveAttribute('href',href);
+  await expect(page.locator('.mobile-instagram')).toHaveAttribute('href',href);
+  await expect(page.locator('.footer-instagram')).toHaveAttribute('href',href);
+  expect(await page.locator('script[type="application/ld+json"]').textContent()).toContain(href);
+});
 
 test('background motion is visible and can be paused', async ({ page }) => {
   await page.goto('/about.html'); const toggle=page.locator('.motion-toggle'); await expect(toggle).toBeVisible(); if((await page.locator('body').getAttribute('data-motion'))==='off')await toggle.click();
