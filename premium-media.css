@@ -1,0 +1,49 @@
+/* Tasmaarah Collection — premium media presentation
+   Purpose: preserve complete products while presenting real photography with luxury editorial framing.
+   Loaded after the main design system so image treatment is deterministic and isolated. */
+:root{--media-mat:#f7eadb;--media-mat-deep:#dec09f;--media-gold:rgba(155,104,53,.28);--media-shadow:0 24px 64px rgba(55,33,16,.14)}
+
+/* Collection: product first. Never crop the merchandise. */
+.catalog-card{position:relative!important;background:linear-gradient(180deg,#fffaf4 0%,#f7eadb 100%)!important;border:1px solid rgba(142,91,43,.16)!important;box-shadow:0 18px 46px rgba(59,36,18,.10)!important;overflow:hidden!important}
+.catalog-card::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background:linear-gradient(125deg,rgba(255,255,255,.34),transparent 32%,rgba(169,109,52,.06) 69%,transparent);box-shadow:inset 0 0 0 1px rgba(255,255,255,.54)}
+.catalog-card>img{position:relative;z-index:0;display:block!important;width:100%!important;height:clamp(320px,32vw,470px)!important;object-fit:contain!important;object-position:center!important;padding:clamp(16px,2vw,28px)!important;box-sizing:border-box!important;background:radial-gradient(circle at 50% 38%,rgba(255,255,255,.94) 0 19%,rgba(250,238,222,.91) 47%,rgba(224,194,159,.82) 100%)!important;filter:saturate(.97) contrast(1.025) brightness(1.015)!important;transform:none!important}
+.catalog-card>div{position:relative;z-index:2;background:linear-gradient(180deg,rgba(255,250,244,.95),rgba(249,238,224,.98))!important}
+@media(hover:hover){.catalog-card:hover{transform:translateY(-4px);box-shadow:0 28px 70px rgba(59,36,18,.15)!important}.catalog-card:hover>img{transform:scale(1.012)!important;filter:saturate(1) contrast(1.03) brightness(1.02)!important}}
+
+/* Main gallery: respect each photograph's native composition. No forced crop. */
+.masonry-gallery{columns:3 300px!important;column-gap:clamp(16px,2vw,28px)!important;max-width:1380px!important;margin-inline:auto!important;padding:0 clamp(18px,4vw,54px) clamp(72px,8vw,120px)!important}
+.masonry-gallery figure{position:relative!important;display:inline-block!important;width:100%!important;break-inside:avoid!important;margin:0 0 clamp(18px,2vw,28px)!important;padding:clamp(8px,1vw,12px)!important;background:linear-gradient(145deg,#f8ecde 0%,#dfc09d 100%)!important;border:1px solid rgba(143,91,42,.18)!important;box-shadow:0 18px 46px rgba(57,34,17,.11),inset 0 0 0 1px rgba(255,255,255,.58)!important;overflow:hidden!important}
+.masonry-gallery figure::before{content:"";position:absolute;inset:6px;pointer-events:none;z-index:2;border:1px solid rgba(255,255,255,.56);box-shadow:inset 0 0 34px rgba(255,245,232,.10)}
+.masonry-gallery figure::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(125deg,rgba(255,255,255,.14),transparent 36%,rgba(123,74,34,.045) 78%,transparent)}
+.masonry-gallery img{position:relative;z-index:1;display:block!important;width:100%!important;height:auto!important;max-height:none!important;aspect-ratio:auto!important;object-fit:contain!important;object-position:center!important;background:#f5e6d3!important;filter:saturate(.97) contrast(1.025) brightness(1.01)!important;transform:none!important}
+@media(hover:hover){.masonry-gallery figure{transition:transform .28s ease,box-shadow .28s ease}.masonry-gallery figure:hover{transform:translateY(-5px);box-shadow:0 30px 72px rgba(57,34,17,.16),inset 0 0 0 1px rgba(255,255,255,.62)!important}.masonry-gallery figure:hover img{transform:scale(1.008)!important;filter:saturate(1) contrast(1.03) brightness(1.02)!important}}
+
+/* Detail/editorial imagery: the entire presentation remains visible. */
+.page-hero>img,.occasion-detail article>img,.editorial-band>img{object-fit:contain!important;object-position:center!important;background:radial-gradient(circle at 50% 42%,#fffaf4 0 22%,#f2dfc8 58%,#d9b48c 100%)!important;padding:clamp(12px,1.8vw,24px)!important;box-sizing:border-box!important;filter:saturate(.97) contrast(1.025) brightness(1.01)!important}
+.page-hero>img{min-height:420px!important;max-height:620px!important}.occasion-detail article>img{min-height:420px!important;max-height:560px!important}.editorial-band>img{min-height:500px!important}
+
+/* Editorial home collages are allowed to crop slightly because they are mood-setting, not product-detail views. */
+.campaign-spread-grid figure,.gallery-grid figure{background:linear-gradient(145deg,#f4e2cd,#d5ad7d)!important;padding:6px!important;border:1px solid rgba(139,88,42,.17)!important;box-shadow:0 18px 48px rgba(55,31,13,.13)!important}
+.campaign-spread-grid img,.gallery-grid img{object-position:center!important;filter:saturate(.96) contrast(1.03) brightness(1.01)!important}
+
+/* The lightbox is the zero-crop inspection surface. */
+.lightbox{background:rgba(20,13,9,.94)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.lightbox figure{padding:clamp(8px,1.4vw,16px)!important;background:linear-gradient(145deg,#f7eadb,#d7b188)!important;border:1px solid rgba(230,197,153,.30)!important;box-shadow:0 34px 90px rgba(0,0,0,.40)!important}
+.lightbox img{display:block!important;width:auto!important;max-width:100%!important;height:auto!important;max-height:78vh!important;object-fit:contain!important;object-position:center!important;background:#f5e7d5!important}
+.lightbox figcaption{margin-top:10px!important;color:#f4e6d5!important;font:500 12px/1.45 var(--serif,Georgia,serif)!important;text-align:center!important}
+
+@media(max-width:980px){
+  .masonry-gallery{columns:2 260px!important;padding-inline:20px!important}
+  .catalog-card>img{height:clamp(300px,48vw,430px)!important}
+  .page-hero>img,.occasion-detail article>img,.editorial-band>img{min-height:0!important;max-height:none!important;height:auto!important;aspect-ratio:4/3!important}
+}
+
+@media(max-width:640px){
+  .masonry-gallery{columns:1!important;padding:0 14px 72px!important}
+  .masonry-gallery figure{padding:8px!important;margin-bottom:18px!important}
+  .catalog-grid{gap:26px!important}.catalog-card>img{height:auto!important;aspect-ratio:4/3!important;object-fit:contain!important;padding:14px!important}
+  .page-hero>img,.occasion-detail article>img,.editorial-band>img{width:100%!important;height:auto!important;aspect-ratio:4/3!important;object-fit:contain!important;padding:12px!important}
+  .lightbox figure{width:min(92vw,620px)!important;max-width:92vw!important}.lightbox img{max-height:70vh!important}
+}
+
+@media(prefers-reduced-motion:reduce){.catalog-card,.masonry-gallery figure,.catalog-card>img,.masonry-gallery img{transition:none!important}}
