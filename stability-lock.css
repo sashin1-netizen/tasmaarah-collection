@@ -35,6 +35,8 @@ body[data-motion="off"]::before,body[data-motion="off"] main::before,body[data-m
 
 /* Keep mobile navigation a true fixed viewport panel. Native <details> still works without JS. */
 @media(max-width:980px){
+  /* backdrop-filter can create a containing block for fixed descendants on mobile Chromium; use an opaque premium header instead so the nav is always viewport-fixed. */
+  .site-header{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:#fbf6ef!important}
   .mobile-menu{display:block!important;position:static!important;z-index:auto!important}
   .mobile-menu>summary{position:relative!important;z-index:10002!important;border-radius:50%;cursor:pointer!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent;user-select:none}
   .mobile-menu:not([open])>.mobile-panel{display:none!important}
