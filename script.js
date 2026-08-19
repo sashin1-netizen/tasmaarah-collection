@@ -1,18 +1,21 @@
 (()=>{
 'use strict';
 const root=document.documentElement;root.classList.add('js');
+
+/* Load one small deterministic stability layer on every public page. */
+if(!document.querySelector('link[data-stability-lock]')){const lock=document.createElement('link');lock.rel='stylesheet';lock.href='stability-lock.css?v=1';lock.dataset.stabilityLock='true';document.head.appendChild(lock)}
+
 const safeStorage={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}}};
 const focusableSelector='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 const trapTab=(e,c)=>{if(e.key!=='Tab'||!c)return;const f=[...c.querySelectorAll(focusableSelector)].filter(x=>x.offsetParent!==null);if(!f.length)return;const a=f[0],b=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();b.focus()}else if(!e.shiftKey&&document.activeElement===b){e.preventDefault();a.focus()}};
 
-/* New preference key deliberately prevents an old paused state from making the rebuilt site appear static. */
 const motionQuery=matchMedia('(prefers-reduced-motion: reduce)'),motionButton=document.querySelector('.motion-toggle'),motionKey='tasmaarah-motion-v2',saved=safeStorage.get(motionKey);
 const setMotion=on=>{document.body.dataset.motion=on?'on':'off';if(motionButton){motionButton.textContent=on?'Pause motion':'Play motion';motionButton.setAttribute('aria-pressed',String(!on));motionButton.setAttribute('aria-label',on?'Pause decorative motion':'Play decorative motion')}safeStorage.set(motionKey,on?'on':'off')};
 setMotion(saved?saved==='on':!motionQuery.matches);motionButton?.addEventListener('click',()=>setMotion(document.body.dataset.motion!=='on'));
 
-/* Native details menu works without JS; JS only adds focus, scrolling and Escape behaviour. */
+/* Native details remains the fallback; JS only guarantees full-width positioning and focus. */
 const menu=document.querySelector('.mobile-menu');
-if(menu){const s=menu.querySelector('summary'),p=menu.querySelector('.mobile-panel'),h=document.querySelector('.site-header');const pos=()=>{if(!p||!h)return;const t=Math.max(0,Math.round(h.getBoundingClientRect().bottom));p.style.top=`${t}px`;p.style.height=`calc(100dvh - ${t}px)`};const close=()=>{menu.open=false};menu.addEventListener('toggle',()=>{const o=menu.open;s?.setAttribute('aria-expanded',String(o));s?.setAttribute('aria-label',o?'Close navigation':'Open navigation');document.body.classList.toggle('menu-open',o);document.body.style.overflow=o?'hidden':'';if(o){pos();requestAnimationFrame(()=>p?.querySelector('a')?.focus({preventScroll:true}))}});p?.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){close();s?.focus()}});addEventListener('resize',()=>{if(innerWidth>980&&menu.open)close();else if(menu.open)pos()},{passive:true});}
+if(menu){const s=menu.querySelector('summary'),p=menu.querySelector('.mobile-panel'),h=document.querySelector('.site-header');const pos=()=>{if(!p||!h)return;const t=Math.max(0,Math.round(h.getBoundingClientRect().bottom));Object.assign(p.style,{top:`${t}px`,height:`calc(100dvh - ${t}px)`,left:'0',right:'0',width:'100vw',maxWidth:'100vw',position:'fixed',margin:'0'})};const close=()=>{menu.open=false};menu.addEventListener('toggle',()=>{const o=menu.open;s?.setAttribute('aria-expanded',String(o));s?.setAttribute('aria-label',o?'Close navigation':'Open navigation');document.body.classList.toggle('menu-open',o);document.body.style.overflow=o?'hidden':'';if(o){pos();requestAnimationFrame(()=>{pos();p?.querySelector('a')?.focus({preventScroll:true})})}});p?.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){close();s?.focus()}else if(menu.open)trapTab(e,p)});document.addEventListener('pointerdown',e=>{if(menu.open&&!menu.contains(e.target))close()},{passive:true});addEventListener('resize',()=>{if(innerWidth>980&&menu.open)close();else if(menu.open)pos()},{passive:true});}
 
 const current=(location.pathname.split('/').pop()||'index.html').toLowerCase();document.querySelectorAll('.desktop-nav a,.mobile-panel a').forEach(a=>{if((a.getAttribute('href')||'').split('#')[0].toLowerCase()===current)a.setAttribute('aria-current','page')});
 
