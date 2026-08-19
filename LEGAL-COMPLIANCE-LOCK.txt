@@ -1,0 +1,3 @@
+Tasmaarah Collection legal compliance website pass
+Locked candidate commit lineage as of 19 August 2026.
+Do not treat this marker as legal certification. See COMPLIANCE-ACTION-REQUIRED.md for outstanding owner-supplied statutory information and offline compliance tasks.
