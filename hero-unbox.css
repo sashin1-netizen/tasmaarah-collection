@@ -1,0 +1,84 @@
+/* Tasmaarah Collection — layout-safe hero unboxing motion
+   Visual-only: opacity, transform, clip-path. No layout, sizing, crop or positioning changes. */
+@media (prefers-reduced-motion:no-preference){
+  body[data-motion="on"] .campaign-hero{isolation:isolate}
+  body[data-motion="on"] .campaign-stage{perspective:1400px;transform-style:preserve-3d}
+
+  /* The hero artwork reveals like a presentation box opening. */
+  body[data-motion="on"] .campaign-stage .stage-main{
+    transform-origin:50% 64%;
+    animation:tcUnboxMain 1.05s cubic-bezier(.18,.78,.2,1) both;
+  }
+  body[data-motion="on"] .campaign-stage .stage-main img{
+    animation:tcUnboxReveal 1.05s cubic-bezier(.18,.78,.2,1) both;
+  }
+
+  /* Supporting photographs unfold after the main presentation. */
+  body[data-motion="on"] .campaign-stage .stage-top{
+    transform-origin:50% 100%;
+    animation:tcUnboxTop .78s .42s cubic-bezier(.2,.78,.22,1) both;
+  }
+  body[data-motion="on"] .campaign-stage .stage-bottom{
+    transform-origin:50% 0%;
+    animation:tcUnboxBottom .78s .50s cubic-bezier(.2,.78,.22,1) both;
+  }
+  body[data-motion="on"] .campaign-stage .stage-detail{
+    transform-origin:0% 50%;
+    animation:tcUnboxDetail .72s .58s cubic-bezier(.2,.78,.22,1) both;
+  }
+  body[data-motion="on"] .campaign-stage .stage-mark{
+    animation:tcUnboxMark .62s .70s cubic-bezier(.2,.78,.22,1) both;
+  }
+
+  /* Copy arrives after the visual reveal, like the card inside the box. */
+  body[data-motion="on"] .campaign-copy>.section-kicker{animation:tcUnboxCopy .50s .46s ease-out both}
+  body[data-motion="on"] .campaign-copy>h1{animation:tcUnboxCopy .66s .54s cubic-bezier(.2,.78,.22,1) both}
+  body[data-motion="on"] .campaign-copy>p:not(.section-kicker){animation:tcUnboxCopy .58s .66s ease-out both}
+  body[data-motion="on"] .campaign-copy .hero-actions{animation:tcUnboxCopy .52s .76s ease-out both}
+  body[data-motion="on"] .campaign-copy .campaign-signature{animation:tcUnboxCopy .48s .84s ease-out both}
+
+  @keyframes tcUnboxMain{
+    0%{opacity:.12;transform:translate3d(0,30px,0) rotateX(8deg) scale(.955)}
+    58%{opacity:1;transform:translate3d(0,-3px,0) rotateX(-1deg) scale(1.006)}
+    100%{opacity:1;transform:none}
+  }
+  @keyframes tcUnboxReveal{
+    0%{clip-path:inset(48% 8% 48% 8% round 18px);filter:brightness(.88) saturate(.92)}
+    55%{clip-path:inset(4% 2% 4% 2% round 8px);filter:brightness(1.04) saturate(1.03)}
+    100%{clip-path:inset(0 0 0 0 round 0);filter:none}
+  }
+  @keyframes tcUnboxTop{
+    0%{opacity:0;transform:translate3d(0,22px,0) rotateX(-16deg) scale(.94)}
+    100%{opacity:1;transform:none}
+  }
+  @keyframes tcUnboxBottom{
+    0%{opacity:0;transform:translate3d(0,-20px,0) rotateX(14deg) scale(.94)}
+    100%{opacity:1;transform:none}
+  }
+  @keyframes tcUnboxDetail{
+    0%{opacity:0;transform:translate3d(18px,4px,0) rotateY(-12deg) scale(.94)}
+    100%{opacity:1;transform:none}
+  }
+  @keyframes tcUnboxMark{
+    0%{opacity:0;transform:translate3d(0,10px,0) scale(.96)}
+    100%{opacity:1;transform:none}
+  }
+  @keyframes tcUnboxCopy{
+    0%{opacity:0;transform:translate3d(0,18px,0)}
+    100%{opacity:1;transform:none}
+  }
+}
+
+/* Mobile keeps the same story but shorter and lighter. */
+@media (max-width:700px) and (prefers-reduced-motion:no-preference){
+  body[data-motion="on"] .campaign-stage .stage-main{animation-duration:.82s}
+  body[data-motion="on"] .campaign-stage .stage-main img{animation-duration:.82s}
+  body[data-motion="on"] .campaign-stage .stage-top{animation-duration:.58s;animation-delay:.28s}
+  body[data-motion="on"] .campaign-stage .stage-bottom{animation-duration:.58s;animation-delay:.34s}
+  body[data-motion="on"] .campaign-stage .stage-detail{animation-duration:.54s;animation-delay:.40s}
+  body[data-motion="on"] .campaign-stage .stage-mark{animation-duration:.46s;animation-delay:.46s}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .campaign-stage .stage-main,.campaign-stage .stage-main img,.campaign-stage .stage-top,.campaign-stage .stage-bottom,.campaign-stage .stage-detail,.campaign-stage .stage-mark,.campaign-copy>*{animation:none!important;opacity:1!important;transform:none!important;clip-path:none!important;filter:none!important}
+}
