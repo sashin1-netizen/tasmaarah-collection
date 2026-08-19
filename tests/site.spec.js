@@ -61,6 +61,15 @@ test('approved hero is the LCP candidate and primary CTAs are usable', async ({ 
   await expect(buttons.nth(1)).toHaveAttribute('href', 'shop.html');
 });
 
+test('mobile hero preserves the complete approved artwork and removes duplicated headline', async ({ page }, testInfo) => {
+  test.skip(!testInfo.project.name.startsWith('mobile'), 'Mobile art-direction contract');
+  await page.goto('/index.html');
+  const fit = await page.locator('.hero-art').evaluate(img => getComputedStyle(img).objectFit);
+  expect(fit).toBe('contain');
+  await expect(page.locator('.campaign-copy h1')).toBeHidden();
+  await expect(page.locator('.hero-actions')).toBeVisible();
+});
+
 test('homepage real photography loads as the user scrolls', async ({ page }) => {
   await page.goto('/index.html');
   await scrollThrough(page);
@@ -99,7 +108,7 @@ test('native mobile menu remains usable with JavaScript disabled', async ({ brow
 test('background motion is visible and can be paused', async ({ page }) => {
   await page.goto('/about.html');
   const animation = await page.evaluate(() => getComputedStyle(document.querySelector('main'), '::before').animationName);
-  expect(animation).toContain('satinSweep');
+  expect(animation).toContain('tcSatin');
   const toggle = page.locator('.motion-toggle');
   await expect(toggle).toBeVisible();
   if ((await page.locator('body').getAttribute('data-motion')) === 'off') await toggle.click();
