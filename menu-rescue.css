@@ -1,4 +1,4 @@
-@import url('effects.css?v=10');
+@import url('effects.css?v=11');
 /* Tasmaarah Collection — fail-safe navigation layer. Loaded last. */
 @media (max-width:980px){
   .site-header{contain:none!important;overflow:visible!important;isolation:auto!important;position:sticky!important;top:0!important;z-index:2147483000!important;transition:box-shadow .16s ease,background .16s ease!important}
