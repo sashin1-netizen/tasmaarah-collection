@@ -35,13 +35,12 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          from html.parser import HTMLParser
           pages=['index.html','about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html','404.html']
           indexable=set(pages)-{'404.html'}
           failures=[]
           for page in pages:
               text=Path(page).read_text(encoding='utf-8')
-              for needle in ('site.css?v=2','client-final.css?v=2','stability-lock.css?v=2','script.js?v=38','class="mobile-menu"','class="motion-toggle"','class="skip-link"'):
+              for needle in ('site.css?v=2','client-final.css?v=2','stability-lock.css?v=3','script.js?v=39','class="mobile-menu"','class="motion-toggle"','class="skip-link"'):
                   if needle not in text: failures.append(f'{page}: missing {needle}')
               for needle in ('<meta name="viewport"','<meta name="referrer"','<meta name="color-scheme"','<title>'):
                   if needle not in text: failures.append(f'{page}: missing {needle}')
@@ -50,10 +49,10 @@ jobs:
                       if needle not in text: failures.append(f'{page}: missing {needle}')
               if text.count('<h1') != 1: failures.append(f'{page}: expected exactly one h1')
           home=Path('index.html').read_text(encoding='utf-8')
-          for needle in ('application/ld+json','class="hero-art"','fetchpriority="high"','loading="eager"','width="1536"','height="1024"','wa.me/27635409729','og:image:width','twitter:card'):
+          for needle in ('application/ld+json','class="hero-art"','fetchpriority="high"','loading="eager"','width="1536"','height="1024"','wa.me/27635409729','og:image:width','twitter:card','https://www.instagram.com/boxes_tasmaarah_collection'):
               if needle not in home: failures.append(f'index.html: missing {needle}')
           lock=Path('stability-lock.css').read_text(encoding='utf-8')
-          for needle in ('position:fixed!important','width:100vw!important','order:1!important','order:2!important','.floating-wa::before','lightbox-enquire','catalog-results-status','prefers-reduced-motion','prefers-contrast'):
+          for needle in ('position:fixed!important','width:100vw!important','order:1!important','order:2!important','.floating-wa::before','lightbox-enquire','catalog-results-status','prefers-reduced-motion','prefers-contrast','.mobile-menu:not([open])>.mobile-panel','footer-instagram'):
               if needle not in lock: failures.append(f'stability-lock.css: missing {needle}')
           if failures: raise SystemExit('\n'.join(failures))
           print('Every public page satisfies the client-ready production contract.')
@@ -105,6 +104,7 @@ jobs:
         run: |
           set -euo pipefail
           grep -q "querySelector('.mobile-menu')" script.js
+          grep -q "summary?.addEventListener('click'" script.js
           grep -q "menu.addEventListener('toggle'" script.js
           grep -q "e.key==='Escape'" script.js
           grep -q "width:'100vw'" script.js
@@ -115,6 +115,7 @@ jobs:
           grep -q 'lightbox-enquire' script.js
           grep -q 'pointermove' script.js
           grep -q 'tasmaarah-motion-v3' script.js
+          grep -q 'boxes_tasmaarah_collection' script.js
           grep -q 'position:fixed!important' stability-lock.css
           grep -q 'width:100vw!important' stability-lock.css
           grep -q 'pointer-events:none!important' stability-lock.css
