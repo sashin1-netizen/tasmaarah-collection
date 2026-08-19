@@ -1,105 +1,72 @@
-/* Tasmaarah Collection — premium hero reveal v2
-   Visual-only. No layout, sizing, crop, positioning or navigation changes. */
+/* Tasmaarah Collection — cinematic luxury hero reveal v3
+   Visual-only layer. No grid, spacing, crop, sizing or navigation changes. */
 @media (prefers-reduced-motion:no-preference){
-  body[data-motion="on"] .campaign-hero{isolation:isolate}
   body[data-motion="on"] .campaign-stage{perspective:1600px;transform-style:preserve-3d}
+  body[data-motion="on"] .campaign-stage .stage-main{position:relative;overflow:hidden;isolation:isolate;animation:tcHeroMain 1.15s cubic-bezier(.16,.84,.24,1) both}
+  body[data-motion="on"] .campaign-stage .stage-main img{animation:tcHeroImage 1.15s cubic-bezier(.16,.84,.24,1) both}
 
-  /* Main artwork: a quiet presentation reveal, not a dramatic flip. */
-  body[data-motion="on"] .campaign-stage .stage-main{
-    position:relative;
-    overflow:hidden;
-    transform-origin:50% 58%;
-    animation:tcHeroSettle 1.28s cubic-bezier(.16,.82,.24,1) both;
-  }
-  body[data-motion="on"] .campaign-stage .stage-main img{
-    animation:tcHeroImage 1.22s cubic-bezier(.16,.82,.24,1) both;
-  }
+  /* Champagne presentation veil — like lifting tissue paper from premium packaging. */
+  body[data-motion="on"] .campaign-stage .stage-main::before{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(135deg,rgba(255,250,243,.99),rgba(235,213,184,.98) 45%,rgba(215,176,126,.94) 100%);transform-origin:50% 0%;animation:tcVeilLift 1.02s .10s cubic-bezier(.18,.82,.2,1) both}
+  body[data-motion="on"] .campaign-stage .stage-main::after{content:"";position:absolute;z-index:5;pointer-events:none;top:0;bottom:0;left:46%;width:8%;background:linear-gradient(90deg,transparent,rgba(139,92,49,.12),rgba(205,164,111,.52),rgba(255,245,232,.82),rgba(205,164,111,.52),rgba(139,92,49,.12),transparent);animation:tcRibbonOpen .88s .14s cubic-bezier(.18,.82,.2,1) both}
 
-  /* Ivory gift-wrap curtain and fine gold ribbon disappear to reveal the campaign. */
-  body[data-motion="on"] .campaign-stage .stage-main::before{
-    content:"";
-    position:absolute;
-    inset:-1px;
-    z-index:3;
-    pointer-events:none;
-    background:
-      linear-gradient(90deg,transparent 49.55%,rgba(161,108,55,.72) 49.72%,rgba(219,181,133,.92) 50%,rgba(161,108,55,.72) 50.28%,transparent 50.45%),
-      linear-gradient(180deg,#f8efe4 0%,#eedac2 48%,#e7cbaa 100%);
-    box-shadow:inset 0 0 0 1px rgba(121,76,39,.13),inset 0 -24px 50px rgba(128,79,39,.06);
-    transform-origin:50% 0;
-    animation:tcGiftLid 1.02s .10s cubic-bezier(.2,.78,.22,1) both;
-  }
-  body[data-motion="on"] .campaign-stage .stage-main::after{
-    content:"✦";
-    position:absolute;
-    left:50%;top:50%;
-    z-index:4;
-    width:48px;height:48px;
-    margin:-24px 0 0 -24px;
-    display:grid;place-items:center;
-    pointer-events:none;
-    border:1px solid rgba(156,103,53,.48);
-    border-radius:50%;
-    background:rgba(255,250,244,.94);
-    color:#9d6a38;
-    font:500 16px/1 Georgia,serif;
-    box-shadow:0 8px 24px rgba(71,43,22,.12),inset 0 0 0 5px rgba(229,204,174,.28);
-    animation:tcSeal 1.00s .08s cubic-bezier(.2,.78,.22,1) both;
-  }
+  /* Supporting photos reveal with editorial restraint. */
+  body[data-motion="on"] .campaign-stage .stage-top{animation:tcPhotoA .72s .56s cubic-bezier(.2,.78,.22,1) both}
+  body[data-motion="on"] .campaign-stage .stage-bottom{animation:tcPhotoB .72s .66s cubic-bezier(.2,.78,.22,1) both}
+  body[data-motion="on"] .campaign-stage .stage-detail{animation:tcPhotoC .68s .76s cubic-bezier(.2,.78,.22,1) both}
+  body[data-motion="on"] .campaign-stage .stage-mark{animation:tcMark .56s .86s cubic-bezier(.2,.78,.22,1) both}
 
-  /* Supporting photographs arrive like curated inserts around the hero. */
-  body[data-motion="on"] .campaign-stage .stage-top{animation:tcInsertTop .70s .66s cubic-bezier(.2,.78,.22,1) both}
-  body[data-motion="on"] .campaign-stage .stage-bottom{animation:tcInsertBottom .70s .73s cubic-bezier(.2,.78,.22,1) both}
-  body[data-motion="on"] .campaign-stage .stage-detail{animation:tcInsertDetail .66s .80s cubic-bezier(.2,.78,.22,1) both}
-  body[data-motion="on"] .campaign-stage .stage-mark{animation:tcBrandMark .58s .88s cubic-bezier(.2,.78,.22,1) both}
+  /* Editorial copy sequence. */
+  body[data-motion="on"] .campaign-copy>.section-kicker{animation:tcCopy .42s .44s ease-out both}
+  body[data-motion="on"] .campaign-copy>h1{animation:tcHeadline .72s .52s cubic-bezier(.16,.82,.2,1) both}
+  body[data-motion="on"] .campaign-copy>p:not(.section-kicker){animation:tcCopy .50s .68s ease-out both}
+  body[data-motion="on"] .campaign-copy .hero-actions{animation:tcCopy .46s .80s ease-out both}
+  body[data-motion="on"] .campaign-copy .campaign-signature{animation:tcCopy .44s .90s ease-out both}
 
-  /* Copy reveals as a restrained editorial sequence. */
-  body[data-motion="on"] .campaign-copy>.section-kicker{animation:tcCopyIn .46s .48s ease-out both}
-  body[data-motion="on"] .campaign-copy>h1{animation:tcHeadlineIn .72s .56s cubic-bezier(.16,.82,.24,1) both}
-  body[data-motion="on"] .campaign-copy>p:not(.section-kicker){animation:tcCopyIn .52s .70s ease-out both}
-  body[data-motion="on"] .campaign-copy .hero-actions{animation:tcCopyIn .48s .82s ease-out both}
-  body[data-motion="on"] .campaign-copy .campaign-signature{animation:tcCopyIn .46s .92s ease-out both}
+  /* One short, expensive-looking highlight across the revealed campaign image. */
+  body[data-motion="on"] .campaign-stage .hero-art{position:relative}
+  body[data-motion="on"] .campaign-stage .stage-main .hero-art{filter:saturate(1.015) contrast(1.015)}
 
-  @keyframes tcHeroSettle{
-    0%{opacity:.22;transform:translate3d(0,18px,0) scale(.982)}
-    65%{opacity:1;transform:translate3d(0,-2px,0) scale(1.003)}
-    100%{opacity:1;transform:none}
-  }
-  @keyframes tcHeroImage{
-    0%{filter:brightness(.88) saturate(.92);transform:scale(1.025)}
-    58%{filter:brightness(1.025) saturate(1.015);transform:scale(1.006)}
-    100%{filter:none;transform:none}
-  }
-  @keyframes tcGiftLid{
-    0%,18%{opacity:1;transform:translate3d(0,0,0) scaleY(1)}
-    62%{opacity:1;transform:translate3d(0,-4%,0) scaleY(.20)}
-    100%{opacity:0;transform:translate3d(0,-14%,0) scaleY(.02)}
-  }
-  @keyframes tcSeal{
-    0%,24%{opacity:1;transform:scale(1) rotate(0deg)}
-    56%{opacity:1;transform:scale(.92) rotate(18deg)}
-    100%{opacity:0;transform:scale(.72) rotate(32deg)}
-  }
-  @keyframes tcInsertTop{from{opacity:0;transform:translate3d(0,14px,0) scale(.975)}to{opacity:1;transform:none}}
-  @keyframes tcInsertBottom{from{opacity:0;transform:translate3d(0,-12px,0) scale(.975)}to{opacity:1;transform:none}}
-  @keyframes tcInsertDetail{from{opacity:0;transform:translate3d(12px,0,0) scale(.975)}to{opacity:1;transform:none}}
-  @keyframes tcBrandMark{from{opacity:0;letter-spacing:.05em;transform:translate3d(0,8px,0)}to{opacity:1;letter-spacing:inherit;transform:none}}
-  @keyframes tcCopyIn{from{opacity:0;transform:translate3d(0,12px,0)}to{opacity:1;transform:none}}
-  @keyframes tcHeadlineIn{from{opacity:0;transform:translate3d(0,18px,0);filter:blur(2px)}to{opacity:1;transform:none;filter:none}}
+  @keyframes tcHeroMain{0%{opacity:.18;transform:translate3d(0,22px,0) scale(.972)}60%{opacity:1;transform:translate3d(0,-2px,0) scale(1.004)}100%{opacity:1;transform:none}}
+  @keyframes tcHeroImage{0%{filter:brightness(.82) saturate(.90);transform:scale(1.028)}72%{filter:brightness(1.025) saturate(1.025);transform:scale(1.004)}100%{filter:none;transform:none}}
+  @keyframes tcVeilLift{0%{opacity:1;transform:scaleY(1)}72%{opacity:.98;transform:scaleY(.035)}100%{opacity:0;transform:scaleY(0)}}
+  @keyframes tcRibbonOpen{0%{opacity:1;transform:scaleX(1)}60%{opacity:.75;transform:scaleX(.12)}100%{opacity:0;transform:scaleX(0)}}
+  @keyframes tcPhotoA{0%{opacity:0;transform:translate3d(-12px,20px,0) scale(.965)}100%{opacity:1;transform:none}}
+  @keyframes tcPhotoB{0%{opacity:0;transform:translate3d(12px,-18px,0) scale(.965)}100%{opacity:1;transform:none}}
+  @keyframes tcPhotoC{0%{opacity:0;transform:translate3d(18px,5px,0) scale(.97)}100%{opacity:1;transform:none}}
+  @keyframes tcMark{0%{opacity:0;letter-spacing:.08em;transform:translate3d(0,8px,0)}100%{opacity:1;letter-spacing:inherit;transform:none}}
+  @keyframes tcHeadline{0%{opacity:0;transform:translate3d(0,22px,0);filter:blur(4px)}70%{opacity:1;filter:blur(0)}100%{opacity:1;transform:none;filter:none}}
+  @keyframes tcCopy{0%{opacity:0;transform:translate3d(0,12px,0)}100%{opacity:1;transform:none}}
 }
 
-@media (max-width:700px) and (prefers-reduced-motion:no-preference){
+/* Tablet: same luxury story, slightly tighter timing. */
+@media (min-width:701px) and (max-width:1100px) and (prefers-reduced-motion:no-preference){
   body[data-motion="on"] .campaign-stage .stage-main{animation-duration:.98s}
-  body[data-motion="on"] .campaign-stage .stage-main img{animation-duration:.94s}
-  body[data-motion="on"] .campaign-stage .stage-main::before{animation-duration:.82s;animation-delay:.06s}
-  body[data-motion="on"] .campaign-stage .stage-main::after{width:40px;height:40px;margin:-20px 0 0 -20px;animation-duration:.80s;animation-delay:.05s}
-  body[data-motion="on"] .campaign-stage .stage-top{animation-duration:.50s;animation-delay:.48s}
-  body[data-motion="on"] .campaign-stage .stage-bottom{animation-duration:.50s;animation-delay:.54s}
-  body[data-motion="on"] .campaign-stage .stage-detail{animation-duration:.48s;animation-delay:.60s}
-  body[data-motion="on"] .campaign-stage .stage-mark{animation-duration:.42s;animation-delay:.66s}
+  body[data-motion="on"] .campaign-stage .stage-main img{animation-duration:.98s}
+  body[data-motion="on"] .campaign-stage .stage-main::before{animation-duration:.88s}
+  body[data-motion="on"] .campaign-stage .stage-main::after{animation-duration:.76s}
+}
+
+/* Mobile: bold enough to feel special, light enough to stay responsive. */
+@media (max-width:700px) and (prefers-reduced-motion:no-preference){
+  body[data-motion="on"] .campaign-stage .stage-main{animation:tcHeroMainMobile .78s cubic-bezier(.18,.82,.2,1) both}
+  body[data-motion="on"] .campaign-stage .stage-main img{animation:tcHeroImageMobile .78s cubic-bezier(.18,.82,.2,1) both}
+  body[data-motion="on"] .campaign-stage .stage-main::before{animation:tcVeilLiftMobile .68s .06s cubic-bezier(.18,.82,.2,1) both}
+  body[data-motion="on"] .campaign-stage .stage-main::after{animation:tcRibbonOpen .58s .08s cubic-bezier(.18,.82,.2,1) both}
+  body[data-motion="on"] .campaign-stage .stage-top{animation-duration:.46s;animation-delay:.30s}
+  body[data-motion="on"] .campaign-stage .stage-bottom{animation-duration:.46s;animation-delay:.36s}
+  body[data-motion="on"] .campaign-stage .stage-detail{animation-duration:.42s;animation-delay:.42s}
+  body[data-motion="on"] .campaign-stage .stage-mark{animation-duration:.38s;animation-delay:.46s}
+  body[data-motion="on"] .campaign-copy>.section-kicker{animation-delay:.20s}
+  body[data-motion="on"] .campaign-copy>h1{animation-duration:.52s;animation-delay:.26s}
+  body[data-motion="on"] .campaign-copy>p:not(.section-kicker){animation-delay:.36s}
+  body[data-motion="on"] .campaign-copy .hero-actions{animation-delay:.44s}
+  body[data-motion="on"] .campaign-copy .campaign-signature{animation-delay:.50s}
+  @keyframes tcHeroMainMobile{0%{opacity:.22;transform:translate3d(0,14px,0) scale(.982)}100%{opacity:1;transform:none}}
+  @keyframes tcHeroImageMobile{0%{filter:brightness(.87) saturate(.93);transform:scale(1.018)}100%{filter:none;transform:none}}
+  @keyframes tcVeilLiftMobile{0%{opacity:1;transform:scaleY(1)}75%{opacity:.94;transform:scaleY(.045)}100%{opacity:0;transform:scaleY(0)}}
 }
 
 @media (prefers-reduced-motion:reduce){
-  .campaign-stage .stage-main,.campaign-stage .stage-main img,.campaign-stage .stage-main::before,.campaign-stage .stage-main::after,.campaign-stage .stage-top,.campaign-stage .stage-bottom,.campaign-stage .stage-detail,.campaign-stage .stage-mark,.campaign-copy>*{animation:none!important;opacity:1!important;transform:none!important;filter:none!important}
+  .campaign-stage .stage-main,.campaign-stage .stage-main img,.campaign-stage .stage-main::before,.campaign-stage .stage-main::after,.campaign-stage .stage-top,.campaign-stage .stage-bottom,.campaign-stage .stage-detail,.campaign-stage .stage-mark,.campaign-copy>*{animation:none!important;opacity:1!important;transform:none!important;clip-path:none!important;filter:none!important}
   .campaign-stage .stage-main::before,.campaign-stage .stage-main::after{display:none!important}
 }
