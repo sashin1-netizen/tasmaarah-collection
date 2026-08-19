@@ -27,6 +27,9 @@ jobs:
           test "$(find assets/images -maxdepth 1 -type f | wc -l)" -ge 20
           test -s assets/images/tasmaarah-logo.webp
           test -s assets/images/file_00000000d5e88243924fe08befb57f2a.png
+          test ! -e atelier-client-ready.css
+          test ! -e homepage-client-fix.css
+          test ! -e homepage-client-fix.js
 
       - name: Verify final design system on every public page
         shell: python
@@ -36,7 +39,7 @@ jobs:
           failures=[]
           for page in pages:
               text=Path(page).read_text(encoding='utf-8')
-              for needle in ('site.css?v=2','client-final.css?v=1','script.js?v=36','class="mobile-menu"','class="motion-toggle"','class="skip-link"'):
+              for needle in ('site.css?v=2','client-final.css?v=2','script.js?v=36','class="mobile-menu"','class="motion-toggle"','class="skip-link"'):
                   if needle not in text: failures.append(f'{page}: missing {needle}')
               if '<meta name="viewport"' not in text: failures.append(f'{page}: missing viewport')
               if '<title>' not in text: failures.append(f'{page}: missing title')
@@ -44,7 +47,7 @@ jobs:
           for needle in ('application/ld+json','class="hero-art"','fetchpriority="high"','width="1536"','height="1024"','wa.me/27635409729'):
               if needle not in home: failures.append(f'index.html: missing {needle}')
           css=Path('client-final.css').read_text(encoding='utf-8')
-          for needle in ('object-fit:contain','@keyframes tcAmbient','@keyframes tcSatin','@keyframes tcHeroSweep','pointer-events:none','@media(max-width:640px)','prefers-reduced-motion'):
+          for needle in ('object-fit:contain','@keyframes tcAmbient','@keyframes tcSatin','@keyframes tcHeroSweep','pointer-events:none','@media(max-width:640px)','prefers-reduced-motion','campaign-spread','gallery-tease'):
               if needle not in css: failures.append(f'client-final.css: missing {needle}')
           if failures: raise SystemExit('\n'.join(failures))
           print('Every public page uses the final client recovery design and interaction build.')
