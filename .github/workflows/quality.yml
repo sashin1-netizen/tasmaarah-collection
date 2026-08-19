@@ -20,7 +20,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html site.css client-final.css script.js robots.txt sitemap.xml package.json playwright.config.js tests/site.spec.js; do
+          for file in index.html about.html shop.html occasions.html custom-orders.html gallery.html contact.html 404.html site.css client-final.css stability-lock.css script.js robots.txt sitemap.xml package.json playwright.config.js tests/site.spec.js; do
             test -s "$file"
           done
           test -d assets/images
@@ -39,18 +39,18 @@ jobs:
           failures=[]
           for page in pages:
               text=Path(page).read_text(encoding='utf-8')
-              for needle in ('site.css?v=2','client-final.css?v=2','script.js?v=36','class="mobile-menu"','class="motion-toggle"','class="skip-link"'):
+              for needle in ('site.css?v=2','client-final.css?v=2','stability-lock.css?v=1','script.js?v=37','class="mobile-menu"','class="motion-toggle"','class="skip-link"'):
                   if needle not in text: failures.append(f'{page}: missing {needle}')
               if '<meta name="viewport"' not in text: failures.append(f'{page}: missing viewport')
               if '<title>' not in text: failures.append(f'{page}: missing title')
           home=Path('index.html').read_text(encoding='utf-8')
           for needle in ('application/ld+json','class="hero-art"','fetchpriority="high"','width="1536"','height="1024"','wa.me/27635409729'):
               if needle not in home: failures.append(f'index.html: missing {needle}')
-          css=Path('client-final.css').read_text(encoding='utf-8')
-          for needle in ('object-fit:contain','@keyframes tcAmbient','@keyframes tcSatin','@keyframes tcHeroSweep','pointer-events:none','@media(max-width:640px)','prefers-reduced-motion','campaign-spread','gallery-tease'):
-              if needle not in css: failures.append(f'client-final.css: missing {needle}')
+          lock=Path('stability-lock.css').read_text(encoding='utf-8')
+          for needle in ('position:fixed!important','width:100vw!important','order:1!important','order:2!important','.floating-wa::before','prefers-reduced-motion'):
+              if needle not in lock: failures.append(f'stability-lock.css: missing {needle}')
           if failures: raise SystemExit('\n'.join(failures))
-          print('Every public page uses the final client recovery design and interaction build.')
+          print('Every public page uses the locked production design and interaction build.')
 
       - name: Verify local assets and internal links
         shell: python
@@ -79,7 +79,7 @@ jobs:
                   if ref.startswith(('http://','https://','mailto:','tel:','data:','#')): continue
                   path=ref.split('?',1)[0].split('#',1)[0].lstrip('/')
                   if path and not (root/path).exists(): missing.append((page.name,ref))
-          for css_name in ('site.css','client-final.css'):
+          for css_name in ('site.css','client-final.css','stability-lock.css'):
               css=Path(css_name).read_text(encoding='utf-8')
               for ref in re.findall(r'url\([\"\']?([^\)\"\']+)',css):
                   if ref.startswith(('http://','https://','data:')): continue
@@ -102,19 +102,17 @@ jobs:
           grep -q "querySelector('.mobile-menu')" script.js
           grep -q "menu.addEventListener('toggle'" script.js
           grep -q "e.key==='Escape'" script.js
+          grep -q "width:'100vw'" script.js
           grep -q 'document.body.style.overflow' script.js
           grep -q 'quote-form' script.js
           grep -q 'data-catalog-search' script.js
           grep -q 'lightbox' script.js
           grep -q 'pointermove' script.js
-          grep -q 'prefers-reduced-motion' script.js
           grep -q 'tasmaarah-motion-v2' script.js
-          grep -q '@keyframes tcAmbient' client-final.css
-          grep -q '@keyframes tcSatin' client-final.css
-          grep -q '@keyframes tcHeroSweep' client-final.css
-          grep -q '@media(prefers-reduced-motion:reduce)' client-final.css
-          grep -q '.mobile-menu' client-final.css
-          grep -q 'pointer-events:none' client-final.css
+          grep -q 'stability-lock.css?v=1' script.js
+          grep -q 'position:fixed!important' stability-lock.css
+          grep -q 'width:100vw!important' stability-lock.css
+          grep -q 'pointer-events:none!important' stability-lock.css
           grep -q 'action="https://api.whatsapp.com/send"' contact.html
           grep -q 'Open WhatsApp directly' contact.html
 
@@ -122,7 +120,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -niE 'localhost|127\.0\.0\.1|TODO|FIXME|lorem ipsum' *.html site.css client-final.css script.js robots.txt sitemap.xml
+          ! grep -niE 'localhost|127\.0\.0\.1|TODO|FIXME|lorem ipsum' *.html site.css client-final.css stability-lock.css script.js robots.txt sitemap.xml
 
       - name: Confirm sitemap coverage
         shell: python
