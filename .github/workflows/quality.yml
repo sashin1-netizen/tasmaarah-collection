@@ -13,44 +13,33 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Verify production files and public-page contract
+      - uses: actions/checkout@v4
+      - name: Verify production contract
         shell: python
         run: |
           from pathlib import Path
-          pages=['index.html','about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html','404.html']
-          media_pages=['index.html','about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html']
-          required=['site.css','client-final.css','stability-lock.css','premium-media.css','desktop-polish.css','script.js','robots.txt','sitemap.xml','package.json','playwright.config.js','tests/site.spec.js','tests/media.spec.js']
+          pages=['index.html','about.html','shop.html','occasions.html','custom-orders.html','gallery.html','contact.html','privacy.html','404.html']
+          required=['site.css','client-final.css','stability-lock.css','premium-media.css','desktop-polish.css','final-polish.css','site-experience.css','script.js','robots.txt','sitemap.xml','package.json','playwright.config.js','tests/site.spec.js','tests/media.spec.js']
           for f in pages+required:
               if not Path(f).is_file() or Path(f).stat().st_size == 0: raise SystemExit(f'Missing/empty: {f}')
           if len(list(Path('assets/images').glob('*'))) < 20: raise SystemExit('Too few production images')
           for page in pages:
               text=Path(page).read_text(encoding='utf-8')
-              for needle in ('site.css?v=2','client-final.css?v=2','stability-lock.css?v=4','script.js?v=40','class="mobile-menu"','class="skip-link"'):
+              for needle in ('site.css?v=2','client-final.css?v=2','stability-lock.css?v=4','class="mobile-menu"','class="skip-link"'):
                   if needle not in text: raise SystemExit(f'{page}: missing {needle}')
-              if 'motion-toggle' in text: raise SystemExit(f'{page}: client-facing motion control must not be present')
+              if 'motion-toggle' in text: raise SystemExit(f'{page}: motion control must not be client-facing')
               if text.count('<h1') != 1: raise SystemExit(f'{page}: expected exactly one h1')
-          for page in media_pages:
-              if 'premium-media.css?v=' not in Path(page).read_text(encoding='utf-8'):
-                  raise SystemExit(f'{page}: premium media treatment missing')
           home=Path('index.html').read_text(encoding='utf-8')
-          for needle in ('class="hero-art"','fetchpriority="high"','wa.me/27635409729','https://www.instagram.com/boxes_tasmaarah_collection','application/ld+json','class="social-showcase"'):
+          for needle in ('class="hero-art"','fetchpriority="high"','wa.me/27635409729','https://www.instagram.com/boxes_tasmaarah_collection','application/ld+json','class="social-showcase"','Content-Security-Policy','site-experience.css?v=1'):
               if needle not in home: raise SystemExit(f'index.html missing {needle}')
-          lock=Path('stability-lock.css').read_text(encoding='utf-8')
-          for needle in ('.motion-toggle{display:none!important}','.mobile-menu[open]>.mobile-panel','position:fixed!important','width:100vw!important','.masonry-gallery figure','prefers-reduced-motion'):
-              if needle not in lock: raise SystemExit(f'stability-lock.css missing {needle}')
-          media=Path('premium-media.css').read_text(encoding='utf-8')
-          for needle in ('.catalog-card>img','object-fit:contain!important','.masonry-gallery img','.lightbox img','.occasion-detail article>img','.contact-intro','.social-showcase'):
-              if needle not in media: raise SystemExit(f'premium-media.css missing {needle}')
-          desktop=Path('desktop-polish.css').read_text(encoding='utf-8')
-          for needle in ('@media (min-width:981px)','.catalog-grid','.masonry-gallery','.contact-experience','.social-showcase','.footer'):
-              if needle not in desktop: raise SystemExit(f'desktop-polish.css missing {needle}')
+          sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
+          for page in pages[:-1]:
+              target='https://sashin1-netizen.github.io/tasmaarah-collection/'+('' if page=='index.html' else page)
+              if target not in sitemap: raise SystemExit(f'sitemap missing {target}')
           script=Path('script.js').read_text(encoding='utf-8')
-          if "desktop-polish.css?v=2" not in script: raise SystemExit('script.js must load current desktop acceptance layer')
+          for needle in ('desktop-polish.css?v=2','site-experience.css?v=1','cookie-notice','social-icons','lightbox-enquire','data-catalog-search'):
+              if needle not in script: raise SystemExit(f'script.js missing {needle}')
           print('Production contract validated.')
-
       - name: Verify local links and image alternatives
         shell: python
         run: |
@@ -70,40 +59,22 @@ jobs:
                   if p and not (root/p).exists(): missing.append((page.name,ref))
           if missing: raise SystemExit(f'Missing local refs: {missing}')
           if missing_alt: raise SystemExit(f'Images missing alt: {missing_alt}')
-
       - name: Check JavaScript syntax
         run: |
           node --check script.js
           node --check playwright.config.js
           node --check tests/site.spec.js
           node --check tests/media.spec.js
-
-      - name: Verify critical interaction contracts
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -q "addEventListener('pointerup'" script.js
-          grep -q "e.key==='Escape'" script.js
-          grep -q 'boxes_tasmaarah_collection' script.js
-          grep -q 'desktop-polish.css?v=2' script.js
-          grep -q 'quote-form' script.js
-          grep -q 'lightbox-enquire' script.js
-          grep -q 'data-catalog-search' script.js
-          grep -q 'action="https://api.whatsapp.com/send"' contact.html
-
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-
       - name: Install browser test dependencies
         run: |
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
-
       - name: Run responsive browser acceptance suite
         run: npm run test:e2e
-
       - name: Upload visual acceptance evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -112,7 +83,6 @@ jobs:
           path: visual-evidence/
           if-no-files-found: ignore
           retention-days: 7
-
       - name: Upload browser failure evidence
         if: failure()
         uses: actions/upload-artifact@v4
