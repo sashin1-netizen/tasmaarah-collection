@@ -1,0 +1,63 @@
+/* Tasmaarah Collection — global premium effects.
+   Progressive enhancement only: content is never hidden and navigation is untouched. */
+
+:root{--fx-espresso:#2b1b11;--fx-gold:#a8753f;--fx-champagne:#ead2b5;--fx-ivory:#fffaf4;--fx-shadow:rgba(55,31,13,.16)}
+
+/* Refined page atmosphere without continuous animation. */
+main{background-image:radial-gradient(circle at 12% 18%,rgba(255,255,255,.48),transparent 22%),radial-gradient(circle at 88% 72%,rgba(191,139,83,.08),transparent 24%)}
+main>section{isolation:isolate}
+main>section::after{content:"";position:absolute;left:clamp(18px,4vw,64px);right:clamp(18px,4vw,64px);bottom:0;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(155,101,51,.15),transparent)}
+main>section:last-child::after{display:none}
+
+/* Editorial heading treatment shared by every public page. */
+.page-heading h1,.page-hero h1,.section-head h2,.campaign-spread-copy h2,.editorial-copy h2,.contact-intro-copy h1,.contact-form-heading h2,.faq-heading h2{position:relative;text-wrap:balance}
+.page-heading h1::after,.page-hero h1::after,.section-head h2::after,.contact-form-heading h2::after,.faq-heading h2::after{content:"";display:block;width:clamp(48px,8vw,92px);height:1px;margin-top:.22em;background:linear-gradient(90deg,var(--fx-gold),rgba(168,117,63,0))}
+.section-head.centered h2::after{margin-left:auto;margin-right:auto;background:linear-gradient(90deg,transparent,var(--fx-gold),transparent)}
+
+/* High-end photographic mounting, applied without changing crop rules. */
+.gallery-grid figure,.masonry-gallery figure,.campaign-spread-grid figure,.occasion-detail article>img,.page-hero>img,.editorial-band>img,.contact-intro-image,.catalog-card,.occasion-card,.social-visuals a{position:relative;isolation:isolate;box-shadow:0 18px 44px var(--fx-shadow),0 3px 10px rgba(55,31,13,.07),inset 0 0 0 1px rgba(255,255,255,.55);border-color:rgba(151,98,50,.2)}
+.gallery-grid figure::after,.masonry-gallery figure::after,.campaign-spread-grid figure::after,.social-visuals a::after,.catalog-card::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(145deg,rgba(255,255,255,.12),transparent 32%,transparent 72%,rgba(67,38,16,.08));box-shadow:inset 0 0 0 1px rgba(255,248,239,.26)}
+.gallery-grid img,.masonry-gallery img,.campaign-spread-grid img,.occasion-detail article>img,.page-hero>img,.editorial-band>img,.contact-intro-image img,.catalog-card img,.occasion-card img,.social-visuals img{image-rendering:auto;transform:translateZ(0);backface-visibility:hidden}
+
+/* One-time entrance choreography. Nothing is hidden if JS fails. */
+body.site-ready .page-heading,body.site-ready .page-hero{animation:tcPageArrive .42s cubic-bezier(.2,.7,.2,1) both}
+.reveal-enter{animation:tcSectionArrive .42s cubic-bezier(.2,.7,.2,1) both}
+.reveal-enter .section-head,.reveal-enter .campaign-spread-copy,.reveal-enter .editorial-copy,.reveal-enter .sizes-block,.reveal-enter .steps-block,.reveal-enter .social-showcase-copy{animation:tcTextArrive .46s .04s cubic-bezier(.2,.7,.2,1) both}
+.reveal-enter .gallery-grid figure,.reveal-enter .campaign-spread-grid figure,.reveal-enter .occasion-card,.reveal-enter .catalog-card,.reveal-enter .social-visuals a{animation:tcMediaArrive .48s cubic-bezier(.2,.7,.2,1) both}
+.reveal-enter .gallery-grid figure:nth-child(2),.reveal-enter .campaign-spread-grid figure:nth-child(2),.reveal-enter .occasion-card:nth-child(2),.reveal-enter .catalog-card:nth-child(2),.reveal-enter .social-visuals a:nth-child(2){animation-delay:.045s}
+.reveal-enter .gallery-grid figure:nth-child(3),.reveal-enter .campaign-spread-grid figure:nth-child(3),.reveal-enter .occasion-card:nth-child(3),.reveal-enter .catalog-card:nth-child(3),.reveal-enter .social-visuals a:nth-child(3){animation-delay:.09s}
+.reveal-enter .gallery-grid figure:nth-child(4),.reveal-enter .occasion-card:nth-child(4),.reveal-enter .catalog-card:nth-child(4),.reveal-enter .social-visuals a:nth-child(4){animation-delay:.135s}
+@keyframes tcPageArrive{from{opacity:.72;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes tcSectionArrive{from{opacity:.82;transform:translateY(9px)}to{opacity:1;transform:none}}
+@keyframes tcTextArrive{from{opacity:.76;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes tcMediaArrive{from{opacity:.82;transform:translateY(12px) scale(.992)}to{opacity:1;transform:none}}
+
+/* Premium interaction without scroll loops or expensive filters. */
+.btn,.header-quote,.text-link,.social-profile-cta,.faq-list summary,.catalog-card a{position:relative;transition:transform .16s ease,box-shadow .16s ease,color .16s ease,background-color .16s ease,border-color .16s ease}
+.btn{overflow:hidden}
+.btn::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 25%,rgba(255,255,255,.22) 48%,transparent 70%);transform:translateX(-135%);transition:transform .38s ease}
+.faq-list details[open]{background:linear-gradient(90deg,rgba(255,250,244,.7),transparent)}
+.quote-form input,.quote-form select,.quote-form textarea,.catalog-toolbar input{transition:border-color .16s ease,box-shadow .16s ease,background-color .16s ease}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus,.catalog-toolbar input:focus{border-color:rgba(154,104,55,.58);box-shadow:0 0 0 3px rgba(168,117,63,.11),0 8px 22px rgba(55,31,13,.06);background:#fffdf9}
+
+@media(pointer:fine) and (hover:hover){
+ .btn:hover::after{transform:translateX(135%)}
+ .btn:hover,.header-quote:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(55,31,13,.13)}
+ .gallery-grid figure:hover,.masonry-gallery figure:hover,.campaign-spread-grid figure:hover,.catalog-card:hover,.occasion-card:hover,.social-visuals a:hover{transform:translateY(-4px) rotateX(.7deg);box-shadow:0 25px 58px rgba(55,31,13,.18),0 7px 18px rgba(55,31,13,.09)}
+ .text-link:hover{letter-spacing:.015em}
+}
+
+/* Mobile: large, readable luxury typography while preserving narrow screens. */
+@media(max-width:700px){
+ main h1,.page-heading h1,.page-hero h1{font-size:clamp(50px,14.2vw,72px)!important;line-height:.9!important}
+ main h2,.section-head h2,.campaign-spread-copy h2,.editorial-copy h2,.contact-form-heading h2,.faq-heading h2{font-size:clamp(40px,11.2vw,58px)!important;line-height:.95!important}
+ main h3{font-size:clamp(28px,7.2vw,36px)!important}
+ main p,.page-heading p,.page-hero p,.section-head>p:last-child,.campaign-spread-copy>p,.editorial-copy>p,.contact-intro-copy>p,.contact-form-heading>p,.faq-list details p{font-size:clamp(18px,4.7vw,20px)!important;line-height:1.58!important}
+ .value-item p,.catalog-card p,.steps small,.occasion-card small{font-size:16px!important;line-height:1.48!important}
+ .section-kicker{font-size:13px!important}
+ .gallery-grid figure,.masonry-gallery figure,.campaign-spread-grid figure,.catalog-card,.occasion-card,.social-visuals a{box-shadow:0 15px 34px rgba(55,31,13,.14),0 3px 9px rgba(55,31,13,.06)}
+}
+@media(max-width:380px){main h1,.page-heading h1,.page-hero h1{font-size:clamp(46px,13.7vw,60px)!important}main h2,.section-head h2{font-size:clamp(37px,10.8vw,49px)!important}main p,.page-heading p,.page-hero p{font-size:18px!important}}
+
+/* Accessibility/performance safety. */
+@media(prefers-reduced-motion:reduce){body.site-ready .page-heading,body.site-ready .page-hero,.reveal-enter,.reveal-enter *{animation:none!important}.btn,.header-quote,.text-link,.social-profile-cta,.faq-list summary,.catalog-card a{transition:none!important}.gallery-grid figure,.masonry-gallery figure,.campaign-spread-grid figure,.catalog-card,.occasion-card,.social-visuals a{transform:none!important}}
