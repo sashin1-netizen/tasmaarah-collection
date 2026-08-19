@@ -1,68 +1,100 @@
-/* Tasmaarah Collection — responsive stability lock. Loaded last on every page. */
+/* Tasmaarah Collection — production stability + premium interaction lock. Loaded LAST on every public page. */
+html{scrollbar-gutter:stable;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
 html,body{max-width:100%;overflow-x:hidden}
+body{isolation:isolate}
 
-/* Never let decorative layers intercept taps. */
-body::before,body::after,main::before,main::after,.campaign-stage::before,.campaign-stage::after,.occasion-card::before,.occasion-card::after{pointer-events:none!important}
+/* Decorative layers must never intercept a tap or move document geometry. */
+body::before,body::after,main::before,main::after,.campaign-stage::before,.campaign-stage::after,.occasion-card::before,.occasion-card::after,.page-heading::before,.page-hero::before,.contact-layout::before{pointer-events:none!important}
+main>*{position:relative;z-index:1}
 
-/* Keep mobile navigation as a true fixed full-width panel. */
+/* Make the requested live motion genuinely visible while keeping it composited and non-disruptive. */
+body::before{z-index:0!important;opacity:.42!important;will-change:transform,background-position!important}
+body>.utility-bar,body>.site-header,body>main,body>.footer,body>.floating-wa{position:relative;z-index:1}
+main::before{z-index:0!important;opacity:.72!important;will-change:background-position,opacity!important}
+.campaign-stage{isolation:isolate!important}
+.campaign-stage::before{display:block!important;opacity:.72;will-change:transform,opacity!important}
+body[data-motion="on"]::before{animation:ambientMove 13s ease-in-out infinite alternate!important}
+body[data-motion="on"] main::before{animation:satinSweep 10s ease-in-out infinite!important}
+body[data-motion="on"] .campaign-stage::before{animation:tcHeroSweep 7.5s ease-in-out infinite!important}
+body[data-motion="on"] .section-kicker::after{animation:tcRule 3.6s ease-in-out infinite!important}
+body[data-motion="off"]::before,body[data-motion="off"] main::before,body[data-motion="off"] .campaign-stage::before,body[data-motion="off"] .section-kicker::after{animation-play-state:paused!important}
+
+/* Premium interaction basics and WCAG-friendly targets. */
+.btn,.header-quote,.mobile-menu>summary,.floating-wa,.lightbox button{min-width:44px;min-height:44px}
+.motion-toggle,.utility-actions a{min-height:32px;display:inline-flex;align-items:center}
+.btn,.header-quote,.occasion-card,.catalog-card a,.text-link{transition:transform .22s ease,box-shadow .22s ease,opacity .22s ease,color .22s ease,background .22s ease}
+@media(hover:hover){.btn:hover,.header-quote:hover{transform:translateY(-2px)}.catalog-card a:hover,.text-link:hover{color:var(--gold,#9a6837)}}
+:focus-visible{outline:2px solid #74491f!important;outline-offset:3px!important}
+
+/* Keep mobile navigation a true fixed viewport panel. Native <details> still works without JS. */
 @media(max-width:980px){
   .mobile-menu{display:block!important;position:static!important;z-index:auto!important}
-  .mobile-menu>summary{position:relative!important;z-index:10002!important}
+  .mobile-menu>summary{position:relative!important;z-index:10002!important;border-radius:50%}
   .mobile-menu[open] .mobile-panel{
     position:fixed!important;
-    left:0!important;
-    right:0!important;
-    width:100vw!important;
-    max-width:100vw!important;
-    margin:0!important;
-    transform:none!important;
+    left:0!important;right:0!important;
+    width:100vw!important;max-width:100vw!important;
+    margin:0!important;transform:none!important;
     z-index:10001!important;
-    background:#fbf6ef!important;
-    overflow-y:auto!important;
-    overflow-x:hidden!important;
+    background:rgba(251,246,239,.995)!important;
+    overflow-y:auto!important;overflow-x:hidden!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch;
     box-shadow:0 24px 60px rgba(36,22,12,.18)!important;
+    padding-inline:max(20px,env(safe-area-inset-left)) max(20px,env(safe-area-inset-right))!important;
   }
-  .mobile-panel a{width:100%!important;max-width:none!important;white-space:normal!important}
-  body.menu-open{overflow:hidden!important}
+  .mobile-panel a{width:100%!important;max-width:none!important;white-space:normal!important;min-height:54px!important}
+  .mobile-panel a[aria-current="page"]{color:#8a5c30!important}
+  body.menu-open{overflow:hidden!important;touch-action:none}
+  body.menu-open .floating-wa{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
 }
 
-/* Mobile homepage: approved artwork first, actions immediately after it. */
+/* Mobile homepage: approved artwork first, actions immediately after, never on top of it. */
 @media(max-width:640px){
-  .campaign-hero{display:flex!important;flex-direction:column!important;padding:0 0 18px!important;min-height:0!important;overflow:hidden!important}
+  .campaign-hero{display:flex!important;flex-direction:column!important;padding:0 0 18px!important;min-height:0!important;overflow:hidden!important;background:linear-gradient(180deg,#e4c6a4,#f3dfca)!important}
   .campaign-stage{order:1!important;position:relative!important;width:100%!important;aspect-ratio:3/2!important;min-height:0!important;height:auto!important;margin:0!important}
   .campaign-stage .stage-main{display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important}
   .campaign-stage .stage-main img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;transform:none!important}
   .campaign-copy{order:2!important;position:relative!important;inset:auto!important;width:100%!important;height:auto!important;padding:12px 14px 0!important;pointer-events:auto!important}
   .campaign-copy>.section-kicker,.campaign-copy>h1,.campaign-copy>p:not(.section-kicker),.campaign-signature{display:none!important}
   .hero-actions{position:static!important;display:grid!important;grid-template-columns:1fr!important;gap:9px!important;width:100%!important;margin:0!important;left:auto!important;bottom:auto!important}
-  .hero-actions .btn{width:100%!important;min-height:48px!important;padding:11px 12px!important;font-size:8px!important;letter-spacing:.08em!important;white-space:normal!important}
+  .hero-actions .btn{width:100%!important;min-height:50px!important;padding:12px 14px!important;font-size:9px!important;letter-spacing:.08em!important;white-space:normal!important}
 
-  /* Header stays stable when menu is opened. */
   .site-header{min-height:74px!important}
   .header-inner{height:74px!important;min-height:74px!important;padding:7px 12px!important;grid-template-columns:46px minmax(0,1fr) 78px!important;gap:6px!important}
-  .brand{justify-self:center!important;min-width:0!important}
-  .brand img{width:132px!important;height:54px!important;object-fit:contain!important}
-  .header-quote{min-width:74px!important;max-width:78px!important;min-height:36px!important;padding:0 7px!important;font-size:7.5px!important;letter-spacing:.08em!important;line-height:1.1!important;text-align:center!important}
+  .brand{justify-self:center!important;min-width:0!important}.brand img{width:132px!important;height:54px!important;object-fit:contain!important}
+  .header-quote{min-width:74px!important;max-width:78px!important;min-height:40px!important;padding:0 7px!important;font-size:7.5px!important;letter-spacing:.08em!important;line-height:1.1!important;text-align:center!important}
 
-  /* Prevent service content from being clipped by decorative/floating controls. */
   .value-strip{position:relative!important;z-index:2!important;margin:0 12px!important;overflow:hidden!important}
-  .value-item{min-width:0!important;overflow:hidden!important}
-  .value-item h2,.value-item p{max-width:100%!important;overflow-wrap:anywhere!important}
+  .value-item{min-width:0!important;overflow:hidden!important}.value-item h2,.value-item p{max-width:100%!important;overflow-wrap:anywhere!important}
 
-  /* One clear WhatsApp control only. */
-  .floating-wa{right:14px!important;left:auto!important;bottom:14px!important;width:58px!important;height:58px!important;min-width:58px!important;min-height:58px!important;border-radius:50%!important;padding:0!important;display:grid!important;place-items:center!important;font-size:0!important;line-height:1!important;z-index:9998!important;overflow:hidden!important}
-  .floating-wa::before{content:"WA"!important;display:block!important;font:600 11px/1 var(--sans)!important;letter-spacing:.04em!important;color:#fff!important}
+  /* Forms/search remain easy to use on phones and do not trigger unwanted input zoom. */
+  .catalog-toolbar input,.quote-form input,.quote-form select,.quote-form textarea{font-size:16px!important;min-height:48px!important}
+  .quote-form textarea{min-height:132px!important}
+  .quote-form button,.quote-form .btn{min-height:50px!important}
+
+  /* One unobtrusive conversion control only. */
+  .floating-wa{position:fixed!important;right:max(14px,env(safe-area-inset-right))!important;left:auto!important;bottom:max(14px,env(safe-area-inset-bottom))!important;width:58px!important;height:58px!important;min-width:58px!important;min-height:58px!important;border-radius:50%!important;padding:0!important;display:grid!important;place-items:center!important;font-size:0!important;line-height:1!important;z-index:9998!important;overflow:hidden!important;box-shadow:0 12px 30px rgba(62,36,16,.24)!important}
+  .floating-wa::before{content:"WA"!important;display:block!important;font:600 11px/1 var(--sans,Arial,sans-serif)!important;letter-spacing:.04em!important;color:#fff!important}
   .floating-wa::after{content:none!important;display:none!important}
-
-  .footer{padding-bottom:88px!important}
+  .footer{padding-bottom:max(88px,calc(74px + env(safe-area-inset-bottom)))!important}
+  .footer a[href^="mailto:"]{overflow-wrap:anywhere}
 }
 
-/* Visible, restrained motion without moving layout. */
-body[data-motion="on"]::before{animation:ambientMove 14s ease-in-out infinite alternate!important}
-body[data-motion="on"] main::before{animation:satinSweep 11s ease-in-out infinite!important}
-body[data-motion="on"] .campaign-stage::before{animation:tcHeroSweep 8s ease-in-out infinite!important}
-body[data-motion="off"]::before,body[data-motion="off"] main::before,body[data-motion="off"] .campaign-stage::before{animation-play-state:paused!important}
+/* Gallery lightbox behaves like a premium modal, including the enquiry action. */
+.lightbox{overscroll-behavior:contain}
+.lightbox figure{max-width:min(88vw,980px)!important}
+.lightbox img{max-height:76vh!important;object-fit:contain!important}
+.lightbox-enquire{position:absolute;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:3;min-height:44px;padding:10px 18px;background:linear-gradient(135deg,#775029,#a8753f 50%,#c89d69);color:#fff;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;font:600 9px/1.2 var(--sans,Arial,sans-serif);display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;box-shadow:0 12px 28px rgba(0,0,0,.25)}
+body.lightbox-open{overflow:hidden!important}
 
+/* Search feedback feels like a real catalogue rather than a static page. */
+.catalog-results-status{max-width:1180px;margin:0 auto 14px;padding:0 18px;color:#78532f;font:600 10px/1.4 var(--sans,Arial,sans-serif);letter-spacing:.06em;text-transform:uppercase}
+
+/* Stronger accessibility preferences. */
+@media(prefers-contrast:more){.btn,.header-quote,.catalog-toolbar input,.quote-form input,.quote-form select,.quote-form textarea{border-width:2px!important}.section-kicker,.value-item h2{color:#5e3718!important}}
 @media(prefers-reduced-motion:reduce){
-  body::before,main::before,.campaign-stage::before{animation:none!important}
+  html{scroll-behavior:auto!important}
+  body::before,main::before,.campaign-stage::before,.section-kicker::after{animation:none!important}
+  .btn,.header-quote,.occasion-card img,.catalog-card img,.masonry-gallery img{transition:none!important}
 }
