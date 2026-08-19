@@ -3,7 +3,7 @@
 const root=document.documentElement;root.classList.add('js');
 const experienceSheet=document.querySelector('link[href^="site-experience.css"]');if(experienceSheet&&!experienceSheet.href.includes('v=7'))experienceSheet.href='site-experience.css?v=7';
 const loadCss=(href,key)=>{if(document.querySelector(`link[data-${key}]`))return;const l=document.createElement('link');l.rel='stylesheet';l.href=href;l.dataset[key]='';document.head.appendChild(l)};
-if(matchMedia('(min-width:981px)').matches)requestIdleCallback?requestIdleCallback(()=>loadCss('desktop-polish.css?v=2','desktopPolish'),{timeout:600}):setTimeout(()=>loadCss('desktop-polish.css?v=2','desktopPolish'),0);
+if(matchMedia('(min-width:981px)').matches){if('requestIdleCallback'in window)window.requestIdleCallback(()=>loadCss('desktop-polish.css?v=2','desktopPolish'),{timeout:600});else setTimeout(()=>loadCss('desktop-polish.css?v=2','desktopPolish'),0)}
 const hero=document.querySelector('.hero-art');if(hero&&!hero.complete){try{hero.fetchPriority='low'}catch{}hero.decoding='async'}
 const focusableSelector='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 const trapTab=(e,c)=>{if(e.key!=='Tab'||!c)return;const f=[...c.querySelectorAll(focusableSelector)].filter(x=>x.offsetParent!==null);if(!f.length)return;const a=f[0],b=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();b.focus()}else if(!e.shiftKey&&document.activeElement===b){e.preventDefault();a.focus()}};
